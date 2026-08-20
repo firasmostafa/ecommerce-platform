@@ -21,18 +21,14 @@ function HeroSection() {
     const fetchFeaturedProducts = async () => {
       try {
         const response = await axios.get(
-          "http://127.0.0.1:8000/api/products?featured=1&per_page=6"
+          "https://ecommerce-platform-4vwn.onrender.com/api/products?featured=1&per_page=6",
         );
 
-        const featuredProducts =
-          response.data.data?.data || [];
+        const featuredProducts = response.data.data?.data || [];
 
         setProducts(featuredProducts);
       } catch (error) {
-        console.error(
-          "Failed to load hero products:",
-          error
-        );
+        console.error("Failed to load hero products:", error);
       } finally {
         setLoading(false);
       }
@@ -48,9 +44,7 @@ function HeroSection() {
 
     const interval = setInterval(() => {
       setCurrentIndex((current) =>
-        current === products.length - 1
-          ? 0
-          : current + 1
+        current === products.length - 1 ? 0 : current + 1,
       );
     }, 5000);
 
@@ -61,9 +55,7 @@ function HeroSection() {
     if (products.length === 0) return;
 
     setCurrentIndex((current) =>
-      current === products.length - 1
-        ? 0
-        : current + 1
+      current === products.length - 1 ? 0 : current + 1,
     );
   };
 
@@ -71,49 +63,34 @@ function HeroSection() {
     if (products.length === 0) return;
 
     setCurrentIndex((current) =>
-      current === 0
-        ? products.length - 1
-        : current - 1
+      current === 0 ? products.length - 1 : current - 1,
     );
   };
 
-  const currentProduct =
-    products[currentIndex] || null;
+  const currentProduct = products[currentIndex] || null;
 
   const primaryImage =
-    currentProduct?.images?.find(
-      (image) => image.is_primary
-    ) ||
+    currentProduct?.images?.find((image) => image.is_primary) ||
     currentProduct?.images?.[0];
 
   const imageUrl = primaryImage?.image
-    ? `http://127.0.0.1:8000/storage/${primaryImage.image}`
+    ? `https://ecommerce-platform-4vwn.onrender.com/storage/${primaryImage.image}`
     : null;
 
-  const originalPrice = Number(
-    currentProduct?.price || 0
-  );
+  const originalPrice = Number(currentProduct?.price || 0);
 
   const salePrice = currentProduct?.sale_price
     ? Number(currentProduct.sale_price)
     : null;
 
   const hasSale =
-    salePrice !== null &&
-    salePrice > 0 &&
-    salePrice < originalPrice;
+    salePrice !== null && salePrice > 0 && salePrice < originalPrice;
 
-  const finalPrice = hasSale
-    ? salePrice
-    : originalPrice;
+  const finalPrice = hasSale ? salePrice : originalPrice;
 
   const discountPercentage =
     hasSale && originalPrice > 0
-      ? Math.round(
-          ((originalPrice - salePrice) /
-            originalPrice) *
-            100
-        )
+      ? Math.round(((originalPrice - salePrice) / originalPrice) * 100)
       : 0;
 
   return (
@@ -125,37 +102,26 @@ function HeroSection() {
         <div className="nova-hero-content">
           <div className="nova-hero-badge">
             <Zap size={15} />
-            <span>
-              NEW SEASON • NEW ENERGY
-            </span>
+            <span>NEW SEASON • NEW ENERGY</span>
           </div>
 
           <h1>
-            Discover products that{" "}
-            <span>match your lifestyle.</span>
+            Discover products that <span>match your lifestyle.</span>
           </h1>
 
           <p className="nova-hero-description">
-            Explore trending technology,
-            fashion, beauty, home essentials
-            and more in one modern shopping
-            experience.
+            Explore trending technology, fashion, beauty, home essentials and
+            more in one modern shopping experience.
           </p>
 
           <div className="nova-hero-actions">
-            <Link
-              to="/products"
-              className="nova-hero-primary"
-            >
+            <Link to="/products" className="nova-hero-primary">
               <ShoppingBag size={18} />
               Shop Now
               <ArrowRight size={18} />
             </Link>
 
-            <Link
-              to="/sale"
-              className="nova-hero-secondary"
-            >
+            <Link to="/sale" className="nova-hero-secondary">
               Explore Deals
             </Link>
           </div>
@@ -167,12 +133,8 @@ function HeroSection() {
               </span>
 
               <div>
-                <strong>
-                  Free Shipping
-                </strong>
-                <small>
-                  Orders over $100
-                </small>
+                <strong>Free Shipping</strong>
+                <small>Orders over $100</small>
               </div>
             </div>
 
@@ -182,12 +144,8 @@ function HeroSection() {
               </span>
 
               <div>
-                <strong>
-                  Secure Shopping
-                </strong>
-                <small>
-                  Protected checkout
-                </small>
+                <strong>Secure Shopping</strong>
+                <small>Protected checkout</small>
               </div>
             </div>
           </div>
@@ -200,30 +158,20 @@ function HeroSection() {
           {loading ? (
             <div className="nova-hero-loading">
               <span />
-              <p>
-                Loading featured products...
-              </p>
+              <p>Loading featured products...</p>
             </div>
           ) : currentProduct ? (
             <>
-              <article
-                key={currentProduct.id}
-                className="nova-slider-card"
-              >
+              <article key={currentProduct.id} className="nova-slider-card">
                 <Link
                   to={`/products/${currentProduct.slug}`}
                   className="nova-slider-image"
                 >
                   {imageUrl ? (
-                    <img
-                      src={imageUrl}
-                      alt={currentProduct.name}
-                    />
+                    <img src={imageUrl} alt={currentProduct.name} />
                   ) : (
                     <div className="nova-slider-placeholder">
-                      {currentProduct.name?.charAt(
-                        0
-                      ) || "N"}
+                      {currentProduct.name?.charAt(0) || "N"}
                     </div>
                   )}
                 </Link>
@@ -231,16 +179,11 @@ function HeroSection() {
                 <div className="nova-slider-product-info">
                   <div className="nova-slider-meta">
                     <span>
-                      {currentProduct.category
-                        ?.name ||
-                        "Nova Collection"}
+                      {currentProduct.category?.name || "Nova Collection"}
                     </span>
 
-                    {currentProduct.stock >
-                      0 && (
-                      <span className="nova-slider-stock">
-                        In Stock
-                      </span>
+                    {currentProduct.stock > 0 && (
+                      <span className="nova-slider-stock">In Stock</span>
                     )}
                   </div>
 
@@ -252,27 +195,16 @@ function HeroSection() {
                   </Link>
 
                   <div className="nova-slider-price">
-                    <strong>
-                      ${finalPrice.toFixed(2)}
-                    </strong>
+                    <strong>${finalPrice.toFixed(2)}</strong>
 
-                    {hasSale && (
-                      <span>
-                        $
-                        {originalPrice.toFixed(
-                          2
-                        )}
-                      </span>
-                    )}
+                    {hasSale && <span>${originalPrice.toFixed(2)}</span>}
                   </div>
                 </div>
 
                 {hasSale && (
                   <div className="nova-slider-discount">
                     <small>Save</small>
-                    <strong>
-                      {discountPercentage}%
-                    </strong>
+                    <strong>{discountPercentage}%</strong>
                   </div>
                 )}
               </article>
@@ -298,26 +230,15 @@ function HeroSection() {
                   </button>
 
                   <div className="nova-slider-dots">
-                    {products.map(
-                      (product, index) => (
-                        <button
-                          key={product.id}
-                          type="button"
-                          aria-label={`Show ${product.name}`}
-                          className={
-                            index ===
-                            currentIndex
-                              ? "active"
-                              : ""
-                          }
-                          onClick={() =>
-                            setCurrentIndex(
-                              index
-                            )
-                          }
-                        />
-                      )
-                    )}
+                    {products.map((product, index) => (
+                      <button
+                        key={product.id}
+                        type="button"
+                        aria-label={`Show ${product.name}`}
+                        className={index === currentIndex ? "active" : ""}
+                        onClick={() => setCurrentIndex(index)}
+                      />
+                    ))}
                   </div>
                 </>
               )}
@@ -326,13 +247,9 @@ function HeroSection() {
             <div className="nova-hero-empty">
               <Zap size={30} />
 
-              <strong>
-                Featured products coming soon
-              </strong>
+              <strong>Featured products coming soon</strong>
 
-              <Link to="/products">
-                Explore the store
-              </Link>
+              <Link to="/products">Explore the store</Link>
             </div>
           )}
         </div>
