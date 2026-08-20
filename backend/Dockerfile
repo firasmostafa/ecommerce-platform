@@ -1,4 +1,4 @@
-FROM php:8.2-apache
+FROM php:8.3-apache
 
 RUN apt-get update && apt-get install -y \
     git \
@@ -42,4 +42,4 @@ Require all granted\n\
 </Directory>\n' \
     >> /etc/apache2/apache2.conf
 
-CMD ["sh", "-c", "php artisan migrate --force && apache2-foreground"]
+CMD ["apache2-foreground"]
