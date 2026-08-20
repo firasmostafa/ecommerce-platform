@@ -1,0 +1,439 @@
+/* ========================================
+   ADMIN HEADER
+======================================== */
+
+.admin-header {
+  position: sticky;
+  top: 0;
+
+  z-index: 1000;
+
+  width: 100%;
+
+  border-bottom: 1px solid #e8e3ef;
+
+  background: rgba(255, 255, 255, 0.97);
+
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.admin-header-container {
+  width: min(1180px, calc(100% - 28px));
+  min-height: 56px;
+
+  margin: 0 auto;
+
+  display: flex;
+  align-items: center;
+
+  gap: 18px;
+}
+
+/* ========================================
+   BRAND
+======================================== */
+
+.admin-brand {
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 7px;
+
+  color: #211a2e;
+
+  text-decoration: none;
+}
+
+.admin-brand-icon {
+  width: 31px;
+  height: 31px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 9px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #6744f4,
+      #a640e6
+    );
+
+  color: #ffffff;
+
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.admin-brand-content {
+  display: flex;
+  flex-direction: column;
+
+  line-height: 1;
+}
+
+.admin-brand-content strong {
+  font-size: 11px;
+  font-weight: 900;
+
+  letter-spacing: 0.05em;
+}
+
+.admin-brand-content small {
+  margin-top: 3px;
+
+  color: #97909e;
+
+  font-size: 5px;
+  font-weight: 900;
+
+  letter-spacing: 0.17em;
+}
+
+/* ========================================
+   DESKTOP NAV
+======================================== */
+
+.admin-desktop-navigation {
+  flex: 1;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 3px;
+}
+
+.admin-desktop-navigation a {
+  min-height: 33px;
+
+  padding: 0 8px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 5px;
+
+  border-radius: 8px;
+
+  color: #665e6e;
+
+  font-size: 7px;
+  font-weight: 800;
+
+  text-decoration: none;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.admin-desktop-navigation a:hover {
+  background: #f6f3ff;
+
+  color: #6844f4;
+}
+
+.admin-desktop-navigation a.active {
+  background: #efebff;
+
+  color: #6844f4;
+}
+
+/* ========================================
+   ACTIONS
+======================================== */
+
+.admin-header-actions {
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 5px;
+}
+
+.admin-header-user {
+  min-height: 34px;
+
+  padding: 0 8px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 6px;
+
+  border: 1px solid #ebe7f0;
+  border-radius: 8px;
+
+  background: #faf9fc;
+}
+
+.admin-header-user-icon {
+  width: 24px;
+  height: 24px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 7px;
+
+  background: #efebff;
+
+  color: #6844f4;
+}
+
+.admin-header-user > div {
+  display: flex;
+  flex-direction: column;
+
+  line-height: 1.1;
+}
+
+.admin-header-user small {
+  color: #9b94a1;
+
+  font-size: 5px;
+}
+
+.admin-header-user strong {
+  margin-top: 2px;
+
+  max-width: 90px;
+
+  overflow: hidden;
+
+  color: #3c3445;
+
+  font-size: 7px;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ========================================
+   LOGOUT
+======================================== */
+
+.admin-header-logout {
+  min-height: 34px;
+
+  padding: 0 8px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 5px;
+
+  border: 1px solid #efdbe4;
+  border-radius: 8px;
+
+  background: #fff7fa;
+
+  color: #cf416f;
+
+  font-family: inherit;
+  font-size: 7px;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.admin-header-logout:hover {
+  background: #fff0f5;
+
+  transform: translateY(-1px);
+}
+
+/* ========================================
+   MOBILE BUTTON
+======================================== */
+
+.admin-header-menu-button {
+  display: none;
+
+  width: 32px;
+  height: 32px;
+
+  place-items: center;
+
+  border: 0;
+  border-radius: 8px;
+
+  background: #efebff;
+
+  color: #6844f4;
+
+  cursor: pointer;
+}
+
+/* ========================================
+   MOBILE NAVIGATION
+======================================== */
+
+.admin-mobile-navigation {
+  display: none;
+}
+
+/* ========================================
+   TABLET
+======================================== */
+
+@media (max-width: 950px) {
+  .admin-desktop-navigation {
+    gap: 1px;
+  }
+
+  .admin-desktop-navigation a {
+    padding: 0 6px;
+
+    font-size: 6px;
+  }
+
+  .admin-header-user {
+    display: none;
+  }
+}
+
+/* ========================================
+   MOBILE
+======================================== */
+
+@media (max-width: 760px) {
+  .admin-header-container {
+    width: calc(100% - 14px);
+    min-height: 50px;
+
+    gap: 6px;
+  }
+
+  .admin-brand-icon {
+    width: 29px;
+    height: 29px;
+
+    font-size: 13px;
+  }
+
+  .admin-brand-content strong {
+    font-size: 10px;
+  }
+
+  .admin-brand-content small {
+    font-size: 4.5px;
+  }
+
+  .admin-desktop-navigation,
+  .admin-header-user,
+  .admin-header-logout {
+    display: none;
+  }
+
+  .admin-header-actions {
+    margin-left: auto;
+  }
+
+  .admin-header-menu-button {
+    display: grid;
+  }
+
+  /* MOBILE MENU */
+
+  .admin-mobile-navigation {
+    position: fixed;
+
+    top: 50px;
+    right: 7px;
+
+    z-index: 999;
+
+    width: min(220px, calc(100% - 14px));
+
+    padding: 7px;
+
+    display: block;
+
+    border: 1px solid #e8e3ef;
+    border-radius: 10px;
+
+    background: #ffffff;
+
+    box-shadow:
+      0 12px 35px rgba(48, 34, 73, 0.12);
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    transform: translateY(-6px);
+
+    transition:
+      opacity 0.2s ease,
+      visibility 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  .admin-mobile-navigation-open {
+    opacity: 1;
+    visibility: visible;
+
+    transform: translateY(0);
+  }
+
+  .admin-mobile-navigation nav {
+    display: flex;
+    flex-direction: column;
+
+    gap: 2px;
+  }
+
+  .admin-mobile-navigation a,
+  .admin-mobile-navigation button {
+    min-height: 33px;
+
+    padding: 0 8px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 6px;
+
+    border: 0;
+    border-radius: 7px;
+
+    background: transparent;
+
+    color: #5c5565;
+
+    font-family: inherit;
+    font-size: 7px;
+    font-weight: 800;
+
+    text-align: left;
+    text-decoration: none;
+
+    cursor: pointer;
+  }
+
+  .admin-mobile-navigation a.active {
+    background: #efebff;
+
+    color: #6844f4;
+  }
+
+  .admin-mobile-navigation button {
+    margin-top: 2px;
+
+    color: #cf416f;
+  }
+}

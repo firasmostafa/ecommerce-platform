@@ -1,0 +1,15 @@
+.admin-layout {
+  min-height: 100vh;
+
+  background: #faf9fd;
+}
+
+.admin-layout-content {
+  min-height: calc(100vh - 58px);
+}
+
+@media (max-width: 850px) {
+  .admin-layout-content {
+    min-height: calc(100vh - 52px);
+  }
+}

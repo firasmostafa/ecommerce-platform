@@ -1,0 +1,314 @@
+/* ========================================
+   ABOUT PAGE
+======================================== */
+
+.about-page {
+  min-height: 100vh;
+
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(112, 71, 247, 0.07),
+      transparent 30%
+    ),
+    #faf9fd;
+}
+
+/* ========================================
+   CONTAINER
+======================================== */
+
+.about-container {
+  width: min(1000px, calc(100% - 36px));
+
+  margin: 0 auto;
+}
+
+/* ========================================
+   HERO
+======================================== */
+
+.about-hero {
+  padding: 48px 0 34px;
+
+  text-align: center;
+}
+
+.about-hero span {
+  display: block;
+
+  color: #7047f7;
+
+  font-size: 9px;
+  font-weight: 900;
+
+  letter-spacing: 0.16em;
+
+  text-transform: uppercase;
+}
+
+.about-hero h1 {
+  max-width: 680px;
+
+  margin: 8px auto 0;
+
+  color: #1d172d;
+
+  font-size: clamp(
+    34px,
+    5vw,
+    52px
+  );
+
+  font-weight: 900;
+
+  line-height: 1.04;
+
+  letter-spacing: -0.045em;
+}
+
+.about-hero p {
+  max-width: 600px;
+
+  margin: 13px auto 0;
+
+  color: #7e788a;
+
+  font-size: 13px;
+
+  line-height: 1.65;
+}
+
+/* ========================================
+   VALUES SECTION
+======================================== */
+
+.about-values {
+  padding: 0 0 65px;
+}
+
+/* ========================================
+   VALUES GRID
+======================================== */
+
+.about-values-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+
+  gap: 12px;
+}
+
+/* ========================================
+   VALUE CARD
+======================================== */
+
+.about-values article {
+  min-height: 165px;
+
+  padding: 18px 16px;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #ebe7f2;
+  border-radius: 15px;
+
+  background: #ffffff;
+
+  text-align: center;
+
+  box-shadow:
+    0 7px 22px rgba(49, 35, 83, 0.05);
+
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.about-values article:hover {
+  transform: translateY(-3px);
+
+  border-color: #d8cff6;
+
+  box-shadow:
+    0 11px 28px rgba(67, 45, 112, 0.09);
+}
+
+/* ========================================
+   ICON
+======================================== */
+
+.about-values svg {
+  width: 22px;
+  height: 22px;
+
+  color: #7047f7;
+}
+
+/* ========================================
+   CARD TITLE
+======================================== */
+
+.about-values h3 {
+  margin: 11px 0 5px;
+
+  color: #2a2339;
+
+  font-size: 12px;
+  font-weight: 900;
+}
+
+/* ========================================
+   CARD TEXT
+======================================== */
+
+.about-values p {
+  margin: 0;
+
+  color: #8b8496;
+
+  font-size: 9px;
+
+  line-height: 1.55;
+}
+
+/* ========================================
+   TABLET
+======================================== */
+
+@media (max-width: 900px) {
+  .about-container {
+    width: calc(100% - 28px);
+  }
+
+  .about-hero {
+    padding: 40px 0 28px;
+  }
+
+  .about-values-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    gap: 11px;
+  }
+
+  .about-values article {
+    min-height: 145px;
+  }
+}
+
+/* ========================================
+   MOBILE
+======================================== */
+
+@media (max-width: 600px) {
+  .about-container {
+    width: calc(100% - 18px);
+  }
+
+  /* HERO */
+
+  .about-hero {
+    padding: 28px 0 20px;
+  }
+
+  .about-hero span {
+    font-size: 7px;
+  }
+
+  .about-hero h1 {
+    max-width: 100%;
+
+    margin-top: 6px;
+
+    font-size: 29px;
+
+    line-height: 1.07;
+  }
+
+  .about-hero p {
+    max-width: 440px;
+
+    margin-top: 8px;
+
+    font-size: 10px;
+
+    line-height: 1.55;
+  }
+
+  /* VALUES */
+
+  .about-values {
+    padding-bottom: 42px;
+  }
+
+  .about-values-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    gap: 8px;
+  }
+
+  .about-values article {
+    min-height: 125px;
+
+    padding: 12px 9px;
+
+    border-radius: 11px;
+  }
+
+  .about-values svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .about-values h3 {
+    margin: 7px 0 3px;
+
+    font-size: 10px;
+  }
+
+  .about-values p {
+    font-size: 8px;
+
+    line-height: 1.45;
+  }
+}
+
+/* ========================================
+   VERY SMALL MOBILE
+======================================== */
+
+@media (max-width: 380px) {
+  .about-container {
+    width: calc(100% - 14px);
+  }
+
+  .about-hero {
+    padding: 24px 0 17px;
+  }
+
+  .about-hero h1 {
+    font-size: 26px;
+  }
+
+  .about-hero p {
+    font-size: 9px;
+  }
+
+  .about-values-grid {
+    gap: 7px;
+  }
+
+  .about-values article {
+    min-height: 118px;
+
+    padding: 10px 7px;
+  }
+}

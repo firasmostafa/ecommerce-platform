@@ -1,0 +1,247 @@
+.sale-page {
+  min-height: 100vh;
+}
+
+/* ========================================
+   HERO
+======================================== */
+
+.sale-hero {
+  padding: 46px 0 38px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #5d36ef 0%,
+      #963df4 48%,
+      #e43cb8 100%
+    );
+
+  color: #ffffff;
+}
+
+.sale-container {
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
+}
+
+.sale-hero span {
+  display: block;
+
+  font-size: 9px;
+  font-weight: 900;
+
+  letter-spacing: 0.16em;
+}
+
+.sale-hero h1 {
+  max-width: 650px;
+
+  margin: 8px 0 0;
+
+  font-size: clamp(34px, 4.5vw, 54px);
+  font-weight: 900;
+
+  line-height: 0.98;
+
+  letter-spacing: -0.045em;
+}
+
+.sale-hero p {
+  max-width: 540px;
+
+  margin: 13px 0 0;
+
+  color: rgba(255, 255, 255, 0.84);
+
+  font-size: 14px;
+
+  line-height: 1.6;
+}
+
+/* ========================================
+   CONTENT
+======================================== */
+
+.sale-content {
+  padding: 42px 0 75px;
+
+  background: #ffffff;
+}
+
+/* ========================================
+   PRODUCTS GRID
+======================================== */
+
+.sale-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+
+  gap: 18px;
+}
+
+/* ========================================
+   STATE
+======================================== */
+
+.sale-state {
+  min-height: 220px;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+}
+
+.sale-spinner {
+  width: 34px;
+  height: 34px;
+
+  border: 3px solid #f2dff3;
+  border-top-color: #d63dbf;
+
+  border-radius: 50%;
+
+  animation:
+    sale-spin 0.8s linear infinite;
+}
+
+@keyframes sale-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ========================================
+   LARGE TABLET
+======================================== */
+
+@media (max-width: 1050px) {
+  .sale-grid {
+    grid-template-columns:
+      repeat(3, minmax(0, 1fr));
+
+    gap: 16px;
+  }
+}
+
+/* ========================================
+   TABLET
+======================================== */
+
+@media (max-width: 820px) {
+  .sale-hero {
+    padding: 38px 0 32px;
+  }
+
+  .sale-hero h1 {
+    max-width: 560px;
+
+    font-size: clamp(
+      31px,
+      6vw,
+      46px
+    );
+  }
+
+  .sale-hero p {
+    max-width: 500px;
+
+    margin-top: 11px;
+
+    font-size: 13px;
+  }
+
+  .sale-content {
+    padding: 34px 0 60px;
+  }
+
+  .sale-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    gap: 15px;
+  }
+}
+
+/* ========================================
+   MOBILE
+======================================== */
+
+@media (max-width: 650px) {
+  .sale-container {
+    width: calc(100% - 22px);
+  }
+
+  .sale-hero {
+    padding: 28px 0 25px;
+  }
+
+  .sale-hero span {
+    font-size: 7px;
+  }
+
+  .sale-hero h1 {
+    max-width: 100%;
+
+    margin-top: 6px;
+
+    font-size: 31px;
+
+    line-height: 1.02;
+  }
+
+  .sale-hero p {
+    max-width: 100%;
+
+    margin-top: 9px;
+
+    font-size: 11px;
+
+    line-height: 1.5;
+  }
+
+  .sale-content {
+    padding: 24px 0 45px;
+  }
+
+  .sale-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    gap: 10px;
+  }
+}
+
+/* ========================================
+   VERY SMALL MOBILE
+======================================== */
+
+@media (max-width: 390px) {
+  .sale-container {
+    width: calc(100% - 16px);
+  }
+
+  .sale-hero {
+    padding: 24px 0 21px;
+  }
+
+  .sale-hero h1 {
+    font-size: 27px;
+  }
+
+  .sale-hero p {
+    font-size: 10px;
+  }
+
+  .sale-content {
+    padding: 20px 0 38px;
+  }
+
+  .sale-grid {
+    gap: 8px;
+  }
+}

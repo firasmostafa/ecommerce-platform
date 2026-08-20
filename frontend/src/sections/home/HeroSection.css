@@ -1,0 +1,633 @@
+.nova-hero {
+  position: relative;
+  min-height: 455px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  isolation: isolate;
+  background:
+    radial-gradient(
+      circle at 12% 20%,
+      rgba(106, 69, 245, 0.14),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 90% 30%,
+      rgba(230, 58, 190, 0.12),
+      transparent 28%
+    ),
+    #f9f8ff;
+}
+
+.nova-hero-container {
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 34px 0 38px;
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1.05fr)
+    minmax(320px, 0.85fr);
+  align-items: center;
+  gap: 32px;
+}
+
+.nova-hero-content {
+  position: relative;
+  z-index: 5;
+}
+
+.nova-hero-badge {
+  width: fit-content;
+  margin-bottom: 10px;
+  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid rgba(108, 69, 245, 0.13);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.82);
+  color: #6945f5;
+  box-shadow: 0 10px 30px rgba(60, 40, 100, 0.07);
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+}
+
+.nova-hero-content h1 {
+  max-width: 680px;
+  margin: 0;
+  color: #18122a;
+  font-size: clamp(34px, 4.1vw, 52px);
+  font-weight: 900;
+  line-height: 0.99;
+  letter-spacing: -0.05em;
+}
+
+.nova-hero-content h1 span {
+  background: linear-gradient(
+    90deg,
+    #6542ef,
+    #9740f6 50%,
+    #df3cbb
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.nova-hero-description {
+  max-width: 600px;
+  margin: 12px 0 0;
+  color: #746e80;
+  font-size: 8px;
+  line-height: 1.55;
+}
+
+.nova-hero-actions {
+  margin-top: 13px;
+  display: flex;
+  gap: 13px;
+  flex-wrap: wrap;
+}
+
+.nova-hero-primary,
+.nova-hero-secondary {
+  min-height: 40px;
+  padding: 0 15px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-size: 8px;
+  font-weight: 800;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.nova-hero-primary {
+  background: linear-gradient(
+    135deg,
+    #6743f4,
+    #9340f6 55%,
+    #d93bc0
+  );
+  color: #ffffff;
+  box-shadow: 0 16px 35px rgba(105, 69, 245, 0.28);
+}
+
+.nova-hero-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 22px 45px rgba(105, 69, 245, 0.35);
+}
+
+.nova-hero-secondary {
+  border: 1px solid #e3dfeb;
+  background: rgba(255, 255, 255, 0.78);
+  color: #352e44;
+}
+
+.nova-hero-secondary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 13px 30px rgba(50, 36, 80, 0.08);
+}
+
+.nova-hero-benefits {
+  margin-top: 16px;
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.nova-hero-benefit {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nova-hero-benefit > span {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border-radius: 9px;
+  background: #ffffff;
+  color: #7047f7;
+  box-shadow: 0 9px 25px rgba(48, 34, 76, 0.08);
+}
+
+.nova-hero-benefit div {
+  display: flex;
+  flex-direction: column;
+}
+
+.nova-hero-benefit strong {
+  color: #292238;
+  font-size: 8px;
+}
+
+.nova-hero-benefit small {
+  margin-top: 3px;
+  color: #9992a4;
+  font-size: 8px;
+}
+
+/* Slider */
+
+.nova-hero-slider {
+  position: relative;
+  min-height: 335px;
+  display: grid;
+  place-items: center;
+}
+
+.nova-slider-card {
+  position: relative;
+  z-index: 3;
+  width: min(285px, 100%);
+  padding: 11px;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 19px;
+  background: rgba(255, 255, 255, 0.76);
+  box-shadow: 0 35px 80px rgba(64, 41, 105, 0.18);
+  backdrop-filter: blur(18px);
+  animation:
+    nova-product-enter 0.55s ease,
+    nova-product-float 5s ease-in-out 0.55s infinite;
+}
+
+.nova-slider-image {
+  height: 215px;
+  display: block;
+  overflow: hidden;
+  border-radius: 14px;
+  background: #eeeaf7;
+}
+
+.nova-slider-image img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  transition: transform 0.45s ease;
+}
+
+.nova-slider-image:hover img {
+  transform: scale(1.05);
+}
+
+.nova-slider-placeholder {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(
+    135deg,
+    #eee9ff,
+    #f8e7fa
+  );
+  color: #7047f7;
+  font-size: 52px;
+  font-weight: 900;
+}
+
+.nova-slider-product-info {
+  padding: 9px 3px 3px;
+}
+
+.nova-slider-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.nova-slider-meta > span:first-child {
+  overflow: hidden;
+  color: #918a9d;
+  font-size: 8px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nova-slider-stock {
+  padding: 4px 6px;
+  border-radius: 999px;
+  background: #e9faf3;
+  color: #159d6b !important;
+  font-size: 8px !important;
+  font-weight: 900 !important;
+}
+
+.nova-slider-title {
+  margin-top: 7px;
+  display: block;
+  overflow: hidden;
+  color: #211a33;
+  font-size: 9px;
+  font-weight: 850;
+  line-height: 1.3;
+  text-decoration: none;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nova-slider-title:hover {
+  color: #6945f5;
+}
+
+.nova-slider-price {
+  margin-top: 6px;
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+}
+
+.nova-slider-price strong {
+  color: #6844f4;
+  font-size: 15px;
+}
+
+.nova-slider-price span {
+  color: #aaa3b2;
+  font-size: 8px;
+  text-decoration: line-through;
+}
+
+.nova-slider-discount {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  padding: 6px 8px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 9px;
+  background: linear-gradient(
+    135deg,
+    #f13f8c,
+    #d93abe
+  );
+  color: #ffffff;
+  box-shadow: 0 12px 30px rgba(222, 59, 180, 0.28);
+}
+
+.nova-slider-discount small {
+  font-size: 8px;
+  font-weight: 700;
+}
+
+.nova-slider-discount strong {
+  font-size: 8px;
+}
+
+.nova-slider-arrow {
+  position: absolute;
+  top: 50%;
+  z-index: 7;
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(227, 222, 237, 0.9);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #453c56;
+  box-shadow: 0 12px 28px rgba(48, 33, 77, 0.12);
+  transform: translateY(-50%);
+  transition:
+    transform 0.2s ease,
+    color 0.2s ease,
+    background 0.2s ease;
+}
+
+.nova-slider-arrow:hover {
+  background: #7047f7;
+  color: #ffffff;
+}
+
+.nova-slider-arrow-left {
+  left: -10px;
+}
+
+.nova-slider-arrow-right {
+  right: -10px;
+}
+
+.nova-slider-dots {
+  position: absolute;
+  bottom: -6px;
+  z-index: 8;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.nova-slider-dots button {
+  width: 7px;
+  height: 7px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: #cbc5d6;
+  transition:
+    width 0.25s ease,
+    background 0.25s ease;
+}
+
+.nova-slider-dots button.active {
+  width: 20px;
+  background: #7047f7;
+}
+
+/* Loading */
+
+.nova-hero-loading,
+.nova-hero-empty {
+  position: relative;
+  z-index: 3;
+  width: min(285px, 100%);
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #e9e4f1;
+  border-radius: 19px;
+  background: rgba(255, 255, 255, 0.8);
+  color: #7d7689;
+  text-align: center;
+  box-shadow: 0 25px 65px rgba(52, 36, 84, 0.11);
+}
+
+.nova-hero-loading > span {
+  width: 28px;
+  height: 28px;
+  border: 3px solid #e8e2fa;
+  border-top-color: #7047f7;
+  border-radius: 50%;
+  animation: nova-loader 0.8s linear infinite;
+}
+
+.nova-hero-loading p {
+  margin: 14px 0 0;
+  font-size: 8px;
+}
+
+.nova-hero-empty {
+  gap: 13px;
+}
+
+.nova-hero-empty svg {
+  color: #7047f7;
+}
+
+.nova-hero-empty strong {
+  color: #30283f;
+}
+
+.nova-hero-empty a {
+  color: #7047f7;
+  font-size: 8px;
+  font-weight: 800;
+}
+
+/* Decoration */
+
+.nova-slider-orbit {
+  position: absolute;
+  border: 1px solid rgba(108, 69, 245, 0.11);
+  border-radius: 50%;
+}
+
+.nova-slider-orbit-one {
+  width: 470px;
+  height: 470px;
+  animation: nova-orbit 20s linear infinite;
+}
+
+.nova-slider-orbit-two {
+  width: 540px;
+  height: 540px;
+  border-style: dashed;
+  animation: nova-orbit 28s linear infinite reverse;
+}
+
+.nova-hero-glow {
+  position: absolute;
+  z-index: -1;
+  border-radius: 50%;
+  filter: blur(25px);
+}
+
+.nova-hero-glow-left {
+  top: 15%;
+  left: -150px;
+  width: 260px;
+  height: 260px;
+  background: rgba(105, 68, 245, 0.13);
+}
+
+.nova-hero-glow-right {
+  right: -160px;
+  bottom: 5%;
+  width: 290px;
+  height: 290px;
+  background: rgba(226, 58, 190, 0.12);
+}
+
+/* Animations */
+
+@keyframes nova-product-enter {
+  from {
+    opacity: 0;
+    transform: translateX(25px) scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes nova-product-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes nova-orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes nova-loader {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Tablet */
+
+@media (max-width: 980px) {
+  .nova-hero-container {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .nova-hero-content {
+    max-width: 760px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .nova-hero-badge {
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .nova-hero-description {
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .nova-hero-actions,
+  .nova-hero-benefits {
+    justify-content: center;
+  }
+
+  .nova-hero-slider {
+    width: min(440px, 100%);
+    margin: 0 auto;
+  }
+}
+
+/* Mobile */
+
+@media (max-width: 650px) {
+  .nova-hero-container {
+    width: calc(100% - 28px);
+    padding: 18px 0 24px;
+  }
+
+  .nova-hero-content h1 {
+    font-size: clamp(26px, 8vw, 36px);
+  }
+
+  .nova-hero-description {
+    font-size: 9px;
+  }
+
+  .nova-hero-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .nova-hero-primary,
+  .nova-hero-secondary {
+    width: 100%;
+  }
+
+  .nova-hero-benefits {
+    gap: 10px;
+  }
+
+  .nova-hero-benefit {
+    flex: 1 1 110px;
+    justify-content: center;
+  }
+
+  .nova-hero-slider {
+    min-height: 245px;
+  }
+
+  .nova-slider-card {
+    width: min(240px, calc(100% - 18px));
+    padding: 8px;
+    border-radius: 15px;
+  }
+
+  .nova-slider-image {
+    height: 150px;
+    border-radius: 12px;
+  }
+
+  .nova-slider-arrow {
+    width: 30px;
+    height: 30px;
+  }
+
+  .nova-slider-arrow-left {
+    left: 0;
+  }
+
+  .nova-slider-arrow-right {
+    right: 0;
+  }
+
+  .nova-slider-orbit-one {
+    width: 260px;
+    height: 260px;
+  }
+
+  .nova-slider-orbit-two {
+    width: 290px;
+    height: 290px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nova-slider-card,
+  .nova-slider-orbit,
+  .nova-hero-loading > span {
+    animation: none;
+  }
+}

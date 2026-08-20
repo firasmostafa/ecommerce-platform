@@ -1,0 +1,438 @@
+/* ========================================
+   AUTH PAGE
+======================================== */
+
+.auth-page {
+  position: relative;
+
+  min-height: calc(100vh - 90px);
+
+  padding: 38px 16px;
+
+  display: grid;
+  place-items: center;
+
+  overflow: hidden;
+
+  background:
+    radial-gradient(
+      circle at 14% 15%,
+      rgba(112, 71, 247, 0.11),
+      transparent 26%
+    ),
+    radial-gradient(
+      circle at 88% 20%,
+      rgba(220, 58, 192, 0.09),
+      transparent 25%
+    ),
+    linear-gradient(
+      180deg,
+      #faf9ff 0%,
+      #f6f4fb 100%
+    );
+}
+
+/* ========================================
+   DECORATION
+======================================== */
+
+.auth-decoration {
+  position: absolute;
+
+  width: 250px;
+  height: 250px;
+
+  border-radius: 50%;
+
+  filter: blur(15px);
+
+  pointer-events: none;
+}
+
+.auth-decoration-left {
+  top: 8%;
+  left: -150px;
+
+  background:
+    rgba(112, 71, 247, 0.08);
+}
+
+.auth-decoration-right {
+  right: -150px;
+  bottom: 8%;
+
+  background:
+    rgba(219, 59, 192, 0.07);
+}
+
+/* ========================================
+   CARD
+======================================== */
+
+.auth-card {
+  position: relative;
+  z-index: 2;
+
+  width: min(400px, 100%);
+
+  padding: 25px 27px 22px;
+
+  border:
+    1px solid rgba(230, 225, 237, 0.95);
+
+  border-radius: 20px;
+
+  background:
+    rgba(255, 255, 255, 0.94);
+
+  box-shadow:
+    0 18px 45px rgba(48, 33, 77, 0.08);
+
+  backdrop-filter: blur(12px);
+}
+
+.auth-card-register {
+  width: min(420px, 100%);
+}
+
+/* ========================================
+   HEADER
+======================================== */
+
+.auth-header {
+  text-align: center;
+}
+
+.auth-icon {
+  width: 42px;
+  height: 42px;
+
+  margin: 0 auto 11px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 12px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #eee9ff,
+      #fbe8f8
+    );
+
+  color: #7047f7;
+
+  box-shadow:
+    0 7px 18px rgba(112, 71, 247, 0.1);
+}
+
+.auth-eyebrow {
+  display: block;
+
+  color: #7047f7;
+
+  font-size: 7px;
+  font-weight: 900;
+
+  letter-spacing: 0.15em;
+}
+
+.auth-card h1 {
+  margin: 5px 0 0;
+
+  color: #241d31;
+
+  font-size: 29px;
+  font-weight: 900;
+
+  line-height: 1.05;
+
+  letter-spacing: -0.04em;
+}
+
+.auth-description {
+  max-width: 315px;
+
+  margin: 8px auto 0;
+
+  color: #888192;
+
+  font-size: 9px;
+
+  line-height: 1.55;
+}
+
+/* ========================================
+   FORM
+======================================== */
+
+.auth-form {
+  margin-top: 18px;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 11px;
+}
+
+.auth-form label {
+  display: block;
+}
+
+.auth-form label > span {
+  display: block;
+
+  margin-bottom: 5px;
+
+  color: #615a6b;
+
+  font-size: 8px;
+  font-weight: 800;
+}
+
+.auth-form input {
+  width: 100%;
+  height: 39px;
+
+  padding: 0 11px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #e5e0ec;
+  border-radius: 9px;
+
+  outline: none;
+
+  background: #fbfaff;
+
+  color: #2b2339;
+
+  font-family: inherit;
+  font-size: 9px;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.auth-form input::placeholder {
+  color: #aaa4b2;
+}
+
+.auth-form input:focus {
+  border-color: #9a7efa;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 0 0 3px rgba(112, 71, 247, 0.07);
+}
+
+/* ========================================
+   ERRORS
+======================================== */
+
+.auth-error {
+  padding: 9px 10px;
+
+  border: 1px solid #f1ccd9;
+  border-radius: 8px;
+
+  background: #fff3f7;
+
+  color: #c83969;
+
+  font-size: 8px;
+  font-weight: 700;
+
+  line-height: 1.45;
+}
+
+.auth-field-error {
+  display: block;
+
+  margin-top: 4px;
+
+  color: #d33f70;
+
+  font-size: 7px;
+  font-weight: 700;
+}
+
+/* ========================================
+   SUBMIT
+======================================== */
+
+.auth-submit {
+  min-height: 40px;
+
+  margin-top: 2px;
+
+  border: 0;
+  border-radius: 10px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #6743f4,
+      #9840f5 55%,
+      #d83bbf
+    );
+
+  color: #ffffff;
+
+  font-family: inherit;
+  font-size: 9px;
+  font-weight: 900;
+
+  box-shadow:
+    0 10px 22px rgba(105, 68, 245, 0.2);
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.auth-submit:hover:not(:disabled) {
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 13px 26px rgba(105, 68, 245, 0.25);
+}
+
+.auth-submit:disabled {
+  cursor: not-allowed;
+
+  opacity: 0.65;
+}
+
+/* ========================================
+   FOOTER
+======================================== */
+
+.auth-footer {
+  margin-top: 14px;
+
+  padding-top: 13px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 5px;
+
+  border-top:
+    1px solid #efebf2;
+
+  color: #928b9b;
+
+  font-size: 8px;
+}
+
+.auth-footer a {
+  color: #7047f7;
+
+  font-weight: 900;
+
+  text-decoration: none;
+}
+
+.auth-footer a:hover {
+  text-decoration: underline;
+}
+
+/* ========================================
+   MOBILE
+======================================== */
+
+@media (max-width: 520px) {
+  .auth-page {
+    min-height:
+      calc(100vh - 70px);
+
+    padding: 24px 10px;
+  }
+
+  .auth-card,
+  .auth-card-register {
+    width: min(350px, 100%);
+
+    padding: 20px 16px 18px;
+
+    border-radius: 16px;
+  }
+
+  .auth-icon {
+    width: 36px;
+    height: 36px;
+
+    margin-bottom: 9px;
+
+    border-radius: 10px;
+  }
+
+  .auth-icon svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .auth-card h1 {
+    font-size: 25px;
+  }
+
+  .auth-description {
+    max-width: 280px;
+
+    font-size: 8px;
+  }
+
+  .auth-form {
+    margin-top: 15px;
+
+    gap: 9px;
+  }
+
+  .auth-form input {
+    height: 37px;
+
+    font-size: 8px;
+  }
+
+  .auth-submit {
+    min-height: 38px;
+
+    font-size: 8px;
+  }
+
+  .auth-footer {
+    margin-top: 12px;
+
+    padding-top: 11px;
+
+    font-size: 7px;
+  }
+}
+
+/* ========================================
+   VERY SMALL MOBILE
+======================================== */
+
+@media (max-width: 360px) {
+  .auth-page {
+    padding: 18px 8px;
+  }
+
+  .auth-card,
+  .auth-card-register {
+    padding: 18px 13px 16px;
+  }
+
+  .auth-card h1 {
+    font-size: 23px;
+  }
+}

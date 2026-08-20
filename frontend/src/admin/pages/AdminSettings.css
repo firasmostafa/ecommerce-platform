@@ -1,0 +1,687 @@
+/* ========================================
+   ADMIN SETTINGS PAGE
+======================================== */
+
+.admin-settings-page {
+  min-height: calc(100vh - 60px);
+  padding: 18px 0 30px;
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(112, 71, 247, 0.06),
+      transparent 28%
+    ),
+    #faf9fd;
+}
+
+.admin-settings-container {
+  width: min(820px, calc(100% - 30px));
+  margin: 0 auto;
+}
+
+/* ========================================
+   PAGE HEADING
+======================================== */
+
+.admin-settings-heading {
+  max-width: 520px;
+  margin: 0 auto 16px;
+  text-align: center;
+}
+
+.admin-settings-heading > span {
+  display: block;
+  margin-bottom: 4px;
+  color: #7047f7;
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+}
+
+.admin-settings-heading h1 {
+  margin: 0;
+  color: #261f30;
+  font-size: 25px;
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+}
+
+.admin-settings-heading p {
+  margin: 5px auto 0;
+  color: #918a99;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+/* ========================================
+   MESSAGES
+======================================== */
+
+.admin-settings-message {
+  width: min(520px, 100%);
+  margin: 0 auto 10px;
+  padding: 9px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border-radius: 9px;
+  text-align: center;
+}
+
+.admin-settings-message strong {
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.admin-settings-success {
+  border: 1px solid #bce8d4;
+  background: #effcf6;
+  color: #178457;
+}
+
+.admin-settings-error {
+  border: 1px solid #f0d0db;
+  background: #fff3f6;
+  color: #c94068;
+  font-size: 9px;
+  font-weight: 800;
+}
+
+/* ========================================
+   SETTINGS CARD
+======================================== */
+
+.admin-settings-card {
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 16px;
+  border: 1px solid #e8e3ed;
+  border-radius: 13px;
+  background: #ffffff;
+  box-shadow:
+    0 5px 18px rgba(47, 34, 68, 0.04);
+}
+
+/* ========================================
+   CARD HEADING
+======================================== */
+
+.admin-settings-card-heading {
+  margin-bottom: 14px;
+  padding-bottom: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  border-bottom: 1px solid #f0edf3;
+  text-align: center;
+}
+
+.admin-settings-card-icon {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  border-radius: 9px;
+  background:
+    linear-gradient(
+      135deg,
+      #f0ebff,
+      #f8f5ff
+    );
+  color: #7047f7;
+}
+
+.admin-settings-card-heading h2 {
+  margin: 0;
+  color: #352d3f;
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.admin-settings-card-heading p {
+  margin: 2px 0 0;
+  color: #99919f;
+  font-size: 8px;
+  line-height: 1.4;
+}
+
+/* ========================================
+   SECTION LABEL
+======================================== */
+
+.admin-settings-section-label {
+  width: fit-content;
+  margin: 0 auto 10px;
+  padding: 5px 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  border-radius: 20px;
+  background: #f4f0ff;
+  color: #7047f7;
+  font-size: 8px;
+  font-weight: 900;
+}
+
+.admin-settings-section-divider {
+  width: min(650px, 100%);
+  height: 1px;
+  margin: 15px auto;
+  background: #f0edf3;
+}
+
+/* ========================================
+   FIELDS
+======================================== */
+
+.admin-settings-fields {
+  width: min(650px, 100%);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.admin-settings-field {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.admin-settings-field-full {
+  grid-column: 1 / -1;
+}
+
+.admin-settings-field > span {
+  color: #5c5365;
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.admin-settings-field input,
+.admin-settings-field select,
+.admin-settings-field textarea {
+  width: 100%;
+  border: 1px solid #e3dee8;
+  border-radius: 8px;
+  outline: none;
+  background: #fbfafc;
+  color: #413849;
+  font-family: inherit;
+  font-size: 9px;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.admin-settings-field input,
+.admin-settings-field select {
+  height: 36px;
+  padding: 0 10px;
+}
+
+.admin-settings-field textarea {
+  min-height: 72px;
+  padding: 9px 10px;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+.admin-settings-field input::placeholder,
+.admin-settings-field textarea::placeholder {
+  color: #aaa3b0;
+}
+
+.admin-settings-field input:focus,
+.admin-settings-field select:focus,
+.admin-settings-field textarea:focus {
+  border-color: #9e8af0;
+  background: #ffffff;
+  box-shadow:
+    0 0 0 3px rgba(112, 71, 247, 0.07);
+}
+
+/* ========================================
+   LOGO UPLOAD
+======================================== */
+
+.admin-settings-field input[type="file"] {
+  height: auto;
+  min-height: 42px;
+  padding: 7px 8px;
+  cursor: pointer;
+}
+
+.admin-settings-field input[type="file"]::file-selector-button {
+  margin-right: 8px;
+  padding: 7px 10px;
+  border: 0;
+  border-radius: 7px;
+  background: #efeaff;
+  color: #6744ed;
+  font-family: inherit;
+  font-size: 8px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.admin-settings-logo-preview {
+  min-height: 82px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid #e7e2ec;
+  border-radius: 10px;
+  background: linear-gradient(
+    135deg,
+    #fbfaff,
+    #f7f4ff
+  );
+}
+
+.admin-settings-logo-preview img {
+  width: 64px;
+  height: 64px;
+  padding: 5px;
+  object-fit: contain;
+  flex-shrink: 0;
+  border: 1px solid #ece7f1;
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+.admin-settings-logo-preview small {
+  color: #8f8798;
+  font-size: 8px;
+  line-height: 1.5;
+}
+
+/* ========================================
+   ANNOUNCEMENT / OFFER
+======================================== */
+
+.admin-settings-announcement-toggle {
+  min-height: 58px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  grid-column: 1 / -1;
+  border: 1px solid #e7e2ec;
+  border-radius: 10px;
+  background: #fbfafc;
+}
+
+.admin-settings-announcement-toggle > div {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.admin-settings-announcement-toggle strong {
+  color: #403748;
+  font-size: 9px;
+  font-weight: 900;
+}
+
+.admin-settings-announcement-toggle span {
+  color: #968e9e;
+  font-size: 7px;
+  line-height: 1.4;
+}
+
+.admin-settings-announcement-toggle input {
+  width: 34px;
+  height: 18px;
+  flex-shrink: 0;
+  accent-color: #7047f7;
+  cursor: pointer;
+}
+
+.admin-settings-offer-preview {
+  min-height: 42px;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #e4def0;
+  border-radius: 10px;
+  background:
+    linear-gradient(
+      135deg,
+      #f3efff,
+      #fbf9ff
+    );
+  color: #5a45c8;
+}
+
+.admin-settings-offer-preview svg {
+  flex-shrink: 0;
+}
+
+.admin-settings-offer-preview strong {
+  overflow: hidden;
+  color: #463a65;
+  font-size: 9px;
+  font-weight: 900;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ========================================
+   ACTIONS
+======================================== */
+
+.admin-settings-actions {
+  margin-top: 13px;
+  display: flex;
+  justify-content: center;
+}
+
+.admin-settings-actions button {
+  min-width: 170px;
+  min-height: 36px;
+  padding: 0 15px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 0;
+  border-radius: 8px;
+  background:
+    linear-gradient(
+      135deg,
+      #6844f4,
+      #9141ee
+    );
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 8px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow:
+    0 7px 17px rgba(104, 68, 244, 0.2);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.admin-settings-actions button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow:
+    0 9px 21px rgba(104, 68, 244, 0.26);
+}
+
+.admin-settings-actions button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+/* ========================================
+   BOTTOM NOTE
+======================================== */
+
+.admin-settings-note {
+  width: fit-content;
+  margin: 5px auto 0;
+  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  border: 1px solid #ebe6ef;
+  border-radius: 20px;
+  background: #ffffff;
+  color: #8e8696;
+  font-size: 7px;
+  font-weight: 700;
+}
+
+/* ========================================
+   LOADING STATE
+======================================== */
+
+.admin-settings-state {
+  width: min(400px, 100%);
+  min-height: 150px;
+  margin: 30px auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 1px solid #e8e3ed;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #7047f7;
+  text-align: center;
+  box-shadow:
+    0 5px 18px rgba(47, 34, 68, 0.04);
+}
+
+.admin-settings-state strong {
+  color: #504758;
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.admin-settings-loader {
+  animation:
+    admin-settings-spin 0.8s linear infinite;
+}
+
+@keyframes admin-settings-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ========================================
+   TABLET
+======================================== */
+
+@media (max-width: 800px) {
+  .admin-settings-container {
+    width: calc(100% - 20px);
+  }
+
+  .admin-settings-card {
+    padding: 14px;
+  }
+}
+
+/* ========================================
+   MOBILE
+======================================== */
+
+@media (max-width: 600px) {
+  .admin-settings-page {
+    min-height: calc(100vh - 50px);
+    padding: 12px 0 22px;
+  }
+
+  .admin-settings-container {
+    width: calc(100% - 14px);
+  }
+
+  .admin-settings-heading {
+    margin-bottom: 11px;
+  }
+
+  .admin-settings-heading > span {
+    margin-bottom: 3px;
+    font-size: 6px;
+  }
+
+  .admin-settings-heading h1 {
+    font-size: 20px;
+  }
+
+  .admin-settings-heading p {
+    margin-top: 3px;
+    font-size: 8px;
+  }
+
+  .admin-settings-message {
+    margin-bottom: 8px;
+    padding: 7px 9px;
+  }
+
+  .admin-settings-message strong {
+    font-size: 8px;
+  }
+
+  .admin-settings-card {
+    margin-bottom: 8px;
+    padding: 10px;
+    border-radius: 10px;
+  }
+
+  .admin-settings-card-heading {
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    gap: 7px;
+  }
+
+  .admin-settings-card-icon {
+    width: 29px;
+    height: 29px;
+  }
+
+  .admin-settings-card-icon svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .admin-settings-card-heading h2 {
+    font-size: 12px;
+  }
+
+  .admin-settings-card-heading p {
+    font-size: 7px;
+  }
+
+  .admin-settings-section-divider {
+    margin: 11px auto;
+  }
+
+  .admin-settings-fields {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .admin-settings-field-full {
+    grid-column: auto;
+  }
+
+  .admin-settings-field > span {
+    font-size: 8px;
+  }
+
+  .admin-settings-field input,
+  .admin-settings-field select {
+    height: 34px;
+    font-size: 8px;
+  }
+
+  .admin-settings-field textarea {
+    min-height: 62px;
+    font-size: 8px;
+  }
+
+  .admin-settings-field input[type="file"] {
+    height: auto;
+    min-height: 40px;
+  }
+
+  .admin-settings-logo-preview {
+    min-height: 72px;
+    padding: 8px 9px;
+  }
+
+  .admin-settings-logo-preview img {
+    width: 52px;
+    height: 52px;
+  }
+
+  .admin-settings-logo-preview small {
+    font-size: 7px;
+  }
+
+  .admin-settings-announcement-toggle {
+    min-height: 52px;
+    grid-column: auto;
+    padding: 8px 9px;
+  }
+
+  .admin-settings-announcement-toggle strong {
+    font-size: 8px;
+  }
+
+  .admin-settings-announcement-toggle span {
+    font-size: 6px;
+  }
+
+  .admin-settings-offer-preview {
+    min-height: 38px;
+    padding: 0 9px;
+  }
+
+  .admin-settings-offer-preview strong {
+    font-size: 8px;
+  }
+
+  .admin-settings-actions {
+    margin-top: 10px;
+  }
+
+  .admin-settings-actions button {
+    width: min(220px, 100%);
+    min-width: 0;
+    min-height: 34px;
+    font-size: 8px;
+  }
+
+  .admin-settings-note {
+    padding: 5px 8px;
+    font-size: 6px;
+  }
+}
+
+/* ========================================
+   VERY SMALL MOBILE
+======================================== */
+
+@media (max-width: 380px) {
+  .admin-settings-container {
+    width: calc(100% - 10px);
+  }
+
+  .admin-settings-card {
+    padding: 9px 8px;
+  }
+
+  .admin-settings-heading h1 {
+    font-size: 19px;
+  }
+
+  .admin-settings-logo-preview {
+    align-items: flex-start;
+  }
+
+  .admin-settings-actions button {
+    width: 100%;
+  }
+}

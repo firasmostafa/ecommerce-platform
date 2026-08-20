@@ -1,0 +1,299 @@
+.categories-preview {
+  padding: 36px 0 50px;
+  background: #ffffff;
+}
+
+.categories-preview-container {
+  width: min(1180px, calc(100% - 36px));
+  margin: 0 auto;
+}
+
+/* ========================================
+   HEADING
+======================================== */
+
+.preview-heading {
+  margin-bottom: 18px;
+
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+
+  gap: 18px;
+}
+
+.preview-eyebrow {
+  display: inline-block;
+
+  margin-bottom: 6px;
+
+  color: #7047f7;
+
+  font-size: 8px;
+  font-weight: 900;
+
+  letter-spacing: 0.15em;
+}
+
+.preview-heading h2 {
+  margin: 0;
+
+  color: #1d172d;
+
+  font-size: clamp(24px, 3vw, 34px);
+  font-weight: 900;
+
+  line-height: 1.05;
+
+  letter-spacing: -0.035em;
+}
+
+.preview-heading p {
+  max-width: 500px;
+
+  margin: 8px 0 0;
+
+  color: #827c8e;
+
+  font-size: 10px;
+  line-height: 1.55;
+}
+
+/* ========================================
+   VIEW ALL
+======================================== */
+
+.preview-view-all {
+  flex-shrink: 0;
+
+  padding: 9px 13px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 6px;
+
+  border: 1px solid #e5e0ed;
+  border-radius: 10px;
+
+  background: #ffffff;
+  color: #41394f;
+
+  font-size: 9px;
+  font-weight: 800;
+
+  text-decoration: none;
+
+  transition:
+    transform 0.25s ease,
+    color 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.preview-view-all:hover {
+  border-color: #cfc3ff;
+  color: #6945f5;
+
+  box-shadow:
+    0 8px 18px rgba(74, 51, 119, 0.08);
+
+  transform: translateY(-1px);
+}
+
+/* ========================================
+   GRID
+======================================== */
+
+.categories-preview-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+
+  gap: 12px;
+}
+
+.categories-preview-grid > * {
+  min-width: 0;
+}
+
+/* ========================================
+   STATE
+======================================== */
+
+.preview-state {
+  min-height: 145px;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #ebe7f2;
+  border-radius: 14px;
+
+  background: #faf9fd;
+
+  text-align: center;
+}
+
+.preview-state p {
+  margin: 7px 0 0;
+
+  color: #898391;
+
+  font-size: 9px;
+}
+
+.preview-state strong {
+  color: #312941;
+
+  font-size: 11px;
+}
+
+.preview-spinner {
+  width: 28px;
+  height: 28px;
+
+  border: 3px solid #e8e2fa;
+  border-top-color: #7047f7;
+
+  border-radius: 50%;
+
+  animation:
+    preview-spin 0.8s linear infinite;
+}
+
+@keyframes preview-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ========================================
+   TABLET
+======================================== */
+
+@media (max-width: 950px) {
+  .categories-preview {
+    padding: 32px 0 44px;
+  }
+
+  .categories-preview-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    gap: 9px;
+  }
+}
+
+/* ========================================
+   MOBILE
+======================================== */
+
+@media (max-width: 650px) {
+  .categories-preview {
+    padding: 24px 0 32px;
+  }
+
+  .categories-preview-container {
+    width: calc(100% - 18px);
+  }
+
+  .preview-heading {
+    margin-bottom: 13px;
+
+    flex-direction: column;
+    align-items: flex-start;
+
+    gap: 7px;
+  }
+
+  .preview-eyebrow {
+    margin-bottom: 4px;
+
+    font-size: 6px;
+  }
+
+  .preview-heading h2 {
+    font-size: 21px;
+  }
+
+  .preview-heading p {
+    max-width: 100%;
+
+    margin-top: 5px;
+
+    font-size: 9px;
+
+    line-height: 1.5;
+  }
+
+  .preview-view-all {
+    width: auto;
+
+    padding: 6px 9px;
+
+    border-radius: 8px;
+
+    font-size: 7px;
+  }
+
+  .preview-view-all svg {
+    width: 11px;
+    height: 11px;
+  }
+
+  .categories-preview-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    gap: 6px;
+  }
+
+  .categories-preview-grid > * {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .preview-state {
+    min-height: 120px;
+
+    border-radius: 10px;
+  }
+
+  .preview-state p {
+    font-size: 8px;
+  }
+}
+
+/* ========================================
+   VERY SMALL MOBILE
+======================================== */
+
+@media (max-width: 370px) {
+  .categories-preview-container {
+    width: calc(100% - 14px);
+  }
+
+  .categories-preview-grid {
+    gap: 5px;
+  }
+
+  .preview-heading h2 {
+    font-size: 19px;
+  }
+}
+
+/* ========================================
+   REDUCED MOTION
+======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .preview-spinner {
+    animation: none;
+  }
+}

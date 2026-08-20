@@ -1,0 +1,369 @@
+/* ========================================
+   CHECKOUT SUCCESS PAGE
+======================================== */
+
+.checkout-success-page {
+  min-height: calc(100vh - 80px);
+  padding: 32px 16px;
+
+  display: grid;
+  place-items: center;
+
+  background:
+    radial-gradient(
+      circle at 20% 10%,
+      rgba(112, 71, 247, 0.08),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 85% 15%,
+      rgba(220, 58, 192, 0.06),
+      transparent 27%
+    ),
+    #faf9fd;
+}
+
+/* ========================================
+   CARD
+======================================== */
+
+.checkout-success-card {
+  width: min(610px, 100%);
+
+  padding: 30px 32px;
+
+  border: 1px solid #e9e4ef;
+  border-radius: 20px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 15px 45px rgba(48, 33, 77, 0.08);
+
+  text-align: center;
+}
+
+/* ========================================
+   SUCCESS ICON
+======================================== */
+
+.checkout-success-icon {
+  width: 60px;
+  height: 60px;
+
+  margin: 0 auto 14px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 17px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #e9fff5,
+      #e8f7ff
+    );
+
+  color: #17a873;
+}
+
+.checkout-success-icon svg {
+  width: 29px;
+  height: 29px;
+}
+
+/* ========================================
+   CONTENT
+======================================== */
+
+.checkout-success-card > span {
+  color: #7047f7;
+
+  font-size: 7px;
+  font-weight: 900;
+
+  letter-spacing: 0.15em;
+}
+
+.checkout-success-card h1 {
+  margin: 7px 0 0;
+
+  color: #241d31;
+
+  font-size: clamp(26px, 4vw, 36px);
+  font-weight: 900;
+
+  line-height: 1.05;
+
+  letter-spacing: -0.035em;
+}
+
+.checkout-success-card > p {
+  max-width: 470px;
+
+  margin: 10px auto 0;
+
+  color: #888192;
+
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+/* ========================================
+   ORDER DETAILS PREVIEW
+======================================== */
+
+.checkout-success-details {
+  margin-top: 20px;
+  padding: 13px;
+
+  display: grid;
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 8px;
+
+  border: 1px solid #ece8f1;
+  border-radius: 13px;
+
+  background: #faf9fd;
+}
+
+.checkout-success-details > div {
+  min-height: 48px;
+
+  padding: 7px 9px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  gap: 3px;
+
+  border-radius: 8px;
+
+  background: #ffffff;
+}
+
+.checkout-success-details span {
+  color: #9992a2;
+
+  font-size: 6px;
+  font-weight: 800;
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.05em;
+}
+
+.checkout-success-details strong {
+  overflow-wrap: anywhere;
+
+  color: #342c40;
+
+  font-size: 9px;
+  font-weight: 900;
+}
+
+/* ========================================
+   ACTIONS
+======================================== */
+
+.checkout-success-actions {
+  margin-top: 18px;
+
+  display: grid;
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 8px;
+}
+
+/* COMMON BUTTON */
+
+.checkout-success-primary,
+.checkout-success-secondary,
+.checkout-success-order {
+  min-height: 39px;
+
+  padding: 0 11px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 6px;
+
+  border-radius: 10px;
+
+  font-size: 8px;
+  font-weight: 900;
+
+  text-decoration: none;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.checkout-success-primary svg,
+.checkout-success-secondary svg,
+.checkout-success-order svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* VIEW ORDER DETAILS */
+
+.checkout-success-order {
+  border: 1px solid #dcd5ff;
+
+  background: #f1eeff;
+  color: #6246df;
+}
+
+.checkout-success-order:hover {
+  border-color: #c8bcff;
+
+  background: #eae5ff;
+
+  transform: translateY(-1px);
+}
+
+/* CONTINUE SHOPPING */
+
+.checkout-success-primary {
+  background:
+    linear-gradient(
+      135deg,
+      #6743f4,
+      #9142f1 55%,
+      #c43bc9
+    );
+
+  color: #ffffff;
+
+  box-shadow:
+    0 8px 18px rgba(105, 68, 245, 0.18);
+}
+
+.checkout-success-primary:hover {
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 11px 23px rgba(105, 68, 245, 0.24);
+}
+
+/* BACK */
+
+.checkout-success-secondary {
+  border: 1px solid #e3deea;
+
+  background: #ffffff;
+
+  color: #51495e;
+}
+
+.checkout-success-secondary:hover {
+  border-color: #d2cbdc;
+
+  background: #faf9fc;
+
+  transform: translateY(-1px);
+}
+
+/* ========================================
+   TABLET
+======================================== */
+
+@media (max-width: 700px) {
+  .checkout-success-card {
+    width: min(560px, 100%);
+  }
+}
+
+/* ========================================
+   MOBILE
+======================================== */
+
+@media (max-width: 600px) {
+  .checkout-success-page {
+    min-height: calc(100vh - 55px);
+
+    padding: 18px 9px;
+  }
+
+  .checkout-success-card {
+    padding: 22px 14px;
+
+    border-radius: 15px;
+  }
+
+  .checkout-success-icon {
+    width: 50px;
+    height: 50px;
+
+    margin-bottom: 11px;
+
+    border-radius: 14px;
+  }
+
+  .checkout-success-icon svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .checkout-success-card h1 {
+    font-size: 24px;
+  }
+
+  .checkout-success-card > p {
+    font-size: 9px;
+  }
+
+  .checkout-success-details {
+    margin-top: 15px;
+
+    padding: 8px;
+
+    gap: 6px;
+  }
+
+  .checkout-success-details > div {
+    min-height: 42px;
+
+    padding: 6px;
+  }
+
+  .checkout-success-actions {
+    margin-top: 14px;
+
+    grid-template-columns: 1fr;
+  }
+
+  .checkout-success-primary,
+  .checkout-success-secondary,
+  .checkout-success-order {
+    width: 100%;
+    min-height: 36px;
+
+    font-size: 7px;
+  }
+}
+
+/* ========================================
+   VERY SMALL MOBILE
+======================================== */
+
+@media (max-width: 370px) {
+  .checkout-success-card {
+    padding: 18px 11px;
+  }
+
+  .checkout-success-card h1 {
+    font-size: 21px;
+  }
+}

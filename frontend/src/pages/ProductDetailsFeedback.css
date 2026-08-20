@@ -1,0 +1,159 @@
+.product-details-cart-added {
+  background: linear-gradient(
+    135deg,
+    #119966,
+    #19b77d
+  );
+  box-shadow:
+    0 15px 30px rgba(21, 153, 102, 0.22);
+}
+
+.product-details-cart-status {
+  margin-top: 16px;
+  padding: 14px 15px;
+
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+
+  border: 1px solid #d6efe3;
+  border-radius: 15px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #f1fcf7,
+      #f8fffb
+    );
+
+  animation:
+    product-cart-status-enter 0.3s ease;
+}
+
+.product-details-cart-status-icon {
+  width: 36px;
+  height: 36px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 11px;
+
+  background: #dff7eb;
+  color: #159564;
+}
+
+.product-details-cart-status > div:nth-child(2) {
+  display: flex;
+  flex-direction: column;
+}
+
+.product-details-cart-status strong {
+  color: #206e51;
+
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.product-details-cart-status span {
+  margin-top: 3px;
+
+  color: #6e8c7e;
+
+  font-size: 9px;
+}
+
+.product-details-cart-status b {
+  color: #13734f;
+}
+
+.product-details-cart-status > a {
+  min-height: 36px;
+  padding: 0 12px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 10px;
+
+  background: #159564;
+  color: #ffffff;
+
+  font-size: 9px;
+  font-weight: 900;
+
+  text-decoration: none;
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
+}
+
+.product-details-cart-status > a:hover {
+  background: #117b53;
+  transform: translateY(-1px);
+}
+
+.product-added-message {
+  margin-top: 10px;
+  padding: 10px 13px;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  border-radius: 11px;
+
+  background: #edf9f4;
+  color: #188158;
+
+  font-size: 9px;
+  font-weight: 800;
+
+  animation:
+    product-added-message-enter 0.25s ease;
+}
+
+@keyframes product-cart-status-enter {
+  from {
+    opacity: 0;
+    transform: translateY(7px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes product-added-message-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 520px) {
+  .product-details-cart-status {
+    grid-template-columns: auto 1fr;
+  }
+
+  .product-details-cart-status > a {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .product-details-cart-status,
+  .product-added-message {
+    animation: none;
+  }
+}

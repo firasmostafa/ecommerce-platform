@@ -1,0 +1,2810 @@
+/* ========================================
+   ANNOUNCEMENT
+======================================== */
+
+.announcement-bar {
+  position: relative;
+  z-index: 101;
+
+  background: linear-gradient(
+    90deg,
+    #5b35f2,
+    #7547ff 45%,
+    #b832d8
+  );
+
+  color: #ffffff;
+}
+
+.announcement-content {
+  width: min(1180px, calc(100% - 40px));
+  min-height: 30px;
+  margin: 0 auto;
+
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+
+  gap: 20px;
+
+  font-size: 10px;
+}
+
+.announcement-content span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.announcement-content p {
+  margin: 0;
+}
+
+.announcement-content a {
+  justify-self: end;
+
+  color: #ffffff;
+
+  font-weight: 800;
+  text-decoration: none;
+}
+
+/* ========================================
+   NAVBAR
+======================================== */
+
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 900;
+
+  width: 100%;
+
+  background: rgba(255, 255, 255, 0.96);
+
+  border-bottom: 1px solid #ebe8ef;
+
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.navbar-container {
+  width: min(1180px, calc(100% - 40px));
+  min-height: 52px;
+
+  margin: 0 auto;
+
+  display: flex;
+  align-items: center;
+
+  gap: 26px;
+}
+
+/* ========================================
+   LOGO
+======================================== */
+
+.navbar-logo {
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  color: #17132f;
+
+  text-decoration: none;
+}
+
+.logo-icon {
+  width: 36px;
+  height: 36px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 10px;
+
+  background: linear-gradient(
+    135deg,
+    #6c45ff,
+    #d53bc4
+  );
+
+  color: #ffffff;
+
+  box-shadow:
+    0 8px 20px rgba(108, 69, 255, 0.24);
+
+  font-size: 17px;
+  font-weight: 900;
+}
+
+
+.navbar-logo-image {
+  width: 36px;
+  height: 36px;
+
+  display: block;
+  flex-shrink: 0;
+
+  object-fit: contain;
+
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+.logo-text {
+  display: flex;
+  flex-direction: column;
+
+  color: #1b1730;
+
+  font-size: 15px;
+  font-weight: 900;
+
+  line-height: 0.9;
+
+  letter-spacing: 0.08em;
+}
+
+.logo-text small {
+  margin-top: 4px;
+
+  color: #8e8799;
+
+  font-size: 6px;
+  font-weight: 800;
+
+  letter-spacing: 0.3em;
+}
+
+/* ========================================
+   DESKTOP NAV
+======================================== */
+
+.desktop-navigation {
+  flex: 1;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 20px;
+}
+
+.desktop-navigation a {
+  position: relative;
+
+  padding: 22px 0;
+
+  color: #50495c;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  text-decoration: none;
+
+  transition: color 0.2s ease;
+}
+
+.desktop-navigation a:hover,
+.desktop-navigation a.active {
+  color: #6945f5;
+}
+
+.desktop-navigation a.active::after {
+  content: "";
+
+  position: absolute;
+
+  right: 0;
+  bottom: 14px;
+  left: 0;
+
+  height: 2px;
+
+  border-radius: 10px;
+
+  background: #6945f5;
+}
+
+.desktop-navigation .sale-link {
+  color: #ed3c79;
+}
+
+/* ========================================
+   MOBILE HOME
+======================================== */
+
+.mobile-home-link {
+  display: none;
+}
+
+/* ========================================
+   ACTIONS
+======================================== */
+
+.navbar-actions {
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 6px;
+}
+
+.navbar-action-button,
+.mobile-menu-button {
+  min-width: 35px;
+  height: 35px;
+
+  padding: 0 7px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 0;
+  border-radius: 9px;
+
+  background: transparent;
+  color: #29233a;
+
+  text-decoration: none;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.navbar-action-button:hover,
+.mobile-menu-button:hover {
+  background: #f1eeff;
+  color: #6746ed;
+}
+
+.mobile-menu-button {
+  display: none;
+}
+
+/* ========================================
+   USER
+======================================== */
+
+.navbar-user-area {
+  display: flex;
+  align-items: center;
+
+  gap: 6px;
+}
+
+.account-button {
+  gap: 8px;
+}
+
+.account-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  line-height: 1.1;
+}
+
+.account-text small {
+  color: #9992a2;
+
+  font-size: 8px;
+}
+
+.account-text strong {
+  margin-top: 3px;
+
+  font-size: 11px;
+}
+
+.navbar-orders-link {
+  min-height: 33px;
+
+  padding: 0 9px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 10px;
+
+  background: #f1eeff;
+  color: #6945f5;
+
+  font-size: 9px;
+  font-weight: 900;
+
+  text-decoration: none;
+}
+
+.navbar-logout-button {
+  min-height: 33px;
+
+  padding: 0 8px;
+
+  border: 1px solid #f0dfe7;
+  border-radius: 10px;
+
+  background: #fff7fa;
+  color: #d43e76;
+
+  font-size: 9px;
+  font-weight: 800;
+
+  cursor: pointer;
+}
+
+/* ========================================
+   CART
+======================================== */
+
+.cart-button {
+  position: relative;
+}
+
+.cart-count {
+  position: absolute;
+  top: 0;
+  right: 0;
+
+  min-width: 16px;
+  height: 16px;
+
+  padding: 0 3px;
+
+  display: grid;
+  place-items: center;
+
+  border: 2px solid #ffffff;
+  border-radius: 999px;
+
+  background: linear-gradient(
+    135deg,
+    #7048ff,
+    #d83bc1
+  );
+
+  color: #ffffff;
+
+  font-size: 6px;
+  font-weight: 900;
+}
+
+/* ========================================
+   SEARCH
+======================================== */
+
+.navbar-search {
+  max-height: 0;
+
+  overflow: hidden;
+
+  opacity: 0;
+
+  transition:
+    max-height 0.3s ease,
+    opacity 0.25s ease;
+}
+
+.navbar-search-open {
+  max-height: 80px;
+
+  border-top: 1px solid #efedf5;
+
+  opacity: 1;
+}
+
+.navbar-search-inner {
+  width: min(700px, calc(100% - 40px));
+  height: 52px;
+
+  margin: 0 auto;
+
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+}
+
+.navbar-search-inner input {
+  width: 100%;
+
+  border: 0;
+  outline: 0;
+
+  background: transparent;
+
+  font-size: 12px;
+}
+
+.navbar-search-inner button {
+  width: 34px;
+  height: 34px;
+
+  display: grid;
+  place-items: center;
+
+  flex-shrink: 0;
+
+  border: 0;
+  border-radius: 9px;
+
+  background: #f3f1f7;
+
+  cursor: pointer;
+}
+
+/* ========================================
+   MOBILE DRAWER
+======================================== */
+
+.mobile-navigation,
+.mobile-menu-overlay {
+  display: none;
+}
+
+/* ========================================
+   TABLET
+======================================== */
+
+@media (max-width: 1000px) {
+  .navbar-container {
+    gap: 18px;
+  }
+
+  .desktop-navigation {
+    gap: 17px;
+  }
+
+  .desktop-navigation a {
+    font-size: 10px;
+  }
+
+  .account-text {
+    display: none;
+  }
+}
+
+/* ========================================
+   MOBILE
+======================================== */
+
+@media (max-width: 780px) {
+  /* Smaller phone interface */
+
+  .announcement-bar {
+    display: none;
+  }
+
+  .navbar-container {
+    width: calc(100% - 18px);
+    min-height: 52px;
+
+    gap: 5px;
+  }
+
+  .desktop-navigation,
+  .search-button,
+  .account-button,
+  .navbar-orders-link,
+  .navbar-logout-button {
+    display: none;
+  }
+
+  /* Logo */
+
+  .navbar-logo {
+    gap: 7px;
+  }
+
+  .logo-icon {
+    width: 31px;
+    height: 31px;
+
+    border-radius: 9px;
+
+    font-size: 15px;
+  }
+
+  .logo-text {
+    font-size: 11px;
+
+    letter-spacing: 0.05em;
+  }
+
+  .logo-text small {
+    margin-top: 4px;
+
+    font-size: 5px;
+
+    letter-spacing: 0.25em;
+  }
+
+  /* HOME stays visible */
+
+  .mobile-home-link {
+    margin-left: auto;
+    margin-right: 2px;
+
+    min-height: 32px;
+
+    padding: 0 7px;
+
+    display: inline-flex;
+    align-items: center;
+
+    gap: 5px;
+
+    border-radius: 9px;
+
+    color: #51495c;
+
+    font-size: 9px;
+    font-weight: 800;
+
+    text-decoration: none;
+  }
+
+  .mobile-home-link.active {
+    background: #f0edff;
+    color: #6845ef;
+  }
+
+  .mobile-home-link svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  /* Cart / Menu */
+
+  .navbar-action-button,
+  .mobile-menu-button {
+    min-width: 32px;
+    width: 32px;
+    height: 32px;
+
+    padding: 0;
+
+    border-radius: 9px;
+  }
+
+  .navbar-action-button svg,
+  .mobile-menu-button svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .mobile-menu-button {
+    display: flex;
+  }
+
+  .mobile-menu-button-active {
+    background: #eeeaff;
+    color: #6945f5;
+  }
+
+  .cart-count {
+    top: -2px;
+    right: -2px;
+
+    min-width: 14px;
+    height: 14px;
+
+    border-width: 1.5px;
+
+    font-size: 6px;
+  }
+
+  /* ===============================
+     OVERLAY
+  =============================== */
+
+  .mobile-menu-overlay {
+    position: fixed;
+    inset: 0;
+
+    z-index: 1090;
+
+    display: block;
+
+    border: 0;
+
+    background: rgba(24, 19, 34, 0.28);
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    pointer-events: none;
+
+    backdrop-filter: blur(2px);
+
+    transition:
+      opacity 0.25s ease,
+      visibility 0.25s ease;
+  }
+
+  .mobile-menu-overlay-open {
+    opacity: 1;
+
+    visibility: visible;
+
+    pointer-events: auto;
+  }
+
+  /* ===============================
+     RIGHT DRAWER
+  =============================== */
+
+  .mobile-navigation {
+    position: fixed;
+
+    top: 0;
+    right: 0;
+    bottom: 0;
+
+    z-index: 1100;
+
+    width: min(270px, 78vw);
+    height: 100dvh;
+
+    padding: 0 14px 14px;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow-y: auto;
+
+    border-left: 1px solid #e9e5ed;
+
+    background: #ffffff;
+
+    box-shadow:
+      -18px 0 50px rgba(31, 23, 46, 0.16);
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    transform: translateX(105%);
+
+    transition:
+      transform 0.3s ease,
+      opacity 0.22s ease,
+      visibility 0.3s ease;
+  }
+
+  .mobile-navigation-open {
+    opacity: 1;
+
+    visibility: visible;
+
+    transform: translateX(0);
+  }
+
+  /* Drawer Header */
+
+  .mobile-navigation-header {
+    min-height: 62px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    border-bottom: 1px solid #efecf2;
+  }
+
+  .mobile-navigation-brand {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    color: #282230;
+
+    text-decoration: none;
+  }
+
+  .mobile-navigation-logo {
+    width: 31px;
+    height: 31px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 9px;
+
+    background: linear-gradient(
+      135deg,
+      #6549ef,
+      #b03ed7
+    );
+
+    color: #ffffff;
+
+    font-size: 12px;
+    font-weight: 900;
+  }
+
+
+  .mobile-navigation-logo-image {
+    width: 31px;
+    height: 31px;
+
+    display: block;
+    flex-shrink: 0;
+
+    object-fit: contain;
+
+    border-radius: 9px;
+    background: #ffffff;
+  }
+
+  .mobile-navigation-brand > div {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mobile-navigation-brand strong {
+    font-size: 11px;
+
+    letter-spacing: 0.06em;
+  }
+
+  .mobile-navigation-brand small {
+    margin-top: 1px;
+
+    color: #9a93a1;
+
+    font-size: 5px;
+
+    letter-spacing: 0.2em;
+  }
+
+  .mobile-navigation-close {
+    width: 31px;
+    height: 31px;
+
+    display: grid;
+    place-items: center;
+
+    border: 0;
+    border-radius: 9px;
+
+    background: #f5f2f8;
+    color: #5f5867;
+
+    cursor: pointer;
+  }
+
+  /* User Card */
+
+  .mobile-user-card,
+  .mobile-signin-card {
+    margin-top: 12px;
+    padding: 9px 10px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    border: 1px solid #ebe6f4;
+    border-radius: 9px;
+
+    background: linear-gradient(
+      135deg,
+      #f8f6ff,
+      #fbfaff
+    );
+
+    text-decoration: none;
+  }
+
+  .mobile-user-icon {
+    width: 30px;
+    height: 30px;
+
+    display: grid;
+    place-items: center;
+
+    flex-shrink: 0;
+
+    border-radius: 8px;
+
+    background: #ebe6ff;
+    color: #6845ef;
+  }
+
+  .mobile-user-card > div:last-child,
+  .mobile-signin-card > div:nth-child(2) {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    flex: 1;
+  }
+
+  .mobile-user-card span,
+  .mobile-signin-card span {
+    color: #9a93a1;
+
+    font-size: 6px;
+  }
+
+  .mobile-user-card strong,
+  .mobile-signin-card strong {
+    margin-top: 1px;
+
+    overflow: hidden;
+
+    color: #332c3b;
+
+    font-size: 9px;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .mobile-signin-card > svg {
+    color: #8d83a0;
+  }
+
+  /* Links */
+
+  .mobile-navigation-links {
+    padding-top: 13px;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 2px;
+  }
+
+  .mobile-menu-section-title {
+    margin: 3px 8px 5px;
+
+    color: #a19aa8;
+
+    font-size: 6px;
+    font-weight: 900;
+
+    letter-spacing: 0.14em;
+  }
+
+  .mobile-menu-section-space {
+    margin-top: 13px;
+  }
+
+  .mobile-navigation-links a {
+    min-height: 30px;
+
+    padding: 0 7px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    border-radius: 8px;
+
+    color: #463f4f;
+
+    font-size: 9px;
+    font-weight: 800;
+
+    text-decoration: none;
+
+    transition:
+      background 0.2s ease,
+      color 0.2s ease;
+  }
+
+  .mobile-navigation-links a svg {
+    color: #aaa3b2;
+  }
+
+  .mobile-navigation-links a:hover,
+  .mobile-navigation-links a.active {
+    background: #f3f0ff;
+
+    color: #6744ed;
+  }
+
+  .mobile-navigation-links a.active svg {
+    color: #6744ed;
+  }
+
+  .mobile-navigation-links .mobile-sale-link {
+    color: #ed3c79;
+  }
+
+  /* Bottom */
+
+  .mobile-navigation-bottom {
+    margin-top: auto;
+    padding-top: 14px;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 7px;
+
+    border-top: 1px solid #efecf2;
+  }
+
+  .mobile-drawer-cart {
+    min-height: 30px;
+
+    padding: 0 8px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+
+    border-radius: 9px;
+
+    background: #f2efff;
+    color: #6744ed;
+
+    font-size: 9px;
+    font-weight: 900;
+
+    text-decoration: none;
+  }
+
+  .mobile-drawer-cart span {
+    flex: 1;
+  }
+
+  .mobile-drawer-cart strong {
+    min-width: 20px;
+    height: 20px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 999px;
+
+    background: #6744ed;
+    color: #ffffff;
+
+    font-size: 6px;
+  }
+
+  .mobile-logout-button {
+    min-height: 30px;
+
+    padding: 0 8px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+
+    border: 1px solid #f0dfe7;
+    border-radius: 9px;
+
+    background: #fff8fa;
+    color: #d23f76;
+
+    font-size: 9px;
+    font-weight: 900;
+
+    cursor: pointer;
+  }
+}
+
+/* ========================================
+   SMALL MOBILE
+======================================== */
+
+@media (max-width: 380px) {
+  .navbar-container {
+    width: calc(100% - 12px);
+  }
+
+  .logo-text {
+    display: none;
+  }
+
+  .mobile-home-link {
+    margin-left: auto;
+
+    padding: 0 7px;
+  }
+
+  .mobile-navigation {
+    width: min(250px, 80vw);
+  }
+}
+/* ========================================
+   CURRENCY - DESKTOP
+======================================== */
+
+.navbar-currency {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+}
+
+.navbar-currency-button {
+  height: 34px;
+  min-width: 66px;
+
+  padding: 0 7px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 5px;
+
+  border: 1px solid #e7e3ef;
+  border-radius: 10px;
+
+  background: #faf9fd;
+  color: #4c4557;
+
+  font-family: inherit;
+  font-size: 9px;
+  font-weight: 900;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.navbar-currency-button:hover,
+.navbar-currency-button-open {
+  border-color: #d8cff8;
+
+  background: #f2efff;
+  color: #6845ef;
+}
+
+.navbar-currency-button-open {
+  box-shadow:
+    0 0 0 3px rgba(105, 69, 245, 0.07);
+}
+
+.navbar-currency-button svg {
+  flex-shrink: 0;
+}
+
+.navbar-currency-button svg:last-child {
+  transition: transform 0.2s ease;
+}
+
+.navbar-currency-button-open svg:last-child {
+  transform: rotate(180deg);
+}
+
+/* DROPDOWN */
+
+.navbar-currency-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+
+  z-index: 1000;
+
+  width: 175px;
+
+  padding: 6px;
+
+  border: 1px solid #e8e4ef;
+  border-radius: 12px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 14px 35px rgba(31, 23, 46, 0.14);
+
+  animation:
+    navbarCurrencyOpen 0.18s ease;
+}
+
+@keyframes navbarCurrencyOpen {
+  from {
+    opacity: 0;
+
+    transform: translateY(-5px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform: translateY(0);
+  }
+}
+
+.navbar-currency-menu button {
+  width: 100%;
+  min-height: 36px;
+
+  padding: 6px 8px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  border: 0;
+  border-radius: 8px;
+
+  background: transparent;
+  color: #4d4656;
+
+  font-family: inherit;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.navbar-currency-menu button:hover {
+  background: #f6f3ff;
+  color: #6744ed;
+}
+
+.navbar-currency-menu button.active {
+  background: #f0edff;
+  color: #6744ed;
+}
+
+/* Currency symbol */
+
+.navbar-currency-symbol {
+  width: 26px;
+  height: 26px;
+
+  display: grid;
+  place-items: center;
+
+  flex-shrink: 0;
+
+  border-radius: 8px;
+
+  background: #f1eeff;
+  color: #6845ef;
+
+  font-size: 9px;
+  font-weight: 900;
+}
+
+/* Currency text */
+
+.navbar-currency-info {
+  min-width: 0;
+
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+
+  gap: 1px;
+}
+
+.navbar-currency-info strong {
+  color: inherit;
+
+  font-size: 9px;
+  font-weight: 900;
+}
+
+.navbar-currency-info small {
+  color: #9891a0;
+
+  font-size: 6px;
+  font-weight: 600;
+}
+
+.navbar-currency-check {
+  color: #6845ef;
+
+  font-size: 11px;
+  font-weight: 900;
+}
+
+/* ========================================
+   MOBILE CURRENCY
+======================================== */
+
+.mobile-currency-section {
+  display: none;
+}
+
+/* ========================================
+   MOBILE COMPACT OVERRIDES
+   Compact navbar + compact currency selector
+======================================== */
+
+@media (max-width: 780px) {
+  /* Hide desktop-only currency control */
+  .navbar-currency {
+    display: none;
+  }
+
+  /* Main mobile navbar */
+  .navbar-container {
+    width: calc(100% - 14px);
+    min-height: 46px;
+    gap: 3px;
+  }
+
+  .navbar-logo {
+    gap: 5px;
+  }
+
+  .logo-icon {
+    width: 28px;
+    height: 28px;
+
+    border-radius: 8px;
+
+    font-size: 11px;
+  }
+
+  .logo-text {
+    font-size: 11px;
+
+    letter-spacing: 0.05em;
+  }
+
+  .logo-text small {
+    margin-top: 3px;
+
+    font-size: 4px;
+
+    letter-spacing: 0.22em;
+  }
+
+  .mobile-home-link {
+    margin-left: auto;
+    margin-right: 1px;
+
+    min-height: 28px;
+
+    padding: 0 7px;
+
+    gap: 4px;
+
+    border-radius: 7px;
+
+    font-size: 8px;
+  }
+
+  .mobile-home-link svg {
+    width: 11px;
+    height: 11px;
+  }
+
+  .navbar-actions {
+    gap: 3px;
+  }
+
+  .navbar-action-button,
+  .mobile-menu-button {
+    min-width: 28px;
+    width: 28px;
+    height: 28px;
+
+    padding: 0;
+
+    border-radius: 7px;
+  }
+
+  .navbar-action-button svg,
+  .mobile-menu-button svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .cart-count {
+    top: -2px;
+    right: -2px;
+
+    min-width: 12px;
+    height: 12px;
+
+    padding: 0 2px;
+
+    border-width: 1px;
+
+    font-size: 5px;
+  }
+
+  /* Drawer slightly more compact */
+  .mobile-navigation {
+    width: min(250px, 78vw);
+
+    padding-right: 11px;
+    padding-left: 11px;
+    padding-bottom: 10px;
+  }
+
+  .mobile-navigation-header {
+    min-height: 54px;
+  }
+
+  .mobile-navigation-logo {
+    width: 27px;
+    height: 27px;
+
+    border-radius: 7px;
+
+    font-size: 10px;
+  }
+
+  .mobile-navigation-brand {
+    gap: 6px;
+  }
+
+  .mobile-navigation-brand strong {
+    font-size: 10px;
+  }
+
+  .mobile-navigation-brand small {
+    font-size: 4px;
+  }
+
+  .mobile-navigation-close {
+    width: 28px;
+    height: 28px;
+
+    border-radius: 7px;
+  }
+
+  .mobile-navigation-close svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  /* Account card */
+  .mobile-user-card,
+  .mobile-signin-card {
+    margin-top: 8px;
+    padding: 6px 7px;
+
+    gap: 6px;
+
+    border-radius: 8px;
+  }
+
+  .mobile-user-icon {
+    width: 26px;
+    height: 26px;
+
+    border-radius: 7px;
+  }
+
+  .mobile-user-icon svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .mobile-user-card span,
+  .mobile-signin-card span {
+    font-size: 5px;
+  }
+
+  .mobile-user-card strong,
+  .mobile-signin-card strong {
+    font-size: 8px;
+  }
+
+  /* Currency section */
+  .mobile-currency-section {
+    margin-top: 7px;
+    padding: 6px 7px;
+
+    display: block;
+
+    border: 1px solid #ebe6f4;
+    border-radius: 8px;
+
+    background: #faf9ff;
+  }
+
+  .mobile-currency-heading {
+    margin-bottom: 4px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 5px;
+  }
+
+  .mobile-currency-heading span {
+    color: #a099aa;
+
+    font-size: 5px;
+    font-weight: 900;
+
+    letter-spacing: 0.1em;
+  }
+
+  .mobile-currency-heading strong {
+    padding: 2px 5px;
+
+    border-radius: 4px;
+
+    background: #ebe6ff;
+    color: #6744ed;
+
+    font-size: 6px;
+    font-weight: 900;
+  }
+
+  .mobile-currency-select-wrapper {
+    position: relative;
+
+    width: 100%;
+    height: 28px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 5px;
+
+    padding: 0 6px;
+
+    box-sizing: border-box;
+
+    border: 1px solid #e1dced;
+    border-radius: 6px;
+
+    background: #ffffff;
+    color: #6845ef;
+  }
+
+  .mobile-currency-select-wrapper > svg:first-child {
+    width: 12px;
+    height: 12px;
+
+    flex-shrink: 0;
+  }
+
+  .mobile-currency-select-wrapper select {
+    width: 100%;
+    height: 100%;
+
+    border: 0;
+    outline: 0;
+
+    appearance: none;
+    -webkit-appearance: none;
+
+    background: transparent;
+    color: #4a4352;
+
+    font-family: inherit;
+    font-size: 6px;
+    font-weight: 800;
+
+    cursor: pointer;
+  }
+
+  .mobile-currency-select-wrapper > svg:last-child {
+    width: 10px;
+    height: 10px;
+
+    flex-shrink: 0;
+
+    color: #91899a;
+
+    pointer-events: none;
+  }
+
+  /* Navigation links */
+  .mobile-navigation-links {
+    padding-top: 9px;
+
+    gap: 1px;
+  }
+
+  .mobile-menu-section-title {
+    margin: 2px 6px 3px;
+
+    font-size: 5px;
+  }
+
+  .mobile-menu-section-space {
+    margin-top: 9px;
+  }
+
+  .mobile-navigation-links a {
+    min-height: 32px;
+
+    padding: 0 7px;
+
+    border-radius: 7px;
+
+    font-size: 8px;
+  }
+
+  .mobile-navigation-links a svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  /* Drawer bottom */
+  .mobile-navigation-bottom {
+    padding-top: 9px;
+
+    gap: 5px;
+  }
+
+  .mobile-drawer-cart,
+  .mobile-logout-button {
+    min-height: 32px;
+
+    padding: 0 8px;
+
+    border-radius: 7px;
+
+    font-size: 8px;
+  }
+
+  .mobile-drawer-cart svg,
+  .mobile-logout-button svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .mobile-drawer-cart strong {
+    min-width: 17px;
+    height: 17px;
+
+    font-size: 6px;
+  }
+}
+
+@media (max-width: 380px) {
+  .navbar-container {
+    width: calc(100% - 10px);
+  }
+
+  .mobile-navigation {
+    width: min(235px, 82vw);
+  }
+
+  .mobile-home-link {
+    padding: 0 5px;
+
+    font-size: 6px;
+  }
+
+  .navbar-action-button,
+  .mobile-menu-button {
+    min-width: 27px;
+    width: 27px;
+    height: 27px;
+  }
+}
+/* ========================================
+   FINAL MOBILE NAVBAR CURRENCY
+   Keep currency visible beside Home
+======================================== */
+
+@media (max-width: 780px) {
+  .navbar-currency {
+    position: relative;
+
+    display: flex !important;
+    align-items: center;
+
+    flex-shrink: 0;
+
+    margin: 0;
+  }
+
+  .navbar-currency-button {
+    width: auto;
+    min-width: 58px;
+    height: 27px;
+
+    padding: 0 6px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 3px;
+
+    border: 1px solid #e5e0ef;
+    border-radius: 7px;
+
+    background: #f7f4ff;
+    color: #6845ef;
+
+    font-size: 6px;
+    font-weight: 900;
+  }
+
+  .navbar-currency-button svg:first-child {
+    width: 11px;
+    height: 11px;
+  }
+
+  .navbar-currency-button svg:last-child {
+    width: 8px;
+    height: 8px;
+  }
+
+  .navbar-currency-menu {
+    top: calc(100% + 5px);
+    right: 0;
+
+    width: 145px;
+
+    padding: 4px;
+
+    border-radius: 9px;
+  }
+
+  .navbar-currency-menu button {
+    min-height: 32px;
+
+    padding: 4px 6px;
+
+    gap: 5px;
+  }
+
+  .navbar-currency-symbol {
+    width: 22px;
+    height: 22px;
+
+    border-radius: 6px;
+
+    font-size: 6px;
+  }
+
+  .navbar-currency-info strong {
+    font-size: 6px;
+  }
+
+  .navbar-currency-info small {
+    font-size: 5px;
+  }
+
+  .navbar-currency-check {
+    font-size: 8px;
+  }
+
+  /* Currency inside hamburger drawer stays hidden */
+  .mobile-currency-section {
+    display: none !important;
+  }
+}
+
+/* ========================================
+   FINAL COMPACT HEADER OVERRIDES
+   Keeps the same design with less height
+======================================== */
+
+@media (min-width: 781px) {
+  .announcement-content {
+    min-height: 30px;
+    font-size: 10px;
+  }
+
+  .navbar-container {
+    min-height: 64px;
+    gap: 26px;
+  }
+
+  .desktop-navigation {
+    gap: 20px;
+  }
+
+  .desktop-navigation a {
+    padding: 22px 0;
+    font-size: 11px;
+  }
+
+  .desktop-navigation a.active::after {
+    bottom: 14px;
+  }
+
+  .logo-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    font-size: 17px;
+  }
+
+  .logo-text {
+    font-size: 15px;
+  }
+
+  .navbar-action-button,
+  .mobile-menu-button {
+    min-width: 35px;
+    height: 35px;
+    border-radius: 9px;
+  }
+
+  .navbar-currency-button {
+    min-width: 66px;
+    height: 34px;
+  }
+}
+
+/* Mobile remains compact and easy to tap */
+@media (max-width: 780px) {
+  .navbar-container {
+    min-height: 44px;
+  }
+
+  .logo-icon {
+    width: 27px;
+    height: 27px;
+  }
+
+  .mobile-home-link {
+    min-height: 27px;
+  }
+
+  .navbar-action-button,
+  .mobile-menu-button {
+    min-width: 27px;
+    width: 27px;
+    height: 27px;
+  }
+
+  .navbar-currency-button {
+    min-width: 54px;
+    height: 27px;
+  }
+}
+
+
+/* ========================================
+   DYNAMIC STORE LOGO
+======================================== */
+
+@media (min-width: 781px) {
+  .navbar-logo-image {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+@media (max-width: 780px) {
+  .navbar-logo-image {
+    width: 27px;
+    height: 27px;
+
+    border-radius: 8px;
+  }
+
+  .mobile-navigation-logo-image {
+    width: 27px;
+    height: 27px;
+
+    border-radius: 7px;
+  }
+}
+
+/* ========================================
+   FAVORITES + MOBILE PRIMARY NAVIGATION
+   Home / Shop / Favorites stay visible
+======================================== */
+
+/* Hidden on desktop */
+.mobile-primary-navigation {
+  display: none;
+}
+
+/* Desktop favorites button */
+.favorites-button {
+  position: relative;
+}
+
+.favorites-count {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+
+  min-width: 15px;
+  height: 15px;
+
+  padding: 0 3px;
+
+  display: grid;
+  place-items: center;
+
+  border: 1.5px solid #ffffff;
+  border-radius: 999px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #f04f8a,
+      #d93cc1
+    );
+
+  color: #ffffff;
+
+  font-size: 6px;
+  font-weight: 900;
+
+  line-height: 1;
+}
+
+/* ========================================
+   MOBILE FINAL LAYOUT
+======================================== */
+
+@media (max-width: 780px) {
+  /*
+   * On mobile we need enough room for:
+   * Logo + Home + Shop + Fav + Currency + Cart + Menu
+   */
+
+  .navbar-container {
+    width: calc(100% - 10px);
+    min-height: 46px;
+
+    gap: 3px;
+  }
+
+  /* Keep only the logo mark so links have room */
+  .navbar-logo {
+    flex-shrink: 0;
+
+    gap: 0;
+  }
+
+  .navbar-logo-image,
+  .logo-icon {
+    width: 27px;
+    height: 27px;
+
+    flex-shrink: 0;
+
+    border-radius: 8px;
+  }
+
+  .navbar-logo-image {
+    padding: 2px;
+
+    object-fit: contain;
+
+    background: #ffffff;
+
+    box-sizing: border-box;
+  }
+
+  .logo-text {
+    display: none;
+  }
+
+  /* Old mobile Home link is no longer used */
+  .mobile-home-link {
+    display: none !important;
+  }
+
+  /* Main links shown directly in the navbar */
+  .mobile-primary-navigation {
+    min-width: 0;
+
+    margin-left: 2px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex: 1;
+
+    gap: 2px;
+  }
+
+  .mobile-primary-link {
+    position: relative;
+
+    min-width: 0;
+    height: 29px;
+
+    padding: 0 6px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 3px;
+
+    border-radius: 8px;
+
+    color: #5a5265;
+
+    font-size: 7px;
+    font-weight: 800;
+
+    line-height: 1;
+
+    text-decoration: none;
+
+    white-space: nowrap;
+
+    transition:
+      background 0.2s ease,
+      color 0.2s ease;
+  }
+
+  .mobile-primary-link svg {
+    width: 11px;
+    height: 11px;
+
+    flex-shrink: 0;
+  }
+
+  .mobile-primary-link:hover,
+  .mobile-primary-link.active {
+    background: #f0edff;
+    color: #6845ef;
+  }
+
+  .mobile-primary-favorites {
+    padding-right: 6px;
+  }
+
+  .mobile-primary-count {
+    position: absolute;
+    top: -2px;
+    right: 0;
+
+    min-width: 11px;
+    height: 11px;
+
+    padding: 0 2px;
+
+    display: grid;
+    place-items: center;
+
+    border: 1px solid #ffffff;
+    border-radius: 999px;
+
+    background: #e6407e;
+    color: #ffffff;
+
+    font-size: 5px;
+    font-weight: 900;
+
+    line-height: 1;
+  }
+
+  /*
+   * The desktop favorites action would duplicate the Fav link.
+   * Keep cart visible, hide the duplicate favorites icon.
+   */
+  .favorites-button {
+    display: none !important;
+  }
+
+  .navbar-actions {
+    flex-shrink: 0;
+
+    gap: 2px;
+  }
+
+  /* Currency remains visible, but compact */
+  .navbar-currency {
+    display: flex !important;
+
+    flex-shrink: 0;
+
+    margin: 0;
+  }
+
+  .navbar-currency-button {
+    min-width: 43px;
+    height: 27px;
+
+    padding: 0 4px;
+
+    gap: 2px;
+
+    border-radius: 7px;
+
+    font-size: 6px;
+  }
+
+  .navbar-currency-button svg:first-child {
+    width: 10px;
+    height: 10px;
+  }
+
+  .navbar-currency-button svg:last-child {
+    width: 7px;
+    height: 7px;
+  }
+
+  /* Cart + menu remain easy to tap */
+  .cart-button,
+  .mobile-menu-button {
+    min-width: 27px;
+    width: 27px;
+    height: 27px;
+
+    padding: 0;
+
+    border-radius: 7px;
+  }
+
+  .cart-button svg,
+  .mobile-menu-button svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .cart-count {
+    top: -2px;
+    right: -2px;
+
+    min-width: 12px;
+    height: 12px;
+
+    padding: 0 2px;
+
+    border-width: 1px;
+
+    font-size: 5px;
+  }
+
+  /* Search and account remain inside the drawer / other navigation */
+  .search-button,
+  .account-button,
+  .navbar-orders-link,
+  .navbar-logout-button {
+    display: none;
+  }
+
+  /* Currency inside hamburger drawer stays hidden */
+  .mobile-currency-section {
+    display: none !important;
+  }
+}
+
+/* ========================================
+   SMALL MOBILE
+======================================== */
+
+@media (max-width: 420px) {
+  .navbar-container {
+    width: calc(100% - 8px);
+
+    gap: 2px;
+  }
+
+  .navbar-logo-image,
+  .logo-icon {
+    width: 25px;
+    height: 25px;
+  }
+
+  .mobile-primary-navigation {
+    gap: 1px;
+  }
+
+  .mobile-primary-link {
+    height: 27px;
+
+    padding: 0 4px;
+
+    gap: 2px;
+
+    font-size: 6px;
+  }
+
+  .mobile-primary-link svg {
+    width: 10px;
+    height: 10px;
+  }
+
+  .navbar-currency-button {
+    min-width: 39px;
+    height: 25px;
+
+    padding: 0 3px;
+
+    font-size: 5px;
+  }
+
+  .cart-button,
+  .mobile-menu-button {
+    min-width: 25px;
+    width: 25px;
+    height: 25px;
+  }
+}
+
+/* ========================================
+   VERY SMALL MOBILE
+======================================== */
+
+@media (max-width: 360px) {
+  .navbar-logo-image,
+  .logo-icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .mobile-primary-link {
+    padding: 0 3px;
+
+    font-size: 5.5px;
+  }
+
+  .mobile-primary-link svg {
+    width: 9px;
+    height: 9px;
+  }
+
+  .navbar-currency-button {
+    min-width: 36px;
+  }
+
+  .navbar-currency-button svg:first-child {
+    display: none;
+  }
+
+  .cart-button,
+  .mobile-menu-button {
+    min-width: 24px;
+    width: 24px;
+    height: 24px;
+  }
+}
+
+
+/* ========================================
+   FINAL MOBILE HEADER - SHEIN INSPIRED
+   Left icons | centered brand | hamburger
+======================================== */
+
+.mobile-header-actions,
+.mobile-header-menu-button {
+  display: none;
+}
+
+@media (max-width: 780px) {
+  .navbar {
+    background: rgba(255, 255, 255, 0.98);
+  }
+
+  .navbar-container {
+    position: relative;
+
+    width: 100%;
+    min-height: 58px;
+
+    padding: 0 12px;
+
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+
+    gap: 0;
+
+    box-sizing: border-box;
+  }
+
+  /* Hide desktop navigation/actions completely on phone */
+  .desktop-navigation,
+  .navbar-actions {
+    display: none !important;
+  }
+
+  /* Old mobile primary nav is no longer used */
+  .mobile-primary-navigation,
+  .mobile-home-link {
+    display: none !important;
+  }
+
+  /* Left: cart / favorites / search */
+  .mobile-header-actions {
+    grid-column: 1;
+
+    display: flex;
+    align-items: center;
+    justify-self: start;
+
+    gap: 10px;
+  }
+
+  .mobile-header-action {
+    position: relative;
+
+    width: 31px;
+    height: 31px;
+
+    padding: 0;
+
+    display: grid;
+    place-items: center;
+
+    border: 0;
+    border-radius: 0;
+
+    background: transparent;
+    color: #211d29;
+
+    text-decoration: none;
+
+    cursor: pointer;
+  }
+
+  .mobile-header-action svg {
+    width: 22px;
+    height: 22px;
+
+    stroke-width: 1.8;
+  }
+
+  .mobile-header-action:hover,
+  .mobile-header-action.active {
+    color: #6845ef;
+  }
+
+  .mobile-header-count {
+    position: absolute;
+    top: -1px;
+    right: -2px;
+
+    min-width: 13px;
+    height: 13px;
+
+    padding: 0 2px;
+
+    display: grid;
+    place-items: center;
+
+    border: 1px solid #ffffff;
+    border-radius: 999px;
+
+    background: #e7467d;
+    color: #ffffff;
+
+    font-size: 5px;
+    font-weight: 900;
+
+    line-height: 1;
+  }
+
+  /* Center: logo + store name */
+  .navbar-logo {
+    position: absolute;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    margin: 0;
+  }
+
+  .navbar-logo-image,
+  .logo-icon {
+    width: 30px;
+    height: 30px;
+
+    border-radius: 8px;
+  }
+
+  .navbar-logo-image {
+    padding: 1px;
+
+    object-fit: contain;
+
+    box-sizing: border-box;
+  }
+
+  .logo-text {
+    display: flex !important;
+    flex-direction: column;
+
+    font-size: 13px;
+    font-weight: 900;
+
+    line-height: 0.9;
+
+    letter-spacing: 0.14em;
+  }
+
+  .logo-text small {
+    margin-top: 4px;
+
+    display: block;
+
+    font-size: 4px;
+
+    letter-spacing: 0.28em;
+  }
+
+  /* Right: hamburger */
+  .mobile-header-menu-button {
+    grid-column: 3;
+
+    width: 34px;
+    height: 34px;
+
+    padding: 0;
+
+    display: grid;
+    place-items: center;
+
+    justify-self: end;
+
+    border: 0;
+    border-radius: 7px;
+
+    background: transparent;
+    color: #211d29;
+
+    cursor: pointer;
+  }
+
+  .mobile-header-menu-button svg {
+    width: 25px;
+    height: 25px;
+
+    stroke-width: 1.8;
+  }
+
+  .mobile-header-menu-button-active {
+    background: #f0edff;
+    color: #6845ef;
+  }
+
+  /* Search panel under the compact header */
+  .navbar-search-inner {
+    width: calc(100% - 24px);
+    height: 48px;
+  }
+
+  /* Currency and the remaining links live inside hamburger drawer */
+  .navbar-currency {
+    display: none !important;
+  }
+
+  .mobile-currency-section {
+    display: block !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .navbar-container {
+    min-height: 56px;
+
+    padding: 0 9px;
+  }
+
+  .mobile-header-actions {
+    gap: 6px;
+  }
+
+  .mobile-header-action {
+    width: 28px;
+    height: 28px;
+  }
+
+  .mobile-header-action svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .navbar-logo {
+    gap: 5px;
+  }
+
+  .navbar-logo-image,
+  .logo-icon {
+    width: 27px;
+    height: 27px;
+  }
+
+  .logo-text {
+    font-size: 11px;
+
+    letter-spacing: 0.1em;
+  }
+
+  .mobile-header-menu-button {
+    width: 30px;
+    height: 30px;
+  }
+
+  .mobile-header-menu-button svg {
+    width: 23px;
+    height: 23px;
+  }
+}
+
+@media (max-width: 360px) {
+  .mobile-header-actions {
+    gap: 3px;
+  }
+
+  .mobile-header-action {
+    width: 25px;
+    height: 25px;
+  }
+
+  .mobile-header-action svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .navbar-logo-image,
+  .logo-icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .logo-text {
+    font-size: 10px;
+  }
+
+  .logo-text small {
+    display: none;
+  }
+
+  .mobile-header-menu-button {
+    width: 27px;
+    height: 27px;
+  }
+}
+
+
+/* ========================================
+   MOBILE CURRENCY BESIDE HAMBURGER
+======================================== */
+
+.mobile-header-currency {
+  display: none;
+}
+
+@media (max-width: 780px) {
+  .navbar-container {
+    grid-template-columns: 1fr auto 1fr;
+  }
+
+  .mobile-header-currency {
+    position: absolute;
+    right: 48px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 46px;
+    height: 30px;
+
+    border: 1px solid #e7e2ee;
+    border-radius: 7px;
+
+    background: #ffffff;
+    color: #292331;
+
+    box-sizing: border-box;
+  }
+
+  .mobile-header-currency select {
+    width: 100%;
+    height: 100%;
+
+    padding: 0 15px 0 6px;
+
+    border: 0;
+    outline: 0;
+
+    appearance: none;
+    -webkit-appearance: none;
+
+    background: transparent;
+    color: inherit;
+
+    font-family: inherit;
+    font-size: 7px;
+    font-weight: 900;
+
+    cursor: pointer;
+  }
+
+  .mobile-header-currency svg {
+    position: absolute;
+    right: 5px;
+
+    width: 9px;
+    height: 9px;
+
+    pointer-events: none;
+  }
+
+  .mobile-header-menu-button {
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Currency in the drawer is no longer needed */
+  .mobile-currency-section {
+    display: none !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .mobile-header-currency {
+    right: 42px;
+
+    width: 42px;
+    height: 28px;
+  }
+
+  .mobile-header-currency select {
+    padding-left: 5px;
+
+    font-size: 6px;
+  }
+}
+
+@media (max-width: 360px) {
+  .mobile-header-currency {
+    right: 38px;
+
+    width: 38px;
+    height: 26px;
+  }
+
+  .mobile-header-currency select {
+    padding-right: 12px;
+
+    font-size: 5.5px;
+  }
+
+  .mobile-header-currency svg {
+    right: 3px;
+  }
+}
+
+
+/* ========================================
+   DESKTOP CART BESIDE STORE LOGO
+======================================== */
+
+.desktop-logo-cart {
+  position: relative;
+
+  min-height: 38px;
+
+  padding: 0 10px 0 7px;
+
+  display: inline-flex;
+  align-items: center;
+
+  gap: 7px;
+
+  flex-shrink: 0;
+
+  border: 1px solid #e8e3ef;
+  border-radius: 11px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #fbfaff,
+      #f5f1ff
+    );
+
+  color: #2d2636;
+
+  text-decoration: none;
+
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.desktop-logo-cart:hover {
+  transform: translateY(-1px);
+
+  border-color: #d8cef6;
+
+  background:
+    linear-gradient(
+      135deg,
+      #f7f3ff,
+      #efe9ff
+    );
+
+  box-shadow:
+    0 7px 18px rgba(103, 68, 237, 0.11);
+}
+
+.desktop-logo-cart-icon {
+  width: 29px;
+  height: 29px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 9px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #6b46f2,
+      #b43bd1
+    );
+
+  color: #ffffff;
+
+  box-shadow:
+    0 6px 14px rgba(105, 69, 245, 0.2);
+}
+
+.desktop-logo-cart-icon svg {
+  stroke-width: 2;
+}
+
+.desktop-logo-cart-text {
+  display: flex;
+  flex-direction: column;
+
+  line-height: 1;
+}
+
+.desktop-logo-cart-text small {
+  color: #9991a2;
+
+  font-size: 6px;
+  font-weight: 700;
+}
+
+.desktop-logo-cart-text strong {
+  margin-top: 3px;
+
+  color: #332b3c;
+
+  font-size: 9px;
+  font-weight: 900;
+}
+
+.desktop-logo-cart-count {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+
+  min-width: 17px;
+  height: 17px;
+
+  padding: 0 3px;
+
+  display: grid;
+  place-items: center;
+
+  border: 2px solid #ffffff;
+  border-radius: 999px;
+
+  background: #ea477e;
+  color: #ffffff;
+
+  font-size: 6px;
+  font-weight: 900;
+}
+
+/* ========================================
+   MOBILE ACCOUNT BESIDE CURRENCY
+======================================== */
+
+.mobile-header-account {
+  display: none;
+}
+
+@media (max-width: 780px) {
+  .desktop-logo-cart {
+    display: none;
+  }
+
+  .mobile-header-account {
+    position: absolute;
+    right: 97px;
+
+    width: 30px;
+    height: 30px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 7px;
+
+    background: transparent;
+    color: #211d29;
+
+    text-decoration: none;
+  }
+
+  .mobile-header-account svg {
+    width: 20px;
+    height: 20px;
+
+    stroke-width: 1.8;
+  }
+
+  .mobile-header-account:hover,
+  .mobile-header-account.active {
+    background: #f0edff;
+    color: #6845ef;
+  }
+}
+
+@media (max-width: 430px) {
+  .mobile-header-account {
+    right: 88px;
+
+    width: 28px;
+    height: 28px;
+  }
+
+  .mobile-header-account svg {
+    width: 19px;
+    height: 19px;
+  }
+}
+
+@media (max-width: 360px) {
+  .mobile-header-account {
+    right: 80px;
+
+    width: 26px;
+    height: 26px;
+  }
+
+  .mobile-header-account svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+/* Hide the old desktop cart action if any older markup remains */
+@media (min-width: 781px) {
+  .navbar-actions .cart-button {
+    display: none !important;
+  }
+}

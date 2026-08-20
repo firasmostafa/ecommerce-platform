@@ -1,0 +1,294 @@
+.category-card {
+  position: relative;
+
+  min-height: 280px;
+
+  overflow: hidden;
+
+  border-radius: 24px;
+
+  background: #ece9f7;
+
+  box-shadow:
+    0 18px 45px rgba(49, 35, 83, 0.12);
+
+  color: #ffffff;
+
+  text-decoration: none;
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.category-card:hover {
+  transform: translateY(-7px);
+
+  box-shadow:
+    0 24px 60px rgba(49, 35, 83, 0.18);
+}
+
+/* IMAGE */
+
+.category-card-image {
+  position: absolute;
+  inset: 0;
+}
+
+.category-card-image img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+
+  transition: transform 0.5s ease;
+}
+
+.category-card:hover .category-card-image img {
+  transform: scale(1.08);
+}
+
+/* PLACEHOLDER */
+
+.category-card-placeholder {
+  width: 100%;
+  height: 100%;
+
+  display: grid;
+  place-items: center;
+
+  background:
+    linear-gradient(
+      135deg,
+      #6642f0,
+      #9f42ff,
+      #e13abf
+    );
+
+  color: #ffffff;
+
+  font-size: 72px;
+  font-weight: 900;
+}
+
+/* OVERLAY */
+
+.category-card-overlay {
+  position: absolute;
+  inset: 0;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(17, 12, 28, 0.02) 18%,
+      rgba(17, 12, 28, 0.82) 100%
+    );
+}
+
+/* CONTENT */
+
+.category-card-content {
+  position: absolute;
+
+  right: 20px;
+  bottom: 20px;
+  left: 20px;
+
+  z-index: 2;
+
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+
+  gap: 16px;
+}
+
+.category-card-label {
+  color: rgba(255, 255, 255, 0.75);
+
+  font-size: 9px;
+  font-weight: 800;
+
+  letter-spacing: 0.12em;
+
+  text-transform: uppercase;
+}
+
+.category-card-content h3 {
+  margin: 5px 0;
+
+  color: #ffffff;
+
+  font-size: 22px;
+  line-height: 1.05;
+}
+
+.category-card-content p {
+  margin: 0;
+
+  color: rgba(255, 255, 255, 0.78);
+
+  font-size: 11px;
+}
+
+/* ARROW */
+
+.category-card-arrow {
+  width: 42px;
+  height: 42px;
+
+  display: grid;
+  place-items: center;
+
+  flex-shrink: 0;
+
+  border:
+    1px solid rgba(255, 255, 255, 0.28);
+
+  border-radius: 13px;
+
+  background:
+    rgba(255, 255, 255, 0.13);
+
+  backdrop-filter: blur(10px);
+
+  transition:
+    transform 0.25s ease,
+    background 0.25s ease;
+}
+
+.category-card:hover .category-card-arrow {
+  background:
+    rgba(255, 255, 255, 0.24);
+
+  transform:
+    translate(3px, -3px);
+}
+
+/* TABLET */
+
+@media (max-width: 900px) {
+  .category-card {
+    min-height: 230px;
+  }
+
+  .category-card-content h3 {
+    font-size: 18px;
+  }
+}
+
+/* MOBILE — TWO CARDS SIDE BY SIDE */
+
+@media (max-width: 650px) {
+  .category-card {
+    width: 100%;
+    min-width: 0;
+
+    min-height: 165px;
+
+    border-radius: 13px;
+
+    box-shadow:
+      0 8px 22px rgba(49, 35, 83, 0.1);
+  }
+
+  .category-card:hover {
+    transform: none;
+  }
+
+  .category-card:active {
+    transform: scale(0.985);
+  }
+
+  .category-card-image img {
+    object-position: center;
+  }
+
+  .category-card-content {
+    right: 9px;
+    bottom: 9px;
+    left: 9px;
+
+    gap: 6px;
+  }
+
+  .category-card-content > div {
+    min-width: 0;
+  }
+
+  .category-card-label {
+    font-size: 5.5px;
+
+    letter-spacing: 0.1em;
+  }
+
+  .category-card-content h3 {
+    max-width: 100%;
+
+    margin: 3px 0;
+
+    overflow: hidden;
+
+    color: #ffffff;
+
+    font-size: 12px;
+    line-height: 1.1;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .category-card-content p {
+    font-size: 7px;
+  }
+
+  .category-card-arrow {
+    width: 28px;
+    height: 28px;
+
+    border-radius: 8px;
+  }
+
+  .category-card-arrow svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .category-card-placeholder {
+    font-size: 38px;
+  }
+
+  .category-card-overlay {
+    background:
+      linear-gradient(
+        180deg,
+        rgba(17, 12, 28, 0.02) 20%,
+        rgba(17, 12, 28, 0.86) 100%
+      );
+  }
+}
+
+/* VERY SMALL MOBILE */
+
+@media (max-width: 370px) {
+  .category-card {
+    min-height: 150px;
+  }
+
+  .category-card-content {
+    right: 7px;
+    bottom: 7px;
+    left: 7px;
+  }
+
+  .category-card-content h3 {
+    font-size: 10px;
+  }
+
+  .category-card-arrow {
+    width: 25px;
+    height: 25px;
+  }
+}
