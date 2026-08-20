@@ -36,15 +36,9 @@ RUN chown -R www-data:www-data \
 RUN chmod -R 775 \
     storage \
     bootstrap/cache
+RUN sed -i 's/Listen 80/Listen 10000/' /etc/apache2/ports.conf \
+    && sed -i 's/<VirtualHost \*:80>/<VirtualHost *:10000>/' /etc/apache2/sites-available/000-default.conf
 
-RUN sed -i \
-    's#DocumentRoot /var/www/html#DocumentRoot /var/www/html/public#g' \
-    /etc/apache2/sites-available/000-default.conf
+EXPOSE 10000
 
-RUN printf '<Directory /var/www/html/public>\n\
-AllowOverride All\n\
-Require all granted\n\
-</Directory>\n' \
-    >> /etc/apache2/apache2.conf
-
-CMD ["sh", "-c", "sed -i \"s/Listen 80/Listen ${PORT}/\" /etc/apache2/ports.conf && sed -i \"s/<VirtualHost \\*:80>/<VirtualHost *:${PORT}>/\" /etc/apache2/sites-available/000-default.conf && apache2-foreground"]
+CMD ["apache2-foreground"]
