@@ -178,6 +178,22 @@ GET /api/my-orders
 GET /api/orders/{order}
 ```
 
+## 📸 Screenshots
+
+### Home Page
+
+![Home Page](screenshots/home(3).png)
+
+### Products Page
+
+![Products Page](screenshots/products.png)
+
+
+### Admin Dashboard
+
+![Admin Dashboard](screenshots/admin.png)
+
+
 ## ⚡ Performance Optimizations
 
 The project includes several performance improvements:
