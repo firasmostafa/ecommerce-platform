@@ -1,15 +1,19 @@
-    import HeroSection from "../sections/home/HeroSection";
-    import CategoriesPreview from "../sections/home/CategoriesPreview";
-    import FeaturedPreview from "../sections/home/FeaturedPreview";
+import HomeDataProvider from "../context/HomeDataProvider";
 
-    function Home() {
-    return (
-        <main>
+import HeroSection from "../sections/home/HeroSection";
+import CategoriesPreview from "../sections/home/CategoriesPreview";
+import FeaturedPreview from "../sections/home/FeaturedPreview";
+
+function Home() {
+  return (
+    <HomeDataProvider>
+      <main>
         <HeroSection />
         <CategoriesPreview />
         <FeaturedPreview />
-        </main>
-    );
-    }
+      </main>
+    </HomeDataProvider>
+  );
+}
 
-    export default Home;
+export default Home;
