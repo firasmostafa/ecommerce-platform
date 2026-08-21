@@ -139,15 +139,19 @@ function AdminProducts() {
   }).length;
 
   const getPrimaryImage = (product) => {
-    const image =
-      product.images?.find((item) => item.is_primary) || product.images?.[0];
+  const image =
+    product.images?.find((item) => item.is_primary) || product.images?.[0];
 
-    if (!image?.image) {
-      return null;
-    }
+  if (!image?.image) {
+    return null;
+  }
 
-    return `${STORAGE_URL}/${image.image}`;
-  };
+  if (image.image.startsWith("http")) {
+    return image.image;
+  }
+
+  return `${STORAGE_URL}/${image.image}`;
+};
 
   const formatPrice = (value) => {
     return `$${Number(value || 0).toFixed(2)}`;

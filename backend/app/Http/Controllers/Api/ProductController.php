@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\ProductImage;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
@@ -23,12 +25,6 @@ class ProductController extends Controller
             ])
             ->where('is_active', true);
 
-        /*
-        |--------------------------------------------------------------------------
-        | Search
-        |--------------------------------------------------------------------------
-        */
-
         if ($request->filled('search')) {
             $search = trim($request->input('search'));
 
@@ -39,12 +35,6 @@ class ProductController extends Controller
             });
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | Category Filter
-        |--------------------------------------------------------------------------
-        */
-
         if ($request->filled('category')) {
             $category = $request->input('category');
 
@@ -54,42 +44,17 @@ class ProductController extends Controller
             });
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | Featured Products
-        |--------------------------------------------------------------------------
-        */
-
-        if ($request->boolean('featured')) {
-            $query->where('is_featured', true);
-        }
-
-        /*
-        |--------------------------------------------------------------------------
-        | Products On Sale
-        |--------------------------------------------------------------------------
-        */
-
+    if ($request->boolean('featured')) {
+    $query->where('is_featured', true);
+}
         if ($request->boolean('on_sale')) {
             $query->whereNotNull('sale_price')
                 ->whereColumn('sale_price', '<', 'price');
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | Stock Filter
-        |--------------------------------------------------------------------------
-        */
-
         if ($request->boolean('in_stock')) {
             $query->where('stock', '>', 0);
         }
-
-        /*
-        |--------------------------------------------------------------------------
-        | Price Filters
-        |--------------------------------------------------------------------------
-        */
 
         if ($request->filled('min_price')) {
             $query->whereRaw(
@@ -104,12 +69,6 @@ class ProductController extends Controller
                 [(float) $request->input('max_price')]
             );
         }
-
-        /*
-        |--------------------------------------------------------------------------
-        | Sorting
-        |--------------------------------------------------------------------------
-        */
 
         $sort = $request->input('sort', 'newest');
 
@@ -141,14 +100,7 @@ class ProductController extends Controller
 
         $query->orderBy('sort_order');
 
-        /*
-        |--------------------------------------------------------------------------
-        | Pagination
-        |--------------------------------------------------------------------------
-        */
-
         $perPage = (int) $request->input('per_page', 12);
-
         $perPage = max(1, min($perPage, 48));
 
         $products = $query
@@ -243,6 +195,25 @@ class ProductController extends Controller
                 'integer',
                 'min:0',
             ],
+
+            /*
+            |--------------------------------------------------------------------------
+            | ImageKit URLs
+            |--------------------------------------------------------------------------
+            */
+
+            'images' => [
+                'nullable',
+                'array',
+                'max:10',
+            ],
+
+            'images.*' => [
+                'required',
+                'string',
+                'url',
+                'max:2048',
+            ],
         ]);
 
         $slug = $validated['slug'] ?? Str::slug($validated['name']);
@@ -251,21 +222,30 @@ class ProductController extends Controller
             $slug .= '-' . Str::lower(Str::random(5));
         }
 
-        $product = Product::create([
-            'category_id' => $validated['category_id'] ?? null,
-            'name' => $validated['name'],
-            'slug' => $slug,
-            'sku' => $validated['sku'] ?? null,
-            'short_description' => $validated['short_description'] ?? null,
-            'description' => $validated['description'] ?? null,
-            'price' => $validated['price'],
-            'sale_price' => $validated['sale_price'] ?? null,
-            'stock' => $validated['stock'] ?? 0,
-            'low_stock_threshold' => $validated['low_stock_threshold'] ?? 5,
-            'is_featured' => $validated['is_featured'] ?? false,
-            'is_active' => $validated['is_active'] ?? true,
-            'sort_order' => $validated['sort_order'] ?? 0,
-        ]);
+        $product = DB::transaction(function () use ($validated, $slug) {
+            $product = Product::create([
+                'category_id' => $validated['category_id'] ?? null,
+                'name' => $validated['name'],
+                'slug' => $slug,
+                'sku' => $validated['sku'] ?? null,
+                'short_description' => $validated['short_description'] ?? null,
+                'description' => $validated['description'] ?? null,
+                'price' => $validated['price'],
+                'sale_price' => $validated['sale_price'] ?? null,
+                'stock' => $validated['stock'] ?? 0,
+                'low_stock_threshold' => $validated['low_stock_threshold'] ?? 5,
+                'is_featured' => $validated['is_featured'] ?? false,
+                'is_active' => $validated['is_active'] ?? true,
+                'sort_order' => $validated['sort_order'] ?? 0,
+            ]);
+
+            $this->saveProductImages(
+                $product,
+                $validated['images'] ?? []
+            );
+
+            return $product;
+        });
 
         $product->load([
             'category',
@@ -380,6 +360,19 @@ class ProductController extends Controller
                 'integer',
                 'min:0',
             ],
+
+            'images' => [
+                'sometimes',
+                'array',
+                'max:10',
+            ],
+
+            'images.*' => [
+                'required',
+                'string',
+                'url',
+                'max:2048',
+            ],
         ]);
 
         if (
@@ -396,47 +389,64 @@ class ProductController extends Controller
             }
         }
 
-        if (array_key_exists('name', $validated)) {
-            $product->name = $validated['name'];
-        }
-
-        if (array_key_exists('slug', $validated)) {
-            $product->slug = $validated['slug'];
-        } elseif (array_key_exists('name', $validated)) {
-            $slug = Str::slug($validated['name']);
-
-            if (
-                Product::where('slug', $slug)
-                    ->where('id', '!=', $product->id)
-                    ->exists()
-            ) {
-                $slug .= '-' . Str::lower(Str::random(5));
+        DB::transaction(function () use ($validated, $product) {
+            if (array_key_exists('name', $validated)) {
+                $product->name = $validated['name'];
             }
 
-            $product->slug = $slug;
-        }
+            if (array_key_exists('slug', $validated)) {
+                $product->slug = $validated['slug'];
+            } elseif (array_key_exists('name', $validated)) {
+                $slug = Str::slug($validated['name']);
 
-        $fields = [
-            'category_id',
-            'sku',
-            'short_description',
-            'description',
-            'price',
-            'sale_price',
-            'stock',
-            'low_stock_threshold',
-            'is_featured',
-            'is_active',
-            'sort_order',
-        ];
+                if (
+                    Product::where('slug', $slug)
+                        ->where('id', '!=', $product->id)
+                        ->exists()
+                ) {
+                    $slug .= '-' . Str::lower(Str::random(5));
+                }
 
-        foreach ($fields as $field) {
-            if (array_key_exists($field, $validated)) {
-                $product->{$field} = $validated[$field];
+                $product->slug = $slug;
             }
-        }
 
-        $product->save();
+            $fields = [
+                'category_id',
+                'sku',
+                'short_description',
+                'description',
+                'price',
+                'sale_price',
+                'stock',
+                'low_stock_threshold',
+                'is_featured',
+                'is_active',
+                'sort_order',
+            ];
+
+            foreach ($fields as $field) {
+                if (array_key_exists($field, $validated)) {
+                    $product->{$field} = $validated[$field];
+                }
+            }
+
+            $product->save();
+
+            /*
+            |--------------------------------------------------------------------------
+            | Replace images only when new images were sent
+            |--------------------------------------------------------------------------
+            */
+
+            if (array_key_exists('images', $validated)) {
+                $product->images()->delete();
+
+                $this->saveProductImages(
+                    $product,
+                    $validated['images']
+                );
+            }
+        });
 
         $product->load([
             'category',
@@ -461,5 +471,23 @@ class ProductController extends Controller
             'success' => true,
             'message' => 'Product deleted successfully.',
         ]);
+    }
+
+    /**
+     * Save ImageKit URLs in product_images table.
+     */
+    private function saveProductImages(
+        Product $product,
+        array $images
+    ): void {
+        foreach ($images as $index => $imageUrl) {
+            ProductImage::create([
+                'product_id' => $product->id,
+                'image' => $imageUrl,
+                'alt_text' => $product->name,
+                'is_primary' => $index === 0,
+                'sort_order' => $index,
+            ]);
+        }
     }
 }

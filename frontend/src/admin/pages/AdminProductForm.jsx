@@ -183,6 +183,38 @@ function AdminProductForm() {
   const handleImagesChange = (event) => {
     const selectedFiles = Array.from(event.target.files || []);
 
+    const allowedTypes = [
+      "image/jpeg",
+      "image/png",
+      "image/webp",
+    ];
+
+    if (selectedFiles.length > 10) {
+      setError("You can upload a maximum of 10 images.");
+      event.target.value = "";
+      return;
+    }
+
+    const invalidType = selectedFiles.find(
+      (file) => !allowedTypes.includes(file.type),
+    );
+
+    if (invalidType) {
+      setError("Only JPG, PNG and WEBP images are allowed.");
+      event.target.value = "";
+      return;
+    }
+
+    const oversizedFile = selectedFiles.find(
+      (file) => file.size > 5 * 1024 * 1024,
+    );
+
+    if (oversizedFile) {
+      setError("Each image must be smaller than 5MB.");
+      event.target.value = "";
+      return;
+    }
+
     imagePreviews.forEach((preview) => {
       URL.revokeObjectURL(preview);
     });
@@ -190,6 +222,85 @@ function AdminProductForm() {
     setImages(selectedFiles);
 
     setImagePreviews(selectedFiles.map((file) => URL.createObjectURL(file)));
+
+    setError("");
+    setSuccess("");
+  };
+
+  /* ========================================
+     IMAGE HELPERS
+  ======================================== */
+
+  const getImageUrl = (imagePath) => {
+    if (!imagePath) {
+      return "";
+    }
+
+    if (imagePath.startsWith("http")) {
+      return imagePath;
+    }
+
+    return `${STORAGE_URL}/${imagePath}`;
+  };
+
+  const uploadImageToImageKit = async (file) => {
+    const authResponse = await axios.get(
+      `${API_URL}/admin/imagekit-auth`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+        },
+      },
+    );
+
+    const {
+      token: imageKitToken,
+      expire,
+      signature,
+      publicKey,
+    } = authResponse.data;
+
+    if (!imageKitToken || !expire || !signature || !publicKey) {
+      throw new Error("ImageKit authentication data is missing.");
+    }
+
+    const uploadData = new FormData();
+
+    uploadData.append("file", file);
+    uploadData.append(
+      "fileName",
+      `product-${Date.now()}-${file.name}`,
+    );
+    uploadData.append("token", imageKitToken);
+    uploadData.append("expire", expire);
+    uploadData.append("signature", signature);
+    uploadData.append("publicKey", publicKey);
+    uploadData.append("folder", "/ecommerce/products");
+
+    const uploadResponse = await axios.post(
+      "https://upload.imagekit.io/api/v1/files/upload",
+      uploadData,
+    );
+
+    const uploadedUrl = uploadResponse.data?.url;
+
+    if (!uploadedUrl) {
+      throw new Error("ImageKit did not return an image URL.");
+    }
+
+    return uploadedUrl;
+  };
+
+  const uploadImagesToImageKit = async (files) => {
+    const uploadedUrls = [];
+
+    for (const file of files) {
+      const imageUrl = await uploadImageToImageKit(file);
+      uploadedUrls.push(imageUrl);
+    }
+
+    return uploadedUrls;
   };
 
   /* ========================================
@@ -254,61 +365,59 @@ function AdminProductForm() {
       setError("");
       setSuccess("");
 
-      const formData = new FormData();
+      let uploadedImageUrls = [];
 
-      formData.append("name", form.name.trim());
-
-      formData.append("sku", form.sku.trim());
-
-      formData.append("category_id", form.category_id);
-
-      formData.append("price", form.price);
-
-      if (form.sale_price !== "") {
-        formData.append("sale_price", form.sale_price);
+      if (images.length > 0) {
+        uploadedImageUrls = await uploadImagesToImageKit(images);
       }
 
-      formData.append("stock", form.stock);
+      const payload = {
+        name: form.name.trim(),
+        sku: form.sku.trim() || null,
+        category_id: form.category_id,
+        price: Number(form.price),
+        sale_price:
+          form.sale_price === "" ? null : Number(form.sale_price),
+        stock: Number(form.stock),
+        low_stock_threshold: Number(form.low_stock_threshold),
+        short_description: form.short_description.trim() || null,
+        description: form.description.trim() || null,
+        is_active: Boolean(form.is_active),
+        is_featured: Boolean(form.is_featured),
+      };
 
-      formData.append("low_stock_threshold", form.low_stock_threshold);
-
-      formData.append("short_description", form.short_description);
-
-      formData.append("description", form.description);
-
-      formData.append("is_active", form.is_active ? "1" : "0");
-
-      formData.append("is_featured", form.is_featured ? "1" : "0");
-
-      images.forEach((image) => {
-        formData.append("images[]", image);
-      });
+      if (uploadedImageUrls.length > 0) {
+        payload.images = uploadedImageUrls;
+      }
 
       let response;
 
       if (isEditMode) {
-        formData.append("_method", "PUT");
-
-        response = await axios.post(
+        response = await axios.put(
           `${API_URL}/admin/products/${productId}`,
-          formData,
+          payload,
           {
             headers: {
               Authorization: `Bearer ${token}`,
-
               Accept: "application/json",
+              "Content-Type": "application/json",
             },
           },
         );
       } else {
-        response = await axios.post(`${API_URL}/admin/products`, formData, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-
-            Accept: "application/json",
+        response = await axios.post(
+          `${API_URL}/admin/products`,
+          payload,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
           },
-        });
+        );
       }
+
       const savedProduct = response.data?.data;
 
       const successMessage = isEditMode
@@ -336,7 +445,11 @@ function AdminProductForm() {
 
         setError(firstError || "Please check the product information.");
       } else {
-        setError(err.response?.data?.message || "Unable to save this product.");
+        setError(
+          err.response?.data?.message ||
+            err.message ||
+            "Unable to save this product.",
+        );
       }
     } finally {
       setSaving(false);
@@ -635,7 +748,7 @@ function AdminProductForm() {
                           key={image.id || image.image}
                         >
                           <img
-                            src={`${STORAGE_URL}/${image.image}`}
+                            src={getImageUrl(image.image)}
                             alt={`Product ${index + 1}`}
                           />
 
@@ -709,7 +822,9 @@ function AdminProductForm() {
               <Save size={14} />
 
               {saving
-                ? "Saving..."
+                ? images.length > 0
+                  ? "Uploading & Saving..."
+                  : "Saving..."
                 : isEditMode
                   ? "Update Product"
                   : "Create Product"}
