@@ -95,7 +95,10 @@ function OrderDetails() {
 
         console.error("Failed to load order:", err);
 
-        setError(err.response?.data?.message || "Unable to load this order.");
+        setError(
+          err.response?.data?.message ||
+            "Unable to load this order.",
+        );
       })
       .finally(() => {
         if (!cancelled) {
@@ -113,7 +116,9 @@ function OrderDetails() {
       return -1;
     }
 
-    return ORDER_STEPS.findIndex((step) => step.status === order.status);
+    return ORDER_STEPS.findIndex(
+      (step) => step.status === order.status,
+    );
   }, [order]);
 
   const formatDate = (value) => {
@@ -133,11 +138,17 @@ function OrderDetails() {
 
     const primaryImage =
       images.find(
-        (image) => image.is_primary === true || image.is_primary === 1,
+        (image) =>
+          image.is_primary === true ||
+          image.is_primary === 1,
       ) || images[0];
 
     if (!primaryImage?.image) {
       return null;
+    }
+
+    if (primaryImage.image.startsWith("http")) {
+      return `${primaryImage.image}?tr=w-220,q-80`;
     }
 
     return `${STORAGE_URL}/${primaryImage.image}`;
@@ -165,7 +176,9 @@ function OrderDetails() {
 
           <p>{error || "Order not found."}</p>
 
-          <Link to="/my-orders">Back to My Orders</Link>
+          <Link to="/my-orders">
+            Back to My Orders
+          </Link>
         </div>
       </main>
     );
@@ -174,7 +187,10 @@ function OrderDetails() {
   return (
     <main className="order-details-page">
       <div className="order-details-container">
-        <Link to="/my-orders" className="order-details-back">
+        <Link
+          to="/my-orders"
+          className="order-details-back"
+        >
           <ArrowLeft size={17} />
           My Orders
         </Link>
@@ -185,10 +201,14 @@ function OrderDetails() {
 
             <h1>{order.order_number}</h1>
 
-            <p>Placed on {formatDate(order.created_at)}</p>
+            <p>
+              Placed on {formatDate(order.created_at)}
+            </p>
           </div>
 
-          <span className={`order-details-status status-${order.status}`}>
+          <span
+            className={`order-details-status status-${order.status}`}
+          >
             {order.status}
           </span>
         </header>
@@ -201,8 +221,8 @@ function OrderDetails() {
               <strong>Order Cancelled</strong>
 
               <p>
-                This order was cancelled and will not continue through the
-                delivery process.
+                This order was cancelled and will not
+                continue through the delivery process.
               </p>
             </div>
           </section>
@@ -222,25 +242,33 @@ function OrderDetails() {
               {ORDER_STEPS.map((step, index) => {
                 const Icon = step.icon;
 
-                const completed = index <= currentStep;
+                const completed =
+                  index <= currentStep;
 
-                const active = index === currentStep;
+                const active =
+                  index === currentStep;
 
                 return (
                   <div
                     key={step.status}
-                    className={`tracking-step ${completed ? "completed" : ""} ${
-                      active ? "active" : ""
-                    }`}
+                    className={`tracking-step ${
+                      completed ? "completed" : ""
+                    } ${active ? "active" : ""}`}
                   >
                     <div className="tracking-step-icon">
                       <Icon size={18} />
                     </div>
 
                     <div>
-                      <strong>{step.label}</strong>
+                      <strong>
+                        {step.label}
+                      </strong>
 
-                      {active && <span>Current status</span>}
+                      {active && (
+                        <span>
+                          Current status
+                        </span>
+                      )}
                     </div>
                   </div>
                 );
@@ -263,21 +291,30 @@ function OrderDetails() {
 
             <div className="order-items-list">
               {(order.items || []).map((item) => {
-                const imageUrl = getItemImage(item);
+                const imageUrl =
+                  getItemImage(item);
 
-                const productLink = item.product?.slug
-                  ? `/products/${item.product.slug}`
-                  : null;
+                const productLink =
+                  item.product?.slug
+                    ? `/products/${item.product.slug}`
+                    : null;
 
                 const lineTotal =
                   item.line_total ||
-                  Number(item.unit_price || 0) * Number(item.quantity || 0);
+                  Number(item.unit_price || 0) *
+                    Number(item.quantity || 0);
 
                 return (
-                  <div className="order-detail-item" key={item.id}>
+                  <div
+                    className="order-detail-item"
+                    key={item.id}
+                  >
                     <div className="order-detail-item-info">
                       {productLink ? (
-                        <Link to={productLink} className="order-item-image">
+                        <Link
+                          to={productLink}
+                          className="order-item-image"
+                        >
                           {imageUrl ? (
                             <img
                               src={imageUrl}
@@ -286,6 +323,8 @@ function OrderDetails() {
                                 item.product?.name ||
                                 "Product"
                               }
+                              loading="lazy"
+                              decoding="async"
                             />
                           ) : (
                             <div className="order-item-placeholder">
@@ -298,7 +337,12 @@ function OrderDetails() {
                           {imageUrl ? (
                             <img
                               src={imageUrl}
-                              alt={item.product_name || "Product"}
+                              alt={
+                                item.product_name ||
+                                "Product"
+                              }
+                              loading="lazy"
+                              decoding="async"
                             />
                           ) : (
                             <div className="order-item-placeholder">
@@ -327,17 +371,28 @@ function OrderDetails() {
                         )}
 
                         {item.product_sku && (
-                          <span>SKU: {item.product_sku}</span>
+                          <span>
+                            SKU: {item.product_sku}
+                          </span>
                         )}
 
-                        <span>Quantity: {item.quantity}</span>
+                        <span>
+                          Quantity: {item.quantity}
+                        </span>
                       </div>
                     </div>
 
                     <div className="order-item-price">
-                      <span>{formatPrice(item.unit_price)} each</span>
+                      <span>
+                        {formatPrice(
+                          item.unit_price,
+                        )}{" "}
+                        each
+                      </span>
 
-                      <strong>{formatPrice(lineTotal)}</strong>
+                      <strong>
+                        {formatPrice(lineTotal)}
+                      </strong>
                     </div>
                   </div>
                 );
@@ -360,42 +415,62 @@ function OrderDetails() {
               <div>
                 <span>Subtotal</span>
 
-                <strong>{formatPrice(order.subtotal)}</strong>
+                <strong>
+                  {formatPrice(order.subtotal)}
+                </strong>
               </div>
 
               <div>
                 <span>Discount</span>
 
-                <strong>-{formatPrice(order.discount_amount)}</strong>
+                <strong>
+                  -
+                  {formatPrice(
+                    order.discount_amount,
+                  )}
+                </strong>
               </div>
 
               <div>
                 <span>Shipping</span>
 
                 <strong>
-                  {Number(order.shipping_amount || 0) === 0
+                  {Number(
+                    order.shipping_amount || 0,
+                  ) === 0
                     ? "Free"
-                    : formatPrice(order.shipping_amount)}
+                    : formatPrice(
+                        order.shipping_amount,
+                      )}
                 </strong>
               </div>
 
               <div>
                 <span>Tax</span>
 
-                <strong>{formatPrice(order.tax_amount)}</strong>
+                <strong>
+                  {formatPrice(
+                    order.tax_amount,
+                  )}
+                </strong>
               </div>
 
               <div className="order-summary-total">
                 <span>Total</span>
 
-                <strong>{formatPrice(order.total)}</strong>
+                <strong>
+                  {formatPrice(order.total)}
+                </strong>
               </div>
             </div>
 
             <div className="order-payment-status">
               <span>Payment</span>
 
-              <strong>{order.payment_status || "pending"}</strong>
+              <strong>
+                {order.payment_status ||
+                  "pending"}
+              </strong>
             </div>
 
             <Link
@@ -415,7 +490,9 @@ function OrderDetails() {
             <div>
               <span>DELIVERY</span>
 
-              <h2>Shipping Information</h2>
+              <h2>
+                Shipping Information
+              </h2>
             </div>
           </div>
 
@@ -423,38 +500,52 @@ function OrderDetails() {
             <div>
               <span>Name</span>
 
-              <strong>{order.customer_name || "—"}</strong>
+              <strong>
+                {order.customer_name || "—"}
+              </strong>
             </div>
 
             <div>
               <span>Phone</span>
 
-              <strong>{order.customer_phone || "—"}</strong>
+              <strong>
+                {order.customer_phone || "—"}
+              </strong>
             </div>
 
             <div>
               <span>Country</span>
 
-              <strong>{order.country || "—"}</strong>
+              <strong>
+                {order.country || "—"}
+              </strong>
             </div>
 
             <div>
               <span>City</span>
 
-              <strong>{order.city || "—"}</strong>
+              <strong>
+                {order.city || "—"}
+              </strong>
             </div>
 
             <div className="order-address-full">
               <span>Address</span>
 
-              <strong>{order.address || "—"}</strong>
+              <strong>
+                {order.address || "—"}
+              </strong>
             </div>
 
             {order.customer_notes && (
               <div className="order-address-full">
-                <span>Delivery Notes</span>
+                <span>
+                  Delivery Notes
+                </span>
 
-                <strong>{order.customer_notes}</strong>
+                <strong>
+                  {order.customer_notes}
+                </strong>
               </div>
             )}
           </div>

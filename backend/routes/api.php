@@ -61,7 +61,7 @@ Route::get('/products', [
     'index',
 ]);
 
-Route::get('/products/{product}', [
+Route::get('/products/{product:slug}', [
     ProductController::class,
     'show',
 ]);

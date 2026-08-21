@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\ProductImage;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -18,6 +19,69 @@ class ProductController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
+        /*
+        |--------------------------------------------------------------------------
+        | Cached Featured Products
+        |--------------------------------------------------------------------------
+        |
+        | Used mainly by homepage.
+        | Cache version allows us to invalidate all featured-product cache keys
+        | without needing wildcard deletion.
+        |
+        */
+
+        if (
+            $request->boolean('featured') &&
+            !$request->filled('search') &&
+            !$request->filled('category') &&
+            !$request->filled('min_price') &&
+            !$request->filled('max_price') &&
+            !$request->boolean('on_sale') &&
+            !$request->boolean('in_stock') &&
+            !$request->filled('sort')
+        ) {
+            $perPage = (int) $request->input('per_page', 12);
+            $perPage = max(1, min($perPage, 48));
+
+            $page = max(1, (int) $request->input('page', 1));
+
+            $version = (int) Cache::get(
+                'featured_products_version',
+                1
+            );
+
+            $cacheKey =
+                "featured_products_v{$version}_per_page_{$perPage}_page_{$page}";
+
+            $products = Cache::remember(
+                $cacheKey,
+                now()->addMinutes(10),
+                function () use ($perPage) {
+                    return Product::query()
+                        ->with([
+                            'category',
+                            'images',
+                        ])
+                        ->where('is_active', true)
+                        ->where('is_featured', true)
+                        ->orderBy('sort_order')
+                        ->orderByDesc('created_at')
+                        ->paginate($perPage);
+                }
+            );
+
+            return response()->json([
+                'success' => true,
+                'data' => $products,
+            ]);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Standard Product Query
+        |--------------------------------------------------------------------------
+        */
+
         $query = Product::query()
             ->with([
                 'category',
@@ -25,36 +89,80 @@ class ProductController extends Controller
             ])
             ->where('is_active', true);
 
+        /*
+        |--------------------------------------------------------------------------
+        | Search
+        |--------------------------------------------------------------------------
+        */
+
         if ($request->filled('search')) {
             $search = trim($request->input('search'));
 
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
                     ->orWhere('sku', 'like', "%{$search}%")
-                    ->orWhere('short_description', 'like', "%{$search}%");
+                    ->orWhere(
+                        'short_description',
+                        'like',
+                        "%{$search}%"
+                    );
             });
         }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Category Filter
+        |--------------------------------------------------------------------------
+        */
 
         if ($request->filled('category')) {
             $category = $request->input('category');
 
-            $query->whereHas('category', function ($q) use ($category) {
-                $q->where('slug', $category)
-                    ->where('is_active', true);
-            });
+            $query->whereHas(
+                'category',
+                function ($q) use ($category) {
+                    $q->where('slug', $category)
+                        ->where('is_active', true);
+                }
+            );
         }
 
-    if ($request->boolean('featured')) {
-    $query->where('is_featured', true);
-}
+        /*
+        |--------------------------------------------------------------------------
+        | Featured
+        |--------------------------------------------------------------------------
+        */
+
+        if ($request->boolean('featured')) {
+            $query->where('is_featured', true);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Sale
+        |--------------------------------------------------------------------------
+        */
+
         if ($request->boolean('on_sale')) {
             $query->whereNotNull('sale_price')
                 ->whereColumn('sale_price', '<', 'price');
         }
 
+        /*
+        |--------------------------------------------------------------------------
+        | Stock
+        |--------------------------------------------------------------------------
+        */
+
         if ($request->boolean('in_stock')) {
             $query->where('stock', '>', 0);
         }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Minimum Price
+        |--------------------------------------------------------------------------
+        */
 
         if ($request->filled('min_price')) {
             $query->whereRaw(
@@ -63,12 +171,24 @@ class ProductController extends Controller
             );
         }
 
+        /*
+        |--------------------------------------------------------------------------
+        | Maximum Price
+        |--------------------------------------------------------------------------
+        */
+
         if ($request->filled('max_price')) {
             $query->whereRaw(
                 'COALESCE(sale_price, price) <= ?',
                 [(float) $request->input('max_price')]
             );
         }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Sorting
+        |--------------------------------------------------------------------------
+        */
 
         $sort = $request->input('sort', 'newest');
 
@@ -78,11 +198,15 @@ class ProductController extends Controller
                 break;
 
             case 'price_low':
-                $query->orderByRaw('COALESCE(sale_price, price) ASC');
+                $query->orderByRaw(
+                    'COALESCE(sale_price, price) ASC'
+                );
                 break;
 
             case 'price_high':
-                $query->orderByRaw('COALESCE(sale_price, price) DESC');
+                $query->orderByRaw(
+                    'COALESCE(sale_price, price) DESC'
+                );
                 break;
 
             case 'name_asc':
@@ -99,6 +223,12 @@ class ProductController extends Controller
         }
 
         $query->orderBy('sort_order');
+
+        /*
+        |--------------------------------------------------------------------------
+        | Pagination
+        |--------------------------------------------------------------------------
+        */
 
         $perPage = (int) $request->input('per_page', 12);
         $perPage = max(1, min($perPage, 48));
@@ -216,36 +346,73 @@ class ProductController extends Controller
             ],
         ]);
 
-        $slug = $validated['slug'] ?? Str::slug($validated['name']);
+        $slug =
+            $validated['slug'] ??
+            Str::slug($validated['name']);
 
         if (Product::where('slug', $slug)->exists()) {
             $slug .= '-' . Str::lower(Str::random(5));
         }
 
-        $product = DB::transaction(function () use ($validated, $slug) {
-            $product = Product::create([
-                'category_id' => $validated['category_id'] ?? null,
-                'name' => $validated['name'],
-                'slug' => $slug,
-                'sku' => $validated['sku'] ?? null,
-                'short_description' => $validated['short_description'] ?? null,
-                'description' => $validated['description'] ?? null,
-                'price' => $validated['price'],
-                'sale_price' => $validated['sale_price'] ?? null,
-                'stock' => $validated['stock'] ?? 0,
-                'low_stock_threshold' => $validated['low_stock_threshold'] ?? 5,
-                'is_featured' => $validated['is_featured'] ?? false,
-                'is_active' => $validated['is_active'] ?? true,
-                'sort_order' => $validated['sort_order'] ?? 0,
-            ]);
+        $product = DB::transaction(
+            function () use ($validated, $slug) {
+                $product = Product::create([
+                    'category_id' =>
+                        $validated['category_id'] ?? null,
 
-            $this->saveProductImages(
-                $product,
-                $validated['images'] ?? []
-            );
+                    'name' =>
+                        $validated['name'],
 
-            return $product;
-        });
+                    'slug' =>
+                        $slug,
+
+                    'sku' =>
+                        $validated['sku'] ?? null,
+
+                    'short_description' =>
+                        $validated['short_description'] ?? null,
+
+                    'description' =>
+                        $validated['description'] ?? null,
+
+                    'price' =>
+                        $validated['price'],
+
+                    'sale_price' =>
+                        $validated['sale_price'] ?? null,
+
+                    'stock' =>
+                        $validated['stock'] ?? 0,
+
+                    'low_stock_threshold' =>
+                        $validated['low_stock_threshold'] ?? 5,
+
+                    'is_featured' =>
+                        $validated['is_featured'] ?? false,
+
+                    'is_active' =>
+                        $validated['is_active'] ?? true,
+
+                    'sort_order' =>
+                        $validated['sort_order'] ?? 0,
+                ]);
+
+                $this->saveProductImages(
+                    $product,
+                    $validated['images'] ?? []
+                );
+
+                return $product;
+            }
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | Clear Storefront Cache
+        |--------------------------------------------------------------------------
+        */
+
+        $this->invalidateProductCaches();
 
         $product->load([
             'category',
@@ -299,14 +466,20 @@ class ProductController extends Controller
                 'nullable',
                 'string',
                 'max:255',
-                Rule::unique('products', 'slug')->ignore($product->id),
+                Rule::unique(
+                    'products',
+                    'slug'
+                )->ignore($product->id),
             ],
 
             'sku' => [
                 'nullable',
                 'string',
                 'max:100',
-                Rule::unique('products', 'sku')->ignore($product->id),
+                Rule::unique(
+                    'products',
+                    'sku'
+                )->ignore($product->id),
             ],
 
             'short_description' => [
@@ -375,78 +548,155 @@ class ProductController extends Controller
             ],
         ]);
 
-        if (
-            array_key_exists('sale_price', $validated)
-            && $validated['sale_price'] !== null
-        ) {
-            $price = $validated['price'] ?? $product->price;
+        /*
+        |--------------------------------------------------------------------------
+        | Sale Price Validation
+        |--------------------------------------------------------------------------
+        */
 
-            if ((float) $validated['sale_price'] >= (float) $price) {
+        if (
+            array_key_exists('sale_price', $validated) &&
+            $validated['sale_price'] !== null
+        ) {
+            $price =
+                $validated['price'] ??
+                $product->price;
+
+            if (
+                (float) $validated['sale_price'] >=
+                (float) $price
+            ) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Sale price must be lower than the regular price.',
+                    'message' =>
+                        'Sale price must be lower than the regular price.',
                 ], 422);
             }
         }
 
-        DB::transaction(function () use ($validated, $product) {
-            if (array_key_exists('name', $validated)) {
-                $product->name = $validated['name'];
-            }
+        DB::transaction(
+            function () use ($validated, $product) {
+                if (
+                    array_key_exists(
+                        'name',
+                        $validated
+                    )
+                ) {
+                    $product->name =
+                        $validated['name'];
+                }
 
-            if (array_key_exists('slug', $validated)) {
-                $product->slug = $validated['slug'];
-            } elseif (array_key_exists('name', $validated)) {
-                $slug = Str::slug($validated['name']);
+                /*
+                |--------------------------------------------------------------------------
+                | Slug
+                |--------------------------------------------------------------------------
+                */
 
                 if (
-                    Product::where('slug', $slug)
-                        ->where('id', '!=', $product->id)
-                        ->exists()
+                    array_key_exists(
+                        'slug',
+                        $validated
+                    )
                 ) {
-                    $slug .= '-' . Str::lower(Str::random(5));
+                    $product->slug =
+                        $validated['slug'];
+                } elseif (
+                    array_key_exists(
+                        'name',
+                        $validated
+                    )
+                ) {
+                    $slug = Str::slug(
+                        $validated['name']
+                    );
+
+                    if (
+                        Product::where(
+                            'slug',
+                            $slug
+                        )
+                            ->where(
+                                'id',
+                                '!=',
+                                $product->id
+                            )
+                            ->exists()
+                    ) {
+                        $slug .=
+                            '-' .
+                            Str::lower(
+                                Str::random(5)
+                            );
+                    }
+
+                    $product->slug = $slug;
                 }
 
-                $product->slug = $slug;
-            }
+                /*
+                |--------------------------------------------------------------------------
+                | Product Fields
+                |--------------------------------------------------------------------------
+                */
 
-            $fields = [
-                'category_id',
-                'sku',
-                'short_description',
-                'description',
-                'price',
-                'sale_price',
-                'stock',
-                'low_stock_threshold',
-                'is_featured',
-                'is_active',
-                'sort_order',
-            ];
+                $fields = [
+                    'category_id',
+                    'sku',
+                    'short_description',
+                    'description',
+                    'price',
+                    'sale_price',
+                    'stock',
+                    'low_stock_threshold',
+                    'is_featured',
+                    'is_active',
+                    'sort_order',
+                ];
 
-            foreach ($fields as $field) {
-                if (array_key_exists($field, $validated)) {
-                    $product->{$field} = $validated[$field];
+                foreach ($fields as $field) {
+                    if (
+                        array_key_exists(
+                            $field,
+                            $validated
+                        )
+                    ) {
+                        $product->{$field} =
+                            $validated[$field];
+                    }
+                }
+
+                $product->save();
+
+                /*
+                |--------------------------------------------------------------------------
+                | Replace images only when new images were sent
+                |--------------------------------------------------------------------------
+                */
+
+                if (
+                    array_key_exists(
+                        'images',
+                        $validated
+                    )
+                ) {
+                    $product
+                        ->images()
+                        ->delete();
+
+                    $this->saveProductImages(
+                        $product,
+                        $validated['images']
+                    );
                 }
             }
+        );
 
-            $product->save();
+        /*
+        |--------------------------------------------------------------------------
+        | Clear Storefront Cache
+        |--------------------------------------------------------------------------
+        */
 
-            /*
-            |--------------------------------------------------------------------------
-            | Replace images only when new images were sent
-            |--------------------------------------------------------------------------
-            */
-
-            if (array_key_exists('images', $validated)) {
-                $product->images()->delete();
-
-                $this->saveProductImages(
-                    $product,
-                    $validated['images']
-                );
-            }
-        });
+        $this->invalidateProductCaches();
 
         $product->load([
             'category',
@@ -467,6 +717,14 @@ class ProductController extends Controller
     {
         $product->delete();
 
+        /*
+        |--------------------------------------------------------------------------
+        | Clear Storefront Cache
+        |--------------------------------------------------------------------------
+        */
+
+        $this->invalidateProductCaches();
+
         return response()->json([
             'success' => true,
             'message' => 'Product deleted successfully.',
@@ -482,12 +740,53 @@ class ProductController extends Controller
     ): void {
         foreach ($images as $index => $imageUrl) {
             ProductImage::create([
-                'product_id' => $product->id,
-                'image' => $imageUrl,
-                'alt_text' => $product->name,
-                'is_primary' => $index === 0,
-                'sort_order' => $index,
+                'product_id' =>
+                    $product->id,
+
+                'image' =>
+                    $imageUrl,
+
+                'alt_text' =>
+                    $product->name,
+
+                'is_primary' =>
+                    $index === 0,
+
+                'sort_order' =>
+                    $index,
             ]);
         }
+    }
+
+    /**
+     * Invalidate storefront product-related caches.
+     */
+    private function invalidateProductCaches(): void
+    {
+        /*
+        |--------------------------------------------------------------------------
+        | Featured Products
+        |--------------------------------------------------------------------------
+        */
+
+        $currentVersion = (int) Cache::get(
+            'featured_products_version',
+            1
+        );
+
+        Cache::forever(
+            'featured_products_version',
+            $currentVersion + 1
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | Category Product Counts
+        |--------------------------------------------------------------------------
+        */
+
+        Cache::forget(
+            'storefront_categories'
+        );
     }
 }

@@ -26,13 +26,15 @@ function ProductCard({ product }) {
 
   const favorite = isFavorite(product.id);
 
-  const primaryImage =
-    product.images?.find((image) => image.is_primary) || product.images?.[0];
+ const primaryImage =
+  product.images?.find((image) => image.is_primary) || product.images?.[0];
 
   const imageUrl = primaryImage?.image
-    ? `https://ecommerce-platform-4vwn.onrender.com/storage/${primaryImage.image}`
-    : null;
-
+  ? primaryImage.image.startsWith("http")
+    ? `${primaryImage.image}?tr=w-500,q-80`
+    : `https://ecommerce-platform-4vwn.onrender.com/storage/${primaryImage.image}`
+  : null;
+  
   const price = Number(product.price || 0);
 
   const salePrice = product.sale_price ? Number(product.sale_price) : null;
@@ -89,11 +91,13 @@ function ProductCard({ product }) {
           className="product-card-image-link"
         >
           {imageUrl ? (
-            <img
-              src={imageUrl}
-              alt={product.name}
-              className="product-card-image"
-            />
+           <img
+  src={imageUrl}
+  alt={product.name}
+  className="product-card-image"
+  loading="lazy"
+  decoding="async"
+/>
           ) : (
             <div className="product-card-placeholder">
               {product.name?.charAt(0) || "N"}

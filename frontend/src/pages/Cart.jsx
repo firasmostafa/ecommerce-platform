@@ -30,24 +30,29 @@ function Cart() {
 
     return regularPrice;
   };
+const getProductImage = (item) => {
+  if (!item.images?.length) {
+    return null;
+  }
 
-  const getProductImage = (item) => {
-    if (!item.images?.length) {
-      return null;
-    }
+  const images = [...item.images].sort(
+    (a, b) =>
+      Number(b.is_primary || 0) - Number(a.is_primary || 0) ||
+      Number(a.sort_order || 0) - Number(b.sort_order || 0),
+  );
 
-    const images = [...item.images].sort(
-      (a, b) =>
-        Number(b.is_primary || 0) - Number(a.is_primary || 0) ||
-        Number(a.sort_order || 0) - Number(b.sort_order || 0),
-    );
+  const image = images[0]?.image;
 
-    if (!images[0]?.image) {
-      return null;
-    }
+  if (!image) {
+    return null;
+  }
 
-    return `${STORAGE_URL}/${images[0].image}`;
-  };
+  if (image.startsWith("http")) {
+    return image;
+  }
+
+  return `${STORAGE_URL}/${image}`;
+};
 
   if (cartItems.length === 0) {
     return (

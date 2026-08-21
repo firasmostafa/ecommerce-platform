@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\HomeSetting;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class HomeSettingController extends Controller
 {
@@ -14,7 +15,13 @@ class HomeSettingController extends Controller
      */
     public function show(): JsonResponse
     {
-        $settings = HomeSetting::first();
+        $settings = Cache::remember(
+            'homepage_settings',
+            now()->addMinutes(10),
+            function () {
+                return HomeSetting::first();
+            }
+        );
 
         if (!$settings) {
             return response()->json([
@@ -253,6 +260,8 @@ class HomeSettingController extends Controller
 
         $settings->fill($validated);
         $settings->save();
+
+        Cache::forget('homepage_settings');
 
         return response()->json([
             'success' => true,

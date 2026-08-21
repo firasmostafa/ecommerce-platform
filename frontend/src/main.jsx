@@ -9,6 +9,7 @@ import CurrencyProvider from "./context/CurrencyProvider.jsx";
 
 import "./index.css";
 import { FavoritesProvider } from "./context/FavoritesProvider.jsx";
+import HomeDataProvider from "./context/HomeDataProvider";
 
 createRoot(
   document.getElementById("root")
@@ -18,7 +19,9 @@ createRoot(
       <CurrencyProvider>
         <CartProvider>
            <FavoritesProvider>
+             <HomeDataProvider>
           <App />
+          </HomeDataProvider>
           </FavoritesProvider>
         </CartProvider>
       </CurrencyProvider>

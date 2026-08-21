@@ -1,5 +1,4 @@
-import { useMemo, useState } from "react";
-import { useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import {
   ArrowLeft,
@@ -51,6 +50,21 @@ function ProductDetails() {
   const [lastAddedQuantity, setLastAddedQuantity] = useState(0);
 
   /* ========================================
+     IMAGE URL HELPER
+  ======================================== */
+
+ const getImageUrl = (image, width = 900) => {
+  if (!image) {
+    return null;
+  }
+
+  if (image.startsWith("http")) {
+    return `${image}?tr=w-${width},q-85`;
+  }
+
+  return `${STORAGE_URL}/${image}`;
+};
+  /* ========================================
      LOAD PRODUCT
   ======================================== */
 
@@ -61,51 +75,51 @@ function ProductDetails() {
       behavior: "instant",
     });
 
-    const fetchProduct = async () => {
-      try {
-        setLoading(true);
-        setError("");
+const fetchProduct = async () => {
+  try {
+    setLoading(true);
+    setError("");
 
-        const productsResponse = await axios.get(
-          `${API_URL}/products?per_page=100`,
-        );
+    const productResponse = await axios.get(
+      `${API_URL}/products/${slug}`,
+    );
 
-        const products =
-          productsResponse.data.data?.data || productsResponse.data.data || [];
+    const matchedProduct =
+      productResponse.data?.data ||
+      productResponse.data;
 
-        const matchedProduct = products.find((item) => item.slug === slug);
+    if (!matchedProduct) {
+      setError("Product not found.");
+      return;
+    }
 
-        if (!matchedProduct) {
-          setError("Product not found.");
+    setProduct(matchedProduct);
+    setSelectedImageIndex(0);
+    setQuantity(1);
+    setJustAdded(false);
 
-          return;
-        }
+    const relatedResponse = await axios.get(
+      `${API_URL}/products?category=${matchedProduct.category?.slug}&per_page=5`,
+    );
 
-        setProduct(matchedProduct);
+    const relatedProductsData =
+      relatedResponse.data?.data?.data ||
+      relatedResponse.data?.data ||
+      [];
 
-        setSelectedImageIndex(0);
+    const related = relatedProductsData
+      .filter((item) => item.id !== matchedProduct.id)
+      .slice(0, 4);
 
-        setQuantity(1);
+    setRelatedProducts(related);
+  } catch (err) {
+    console.error("Failed to load product details:", err);
 
-        setJustAdded(false);
-
-        const related = products
-          .filter(
-            (item) =>
-              item.id !== matchedProduct.id &&
-              item.category_id === matchedProduct.category_id,
-          )
-          .slice(0, 4);
-
-        setRelatedProducts(related);
-      } catch (err) {
-        console.error("Failed to load product details:", err);
-
-        setError("We could not load this product right now.");
-      } finally {
-        setLoading(false);
-      }
-    };
+    setError("We could not load this product right now.");
+  } finally {
+    setLoading(false);
+  }
+};
 
     fetchProduct();
   }, [slug]);
@@ -135,20 +149,22 @@ function ProductDetails() {
       return 0;
     }
 
-    const cartItem = cartItems.find((item) => item.id === product.id);
+    const cartItem = cartItems.find(
+      (item) => item.id === product.id,
+    );
 
     return Number(cartItem?.quantity || 0);
   }, [cartItems, product]);
 
   /* ========================================
-     IMAGE
+     SELECTED IMAGE
   ======================================== */
 
   const selectedImage = images[selectedImageIndex];
-
-  const selectedImageUrl = selectedImage?.image
-    ? `${STORAGE_URL}/${selectedImage.image}`
-    : null;
+  
+const selectedImageUrl = selectedImage?.image
+  ? getImageUrl(selectedImage.image, 1000)
+  : null;
 
   /* ========================================
      PRICE
@@ -156,16 +172,22 @@ function ProductDetails() {
 
   const regularPrice = Number(product?.price || 0);
 
-  const salePrice = product?.sale_price ? Number(product.sale_price) : null;
+  const salePrice = product?.sale_price
+    ? Number(product.sale_price)
+    : null;
 
   const hasSale =
-    salePrice !== null && salePrice > 0 && salePrice < regularPrice;
+    salePrice !== null &&
+    salePrice > 0 &&
+    salePrice < regularPrice;
 
   const finalPrice = hasSale ? salePrice : regularPrice;
 
   const discountPercentage =
     hasSale && regularPrice > 0
-      ? Math.round(((regularPrice - salePrice) / regularPrice) * 100)
+      ? Math.round(
+          ((regularPrice - salePrice) / regularPrice) * 100,
+        )
       : 0;
 
   /* ========================================
@@ -177,7 +199,9 @@ function ProductDetails() {
       return;
     }
 
-    setQuantity((current) => Math.min(current + 1, Number(product.stock)));
+    setQuantity((current) =>
+      Math.min(current + 1, Number(product.stock)),
+    );
   };
 
   const decreaseQuantity = () => {
@@ -242,22 +266,28 @@ function ProductDetails() {
     <main className="product-details-page">
       <section className="product-details-main">
         <div className="product-details-container">
-          <Link to="/products" className="product-details-back">
+          <Link
+            to="/products"
+            className="product-details-back"
+          >
             <ArrowLeft size={17} />
             Back to Shop
           </Link>
 
           <div className="product-details-grid">
-            {/* ===============================
+            {/* =================================
                 GALLERY
-            =============================== */}
+            ================================= */}
 
             <div className="product-gallery">
               <div className="product-main-image">
                 {selectedImageUrl ? (
                   <img
                     src={selectedImageUrl}
-                    alt={selectedImage?.alt_text || product.name}
+                    alt={
+                      selectedImage?.alt_text ||
+                      product.name
+                    }
                   />
                 ) : (
                   <div className="product-main-placeholder">
@@ -272,27 +302,39 @@ function ProductDetails() {
                 )}
 
                 {product.is_featured && (
-                  <span className="product-details-featured">Featured</span>
+                  <span className="product-details-featured">
+                    Featured
+                  </span>
                 )}
               </div>
 
               {images.length > 1 && (
                 <div className="product-thumbnails">
                   {images.map((image, index) => {
-                    const url = image.image
-                      ? `${STORAGE_URL}/${image.image}`
-                      : null;
+                  const url = getImageUrl(image.image, 180);
 
                     return (
                       <button
-                        key={image.id}
+                        key={image.id || `${image.image}-${index}`}
                         type="button"
-                        className={index === selectedImageIndex ? "active" : ""}
-                        onClick={() => setSelectedImageIndex(index)}
-                        aria-label={`View product image ${index + 1}`}
+                        className={
+                          index === selectedImageIndex
+                            ? "active"
+                            : ""
+                        }
+                        onClick={() =>
+                          setSelectedImageIndex(index)
+                        }
+                        aria-label={`View product image ${
+                          index + 1
+                        }`}
                       >
                         {url && (
-                          <img src={url} alt={image.alt_text || product.name} />
+                       <img
+  src={selectedImageUrl}
+  alt={selectedImage?.alt_text || product.name}
+  decoding="async"
+/>
                         )}
                       </button>
                     );
@@ -301,13 +343,14 @@ function ProductDetails() {
               )}
             </div>
 
-            {/* ===============================
+            {/* =================================
                 INFORMATION
-            =============================== */}
+            ================================= */}
 
             <div className="product-information">
               <span className="product-details-category">
-                {product.category?.name || "Nova Collection"}
+                {product.category?.name ||
+                  "Nova Collection"}
               </span>
 
               <h1>{product.name}</h1>
@@ -319,15 +362,20 @@ function ProductDetails() {
 
                 {hasSale && (
                   <>
-                    <span>{formatPrice(regularPrice)}</span>
+                    <span>
+                      {formatPrice(regularPrice)}
+                    </span>
 
-                    <small>Save {discountPercentage}%</small>
+                    <small>
+                      Save {discountPercentage}%
+                    </small>
                   </>
                 )}
               </div>
 
               <p className="product-details-short">
-                {product.short_description || product.description}
+                {product.short_description ||
+                  product.description}
               </p>
 
               {/* META */}
@@ -347,7 +395,10 @@ function ProductDetails() {
                       Number(product.stock) <= 0
                         ? "unavailable"
                         : Number(product.stock) <=
-                            Number(product.low_stock_threshold ?? 5)
+                            Number(
+                              product.low_stock_threshold ??
+                                5,
+                            )
                           ? "low-stock"
                           : "available"
                     }
@@ -355,7 +406,10 @@ function ProductDetails() {
                     {Number(product.stock) <= 0
                       ? "Sold Out"
                       : Number(product.stock) <=
-                          Number(product.low_stock_threshold ?? 5)
+                          Number(
+                            product.low_stock_threshold ??
+                              5,
+                          )
                         ? "Low Stock"
                         : "In Stock"}
                   </strong>
@@ -394,7 +448,9 @@ function ProductDetails() {
                       type="button"
                       onClick={increaseQuantity}
                       disabled={
-                        product.stock === 0 || quantity >= Number(product.stock)
+                        product.stock === 0 ||
+                        quantity >=
+                          Number(product.stock)
                       }
                       aria-label="Increase quantity"
                     >
@@ -406,7 +462,9 @@ function ProductDetails() {
                 <button
                   type="button"
                   className={`product-details-cart ${
-                    justAdded ? "product-details-cart-added" : ""
+                    justAdded
+                      ? "product-details-cart-added"
+                      : ""
                   }`}
                   disabled={product.stock === 0}
                   onClick={handleAddToCart}
@@ -420,7 +478,9 @@ function ProductDetails() {
                     <>
                       <ShoppingBag size={19} />
 
-                      {product.stock > 0 ? "Add to Cart" : "Sold Out"}
+                      {product.stock > 0
+                        ? "Add to Cart"
+                        : "Sold Out"}
                     </>
                   )}
                 </button>
@@ -435,15 +495,23 @@ function ProductDetails() {
                   </div>
 
                   <div>
-                    <strong>Product is in your cart</strong>
+                    <strong>
+                      Product is in your cart
+                    </strong>
 
                     <span>
-                      You currently have <b>{quantityInCart}</b>{" "}
-                      {quantityInCart === 1 ? "item" : "items"} of this product.
+                      You currently have{" "}
+                      <b>{quantityInCart}</b>{" "}
+                      {quantityInCart === 1
+                        ? "item"
+                        : "items"}{" "}
+                      of this product.
                     </span>
                   </div>
 
-                  <Link to="/cart">View Cart</Link>
+                  <Link to="/cart">
+                    View Cart
+                  </Link>
                 </div>
               )}
 
@@ -455,8 +523,10 @@ function ProductDetails() {
 
                   <span>
                     {lastAddedQuantity}{" "}
-                    {lastAddedQuantity === 1 ? "item was" : "items were"} added
-                    successfully.
+                    {lastAddedQuantity === 1
+                      ? "item was"
+                      : "items were"}{" "}
+                    added successfully.
                   </span>
                 </div>
               )}
@@ -472,7 +542,9 @@ function ProductDetails() {
                   <div>
                     <strong>Fast Delivery</strong>
 
-                    <small>Reliable shipping service</small>
+                    <small>
+                      Reliable shipping service
+                    </small>
                   </div>
                 </div>
 
@@ -484,7 +556,9 @@ function ProductDetails() {
                   <div>
                     <strong>Secure Checkout</strong>
 
-                    <small>Protected order process</small>
+                    <small>
+                      Protected order process
+                    </small>
                   </div>
                 </div>
               </div>
@@ -508,7 +582,10 @@ function ProductDetails() {
 
             <div className="related-products-grid">
               {relatedProducts.map((item) => (
-                <ProductCard key={item.id} product={item} />
+                <ProductCard
+                  key={item.id}
+                  product={item}
+                />
               ))}
             </div>
           </div>

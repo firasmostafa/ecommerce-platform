@@ -4,15 +4,22 @@ import { Link } from "react-router-dom";
 import "./CategoryCard.css";
 
 function CategoryCard({ category }) {
-  const imageUrl = category.image
-    ? `https://ecommerce-platform-4vwn.onrender.com/storage/${category.image}`
-    : null;
+const imageUrl = category.image
+  ? category.image.startsWith("http")
+    ? `${category.image}?tr=w-700,q-80`
+    : `https://ecommerce-platform-4vwn.onrender.com/storage/${category.image}`
+  : null;
 
   return (
     <Link to={`/products?category=${category.slug}`} className="category-card">
       <div className="category-card-image">
         {imageUrl ? (
-          <img src={imageUrl} alt={category.name} />
+        <img
+  src={imageUrl}
+  alt={category.name}
+  loading="lazy"
+  decoding="async"
+/>
         ) : (
           <div className="category-card-placeholder">
             {category.name.charAt(0)}

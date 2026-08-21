@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
@@ -16,16 +17,22 @@ class CategoryController extends Controller
      */
     public function index(): JsonResponse
     {
-        $categories = Category::query()
-            ->where('is_active', true)
-            ->withCount([
-                'products' => function ($query) {
-                    $query->where('is_active', true);
-                },
-            ])
-            ->orderBy('sort_order')
-            ->orderBy('name')
-            ->get();
+        $categories = Cache::remember(
+            'storefront_categories',
+            now()->addMinutes(10),
+            function () {
+                return Category::query()
+                    ->where('is_active', true)
+                    ->withCount([
+                        'products' => function ($query) {
+                            $query->where('is_active', true);
+                        },
+                    ])
+                    ->orderBy('sort_order')
+                    ->orderBy('name')
+                    ->get();
+            }
+        );
 
         return response()->json([
             'success' => true,
@@ -85,6 +92,8 @@ class CategoryController extends Controller
             'sort_order' => $validated['sort_order'] ?? 0,
         ]);
 
+        Cache::forget('storefront_categories');
+
         return response()->json([
             'success' => true,
             'message' => 'Category created successfully.',
@@ -97,7 +106,11 @@ class CategoryController extends Controller
      */
     public function show(Category $category): JsonResponse
     {
-        $category->loadCount('products');
+        $category->loadCount([
+            'products' => function ($query) {
+                $query->where('is_active', true);
+            },
+        ]);
 
         return response()->json([
             'success' => true,
@@ -152,8 +165,8 @@ class CategoryController extends Controller
         if (array_key_exists('slug', $validated)) {
             $category->slug = $validated['slug'];
         } elseif (
-            array_key_exists('name', $validated)
-            && $category->name !== $category->getOriginal('name')
+            array_key_exists('name', $validated) &&
+            $category->name !== $category->getOriginal('name')
         ) {
             $newSlug = Str::slug($validated['name']);
 
@@ -186,6 +199,8 @@ class CategoryController extends Controller
 
         $category->save();
 
+        Cache::forget('storefront_categories');
+
         return response()->json([
             'success' => true,
             'message' => 'Category updated successfully.',
@@ -200,9 +215,11 @@ class CategoryController extends Controller
     {
         $category->delete();
 
+        Cache::forget('storefront_categories');
+
         return response()->json([
             'success' => true,
             'message' => 'Category deleted successfully.',
         ]);
     }
-}  
+}
