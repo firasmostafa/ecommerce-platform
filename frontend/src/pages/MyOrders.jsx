@@ -17,7 +17,7 @@ import { useCurrency } from "../context/useCurrency";
 
 import "./MyOrders.css";
 
-const API_URL = "http://127.0.0.1:8000/api";
+const API_URL = "https://ecommerce-platform-4vwn.onrender.com/api";
 
 const statusSteps = [
   "pending",
@@ -56,24 +56,16 @@ function MyOrders() {
           return;
         }
 
-        setOrders(
-          response.data.data?.data || []
-        );
+        setOrders(response.data.data?.data || []);
       })
       .catch((err) => {
         if (cancelled) {
           return;
         }
 
-        console.error(
-          "Failed to load orders:",
-          err
-        );
+        console.error("Failed to load orders:", err);
 
-        setError(
-          err.response?.data?.message ||
-            "Unable to load your orders."
-        );
+        setError(err.response?.data?.message || "Unable to load your orders.");
       })
       .finally(() => {
         if (!cancelled) {
@@ -87,24 +79,19 @@ function MyOrders() {
   }, [token]);
 
   const reloadOrders = async () => {
-    const response = await axios.get(
-      `${API_URL}/my-orders`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-        },
-      }
-    );
+    const response = await axios.get(`${API_URL}/my-orders`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+      },
+    });
 
-    setOrders(
-      response.data.data?.data || []
-    );
+    setOrders(response.data.data?.data || []);
   };
 
   const cancelOrder = async (orderId) => {
     const confirmed = window.confirm(
-      "Are you sure you want to cancel this order?"
+      "Are you sure you want to cancel this order?",
     );
 
     if (!confirmed) {
@@ -123,20 +110,14 @@ function MyOrders() {
             Authorization: `Bearer ${token}`,
             Accept: "application/json",
           },
-        }
+        },
       );
 
       await reloadOrders();
     } catch (err) {
-      console.error(
-        "Cancel order failed:",
-        err
-      );
+      console.error("Cancel order failed:", err);
 
-      setError(
-        err.response?.data?.message ||
-          "Unable to cancel this order."
-      );
+      setError(err.response?.data?.message || "Unable to cancel this order.");
     } finally {
       setCancellingId(null);
     }
@@ -166,16 +147,12 @@ function MyOrders() {
           <h1>My Orders</h1>
 
           <p>
-            View your purchases and follow each order
-            from confirmation to delivery.
+            View your purchases and follow each order from confirmation to
+            delivery.
           </p>
         </header>
 
-        {error && (
-          <div className="my-orders-error">
-            {error}
-          </div>
-        )}
+        {error && <div className="my-orders-error">{error}</div>}
 
         {orders.length === 0 ? (
           <div className="my-orders-state">
@@ -184,53 +161,36 @@ function MyOrders() {
             <h2>No orders yet</h2>
 
             <p>
-              When you place your first order, you will
-              be able to track it here.
+              When you place your first order, you will be able to track it
+              here.
             </p>
 
-            <Link to="/products">
-              Start Shopping
-            </Link>
+            <Link to="/products">Start Shopping</Link>
           </div>
         ) : (
           <div className="orders-list">
             {orders.map((order) => {
-              const currentStep =
-                getCurrentStep(order.status);
+              const currentStep = getCurrentStep(order.status);
 
-              const canCancel = [
-                "pending",
-                "confirmed",
-              ].includes(order.status);
+              const canCancel = ["pending", "confirmed"].includes(order.status);
 
               return (
-                <article
-                  className="order-card"
-                  key={order.id}
-                >
+                <article className="order-card" key={order.id}>
                   <div className="order-card-header">
                     <div>
                       <span>ORDER</span>
 
-                      <h2>
-                        {order.order_number}
-                      </h2>
+                      <h2>{order.order_number}</h2>
 
                       <small>
-                        {new Date(
-                          order.created_at
-                        ).toLocaleDateString()}
+                        {new Date(order.created_at).toLocaleDateString()}
                       </small>
                     </div>
 
                     <div className="order-card-total">
                       <span>Total</span>
 
-                      <strong>
-                        {formatPrice(
-                          order.total
-                        )}
-                      </strong>
+                      <strong>{formatPrice(order.total)}</strong>
                     </div>
                   </div>
 
@@ -239,55 +199,43 @@ function MyOrders() {
                       <XCircle size={20} />
 
                       <div>
-                        <strong>
-                          Order Cancelled
-                        </strong>
+                        <strong>Order Cancelled</strong>
 
-                        <span>
-                          This order has been cancelled.
-                        </span>
+                        <span>This order has been cancelled.</span>
                       </div>
                     </div>
                   ) : (
                     <div className="order-timeline">
-                      {statusSteps.map(
-                        (step, index) => {
-                          const completed =
-                            index <= currentStep;
+                      {statusSteps.map((step, index) => {
+                        const completed = index <= currentStep;
 
-                          const icons = {
-                            pending: Clock3,
-                            confirmed: CheckCircle2,
-                            processing: Package,
-                            shipped: Truck,
-                            delivered: CheckCircle2,
-                          };
+                        const icons = {
+                          pending: Clock3,
+                          confirmed: CheckCircle2,
+                          processing: Package,
+                          shipped: Truck,
+                          delivered: CheckCircle2,
+                        };
 
-                          const Icon = icons[step];
+                        const Icon = icons[step];
 
-                          return (
-                            <div
-                              className={`timeline-step ${
-                                completed
-                                  ? "completed"
-                                  : ""
-                              }`}
-                              key={step}
-                            >
-                              <div className="timeline-icon">
-                                <Icon size={17} />
-                              </div>
-
-                              <span>
-                                {step
-                                  .charAt(0)
-                                  .toUpperCase() +
-                                  step.slice(1)}
-                              </span>
+                        return (
+                          <div
+                            className={`timeline-step ${
+                              completed ? "completed" : ""
+                            }`}
+                            key={step}
+                          >
+                            <div className="timeline-icon">
+                              <Icon size={17} />
                             </div>
-                          );
-                        }
-                      )}
+
+                            <span>
+                              {step.charAt(0).toUpperCase() + step.slice(1)}
+                            </span>
+                          </div>
+                        );
+                      })}
                     </div>
                   )}
 
@@ -295,9 +243,7 @@ function MyOrders() {
                     <div>
                       <span>Status</span>
 
-                      <strong
-                        className={`order-status status-${order.status}`}
-                      >
+                      <strong className={`order-status status-${order.status}`}>
                         {order.status}
                       </strong>
                     </div>
@@ -314,12 +260,8 @@ function MyOrders() {
                         <button
                           type="button"
                           className="order-cancel-button"
-                          disabled={
-                            cancellingId === order.id
-                          }
-                          onClick={() =>
-                            cancelOrder(order.id)
-                          }
+                          disabled={cancellingId === order.id}
+                          onClick={() => cancelOrder(order.id)}
                         >
                           {cancellingId === order.id
                             ? "Cancelling..."

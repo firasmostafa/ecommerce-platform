@@ -16,7 +16,7 @@ function Categories() {
         setError("");
 
         const response = await axios.get(
-          "http://127.0.0.1:8000/api/categories"
+          "https://ecommerce-platform-4vwn.onrender.com/api/categories",
         );
 
         setCategories(response.data.data || []);
@@ -38,8 +38,8 @@ function Categories() {
           <span>SHOP YOUR WAY</span>
           <h1>Explore All Categories</h1>
           <p>
-            Discover collections across technology, fashion, beauty,
-            home, sports and more.
+            Discover collections across technology, fashion, beauty, home,
+            sports and more.
           </p>
         </div>
       </section>
@@ -63,10 +63,7 @@ function Categories() {
           {!loading && !error && categories.length > 0 && (
             <div className="categories-page-grid">
               {categories.map((category) => (
-                <CategoryCard
-                  key={category.id}
-                  category={category}
-                />
+                <CategoryCard key={category.id} category={category} />
               ))}
             </div>
           )}

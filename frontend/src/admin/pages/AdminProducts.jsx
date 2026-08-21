@@ -18,8 +18,8 @@ import { useAuth } from "../../context/auth-context";
 
 import "./AdminProducts.css";
 
-const API_URL = "http://127.0.0.1:8000/api";
-const STORAGE_URL = "http://127.0.0.1:8000/storage";
+const API_URL = "https://ecommerce-platform-4vwn.onrender.com/api";
+const STORAGE_URL = "https://ecommerce-platform-4vwn.onrender.com/storage";
 
 function AdminProducts() {
   const { token } = useAuth();
@@ -28,15 +28,12 @@ function AdminProducts() {
   const [categories, setCategories] = useState([]);
 
   const [search, setSearch] = useState("");
-  const [categoryFilter, setCategoryFilter] =
-    useState("");
+  const [categoryFilter, setCategoryFilter] = useState("");
 
-  const [stockFilter, setStockFilter] =
-    useState("");
+  const [stockFilter, setStockFilter] = useState("");
 
   const [loading, setLoading] = useState(true);
-  const [deletingId, setDeletingId] =
-    useState(null);
+  const [deletingId, setDeletingId] = useState(null);
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -46,17 +43,10 @@ function AdminProducts() {
 
     const loadProducts = async () => {
       try {
-        const [
-          productsResponse,
-          categoriesResponse,
-        ] = await Promise.all([
-          axios.get(
-            `${API_URL}/products?per_page=50`
-          ),
+        const [productsResponse, categoriesResponse] = await Promise.all([
+          axios.get(`${API_URL}/products?per_page=50`),
 
-          axios.get(
-            `${API_URL}/categories`
-          ),
+          axios.get(`${API_URL}/categories`),
         ]);
 
         if (cancelled) {
@@ -73,17 +63,9 @@ function AdminProducts() {
           categoriesResponse.data?.data ||
           [];
 
-        setProducts(
-          Array.isArray(productsData)
-            ? productsData
-            : []
-        );
+        setProducts(Array.isArray(productsData) ? productsData : []);
 
-        setCategories(
-          Array.isArray(categoriesData)
-            ? categoriesData
-            : []
-        );
+        setCategories(Array.isArray(categoriesData) ? categoriesData : []);
 
         setError("");
         setLoading(false);
@@ -92,15 +74,9 @@ function AdminProducts() {
           return;
         }
 
-        console.error(
-          "Failed to load admin products:",
-          err
-        );
+        console.error("Failed to load admin products:", err);
 
-        setError(
-          err.response?.data?.message ||
-            "Unable to load products."
-        );
+        setError(err.response?.data?.message || "Unable to load products.");
 
         setLoading(false);
       }
@@ -114,88 +90,57 @@ function AdminProducts() {
   }, []);
 
   const filteredProducts = useMemo(() => {
-    const normalizedSearch =
-      search.trim().toLowerCase();
+    const normalizedSearch = search.trim().toLowerCase();
 
     return products.filter((product) => {
       const matchesSearch =
         !normalizedSearch ||
-        product.name
-          ?.toLowerCase()
-          .includes(normalizedSearch) ||
-        product.sku
-          ?.toLowerCase()
-          .includes(normalizedSearch) ||
-        product.slug
-          ?.toLowerCase()
-          .includes(normalizedSearch);
+        product.name?.toLowerCase().includes(normalizedSearch) ||
+        product.sku?.toLowerCase().includes(normalizedSearch) ||
+        product.slug?.toLowerCase().includes(normalizedSearch);
 
-      const categoryId =
-        product.category_id ??
-        product.category?.id;
+      const categoryId = product.category_id ?? product.category?.id;
 
       const matchesCategory =
-        !categoryFilter ||
-        String(categoryId) ===
-          String(categoryFilter);
+        !categoryFilter || String(categoryId) === String(categoryFilter);
 
       let matchesStock = true;
 
       if (stockFilter === "in_stock") {
-        matchesStock =
-          Number(product.stock || 0) > 0;
+        matchesStock = Number(product.stock || 0) > 0;
       }
 
       if (stockFilter === "low_stock") {
-        const stock =
-          Number(product.stock || 0);
+        const stock = Number(product.stock || 0);
 
-        matchesStock =
-          stock > 0 && stock <= 10;
+        matchesStock = stock > 0 && stock <= 10;
       }
 
       if (stockFilter === "out_of_stock") {
-        matchesStock =
-          Number(product.stock || 0) <= 0;
+        matchesStock = Number(product.stock || 0) <= 0;
       }
 
-      return (
-        matchesSearch &&
-        matchesCategory &&
-        matchesStock
-      );
+      return matchesSearch && matchesCategory && matchesStock;
     });
-  }, [
-    products,
-    search,
-    categoryFilter,
-    stockFilter,
-  ]);
+  }, [products, search, categoryFilter, stockFilter]);
 
   const totalProducts = products.length;
 
-  const activeProducts = products.filter(
-    (product) => product.is_active
-  ).length;
+  const activeProducts = products.filter((product) => product.is_active).length;
 
   const featuredProducts = products.filter(
-    (product) => product.is_featured
+    (product) => product.is_featured,
   ).length;
 
-  const lowStockProducts = products.filter(
-    (product) => {
-      const stock =
-        Number(product.stock || 0);
+  const lowStockProducts = products.filter((product) => {
+    const stock = Number(product.stock || 0);
 
-      return stock > 0 && stock <= 10;
-    }
-  ).length;
+    return stock > 0 && stock <= 10;
+  }).length;
 
   const getPrimaryImage = (product) => {
     const image =
-      product.images?.find(
-        (item) => item.is_primary
-      ) || product.images?.[0];
+      product.images?.find((item) => item.is_primary) || product.images?.[0];
 
     if (!image?.image) {
       return null;
@@ -209,20 +154,14 @@ function AdminProducts() {
   };
 
   const getFinalPrice = (product) => {
-    const price =
-      Number(product.price || 0);
+    const price = Number(product.price || 0);
 
     const salePrice =
-      product.sale_price !== null &&
-      product.sale_price !== undefined
+      product.sale_price !== null && product.sale_price !== undefined
         ? Number(product.sale_price)
         : null;
 
-    if (
-      salePrice !== null &&
-      salePrice > 0 &&
-      salePrice < price
-    ) {
+    if (salePrice !== null && salePrice > 0 && salePrice < price) {
       return salePrice;
     }
 
@@ -237,7 +176,7 @@ function AdminProducts() {
 
   const handleDelete = async (product) => {
     const confirmed = window.confirm(
-      `Delete "${product.name}"? This action cannot be undone.`
+      `Delete "${product.name}"? This action cannot be undone.`,
     );
 
     if (!confirmed) {
@@ -249,36 +188,22 @@ function AdminProducts() {
       setError("");
       setSuccess("");
 
-      await axios.delete(
-        `${API_URL}/admin/products/${product.id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            Accept: "application/json",
-          },
-        }
-      );
+      await axios.delete(`${API_URL}/admin/products/${product.id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+        },
+      });
 
       setProducts((currentProducts) =>
-        currentProducts.filter(
-          (item) =>
-            item.id !== product.id
-        )
+        currentProducts.filter((item) => item.id !== product.id),
       );
 
-      setSuccess(
-        `${product.name} was deleted successfully.`
-      );
+      setSuccess(`${product.name} was deleted successfully.`);
     } catch (err) {
-      console.error(
-        "Failed to delete product:",
-        err
-      );
+      console.error("Failed to delete product:", err);
 
-      setError(
-        err.response?.data?.message ||
-          "Unable to delete this product."
-      );
+      setError(err.response?.data?.message || "Unable to delete this product.");
     } finally {
       setDeletingId(null);
     }
@@ -291,9 +216,7 @@ function AdminProducts() {
           <div className="admin-products-state">
             <span className="admin-products-spinner" />
 
-            <strong>
-              Loading products...
-            </strong>
+            <strong>Loading products...</strong>
           </div>
         </div>
       </main>
@@ -303,31 +226,20 @@ function AdminProducts() {
   return (
     <main className="admin-products-page">
       <div className="admin-products-container">
-
         {/* =====================================
             PAGE HEADER
         ====================================== */}
 
         <header className="admin-products-heading">
           <div>
-            <span>
-              PRODUCT MANAGEMENT
-            </span>
+            <span>PRODUCT MANAGEMENT</span>
 
-            <h1>
-              Products
-            </h1>
+            <h1>Products</h1>
 
-            <p>
-              Manage your store products,
-              prices, stock and visibility.
-            </p>
+            <p>Manage your store products, prices, stock and visibility.</p>
           </div>
 
-          <Link
-            to="/admin/products/create"
-            className="admin-add-product"
-          >
+          <Link to="/admin/products/create" className="admin-add-product">
             <Plus size={14} />
             Add Product
           </Link>
@@ -338,20 +250,15 @@ function AdminProducts() {
         ====================================== */}
 
         <section className="admin-products-summary">
-
           <article className="admin-product-summary-card">
             <span className="admin-product-summary-icon">
               <Boxes size={15} />
             </span>
 
             <div>
-              <span>
-                Products
-              </span>
+              <span>Products</span>
 
-              <strong>
-                {totalProducts}
-              </strong>
+              <strong>{totalProducts}</strong>
             </div>
           </article>
 
@@ -361,13 +268,9 @@ function AdminProducts() {
             </span>
 
             <div>
-              <span>
-                Active
-              </span>
+              <span>Active</span>
 
-              <strong>
-                {activeProducts}
-              </strong>
+              <strong>{activeProducts}</strong>
             </div>
           </article>
 
@@ -377,13 +280,9 @@ function AdminProducts() {
             </span>
 
             <div>
-              <span>
-                Featured
-              </span>
+              <span>Featured</span>
 
-              <strong>
-                {featuredProducts}
-              </strong>
+              <strong>{featuredProducts}</strong>
             </div>
           </article>
 
@@ -393,16 +292,11 @@ function AdminProducts() {
             </span>
 
             <div>
-              <span>
-                Low Stock
-              </span>
+              <span>Low Stock</span>
 
-              <strong>
-                {lowStockProducts}
-              </strong>
+              <strong>{lowStockProducts}</strong>
             </div>
           </article>
-
         </section>
 
         {/* =====================================
@@ -410,7 +304,6 @@ function AdminProducts() {
         ====================================== */}
 
         <section className="admin-products-toolbar">
-
           <div className="admin-products-search">
             <Search size={14} />
 
@@ -418,63 +311,36 @@ function AdminProducts() {
               type="search"
               value={search}
               placeholder="Search product or SKU..."
-              onChange={(event) =>
-                setSearch(
-                  event.target.value
-                )
-              }
+              onChange={(event) => setSearch(event.target.value)}
             />
           </div>
 
           <select
             value={categoryFilter}
-            onChange={(event) =>
-              setCategoryFilter(
-                event.target.value
-              )
-            }
+            onChange={(event) => setCategoryFilter(event.target.value)}
             aria-label="Filter by category"
           >
-            <option value="">
-              All Categories
-            </option>
+            <option value="">All Categories</option>
 
-            {categories.map(
-              (category) => (
-                <option
-                  key={category.id}
-                  value={category.id}
-                >
-                  {category.name}
-                </option>
-              )
-            )}
+            {categories.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.name}
+              </option>
+            ))}
           </select>
 
           <select
             value={stockFilter}
-            onChange={(event) =>
-              setStockFilter(
-                event.target.value
-              )
-            }
+            onChange={(event) => setStockFilter(event.target.value)}
             aria-label="Filter by stock"
           >
-            <option value="">
-              All Stock
-            </option>
+            <option value="">All Stock</option>
 
-            <option value="in_stock">
-              In Stock
-            </option>
+            <option value="in_stock">In Stock</option>
 
-            <option value="low_stock">
-              Low Stock
-            </option>
+            <option value="low_stock">Low Stock</option>
 
-            <option value="out_of_stock">
-              Out of Stock
-            </option>
+            <option value="out_of_stock">Out of Stock</option>
           </select>
 
           <button
@@ -485,7 +351,6 @@ function AdminProducts() {
             <RefreshCw size={13} />
             Reset
           </button>
-
         </section>
 
         {/* =====================================
@@ -510,15 +375,8 @@ function AdminProducts() {
 
         <div className="admin-products-results-heading">
           <span>
-            Showing{" "}
-            <strong>
-              {filteredProducts.length}
-            </strong>{" "}
-            of{" "}
-            <strong>
-              {totalProducts}
-            </strong>{" "}
-            products
+            Showing <strong>{filteredProducts.length}</strong> of{" "}
+            <strong>{totalProducts}</strong> products
           </span>
         </div>
 
@@ -529,238 +387,144 @@ function AdminProducts() {
         {filteredProducts.length > 0 ? (
           <>
             <div className="admin-products-table-card">
-
               <table className="admin-products-table">
-
                 <thead>
                   <tr>
-                    <th>
-                      Product
-                    </th>
+                    <th>Product</th>
 
-                    <th>
-                      Category
-                    </th>
+                    <th>Category</th>
 
-                    <th>
-                      Price
-                    </th>
+                    <th>Price</th>
 
-                    <th>
-                      Stock
-                    </th>
+                    <th>Stock</th>
 
-                    <th>
-                      Status
-                    </th>
+                    <th>Status</th>
 
-                    <th>
-                      Actions
-                    </th>
+                    <th>Actions</th>
                   </tr>
                 </thead>
 
                 <tbody>
+                  {filteredProducts.map((product) => {
+                    const imageUrl = getPrimaryImage(product);
 
-                  {filteredProducts.map(
-                    (product) => {
-                      const imageUrl =
-                        getPrimaryImage(
-                          product
-                        );
+                    const price = Number(product.price || 0);
 
-                      const price =
-                        Number(
-                          product.price || 0
-                        );
+                    const finalPrice = getFinalPrice(product);
 
-                      const finalPrice =
-                        getFinalPrice(
-                          product
-                        );
+                    const hasSale = finalPrice < price;
 
-                      const hasSale =
-                        finalPrice < price;
+                    const stock = Number(product.stock || 0);
 
-                      const stock =
-                        Number(
-                          product.stock || 0
-                        );
+                    return (
+                      <tr key={product.id}>
+                        {/* PRODUCT */}
 
-                      return (
-                        <tr key={product.id}>
-
-                          {/* PRODUCT */}
-
-                          <td>
-                            <div className="admin-product-cell">
-
-                              <div className="admin-product-image">
-
-                                {imageUrl ? (
-                                  <img
-                                    src={imageUrl}
-                                    alt={
-                                      product.name
-                                    }
-                                  />
-                                ) : (
-                                  <Package
-                                    size={15}
-                                  />
-                                )}
-
-                              </div>
-
-                              <div className="admin-product-cell-info">
-
-                                <strong>
-                                  {
-                                    product.name
-                                  }
-                                </strong>
-
-                                <span>
-                                  SKU:{" "}
-                                  {product.sku ||
-                                    "—"}
-                                </span>
-
-                              </div>
-
-                            </div>
-                          </td>
-
-                          {/* CATEGORY */}
-
-                          <td>
-                            <span className="admin-product-category">
-                              {product
-                                .category
-                                ?.name ||
-                                "—"}
-                            </span>
-                          </td>
-
-                          {/* PRICE */}
-
-                          <td>
-                            <div className="admin-product-price">
-
-                              <strong>
-                                {formatPrice(
-                                  finalPrice
-                                )}
-                              </strong>
-
-                              {hasSale && (
-                                <span>
-                                  {formatPrice(
-                                    price
-                                  )}
-                                </span>
+                        <td>
+                          <div className="admin-product-cell">
+                            <div className="admin-product-image">
+                              {imageUrl ? (
+                                <img src={imageUrl} alt={product.name} />
+                              ) : (
+                                <Package size={15} />
                               )}
-
                             </div>
-                          </td>
 
-                          {/* STOCK */}
+                            <div className="admin-product-cell-info">
+                              <strong>{product.name}</strong>
 
-                          <td>
+                              <span>SKU: {product.sku || "—"}</span>
+                            </div>
+                          </div>
+                        </td>
+
+                        {/* CATEGORY */}
+
+                        <td>
+                          <span className="admin-product-category">
+                            {product.category?.name || "—"}
+                          </span>
+                        </td>
+
+                        {/* PRICE */}
+
+                        <td>
+                          <div className="admin-product-price">
+                            <strong>{formatPrice(finalPrice)}</strong>
+
+                            {hasSale && <span>{formatPrice(price)}</span>}
+                          </div>
+                        </td>
+
+                        {/* STOCK */}
+
+                        <td>
+                          <span
+                            className={`admin-product-stock ${
+                              stock <= 0 ? "out" : stock <= 10 ? "low" : "good"
+                            }`}
+                          >
+                            {stock}
+                          </span>
+                        </td>
+
+                        {/* STATUS */}
+
+                        <td>
+                          <div className="admin-product-statuses">
                             <span
-                              className={`admin-product-stock ${
-                                stock <= 0
-                                  ? "out"
-                                  : stock <= 10
-                                    ? "low"
-                                    : "good"
+                              className={`admin-product-status ${
+                                product.is_active ? "active" : "inactive"
                               }`}
                             >
-                              {stock}
+                              {product.is_active ? "Active" : "Inactive"}
                             </span>
-                          </td>
 
-                          {/* STATUS */}
-
-                          <td>
-                            <div className="admin-product-statuses">
-
-                              <span
-                                className={`admin-product-status ${
-                                  product.is_active
-                                    ? "active"
-                                    : "inactive"
-                                }`}
-                              >
-                                {product.is_active
-                                  ? "Active"
-                                  : "Inactive"}
+                            {product.is_featured && (
+                              <span className="admin-product-featured">
+                                <Star size={9} />
+                                Featured
                               </span>
+                            )}
+                          </div>
+                        </td>
 
-                              {product.is_featured && (
-                                <span className="admin-product-featured">
-                                  <Star
-                                    size={9}
-                                  />
-                                  Featured
-                                </span>
-                              )}
+                        {/* ACTIONS */}
 
-                            </div>
-                          </td>
+                        <td>
+                          <div className="admin-product-actions">
+                            <Link
+                              to={`/products/${product.slug}`}
+                              className="admin-product-action view"
+                              title="View product"
+                            >
+                              <Eye size={12} />
+                            </Link>
 
-                          {/* ACTIONS */}
+                            <Link
+                              to={`/admin/products/${product.id}/edit`}
+                              className="admin-product-action edit"
+                              title="Edit product"
+                            >
+                              <Edit3 size={12} />
+                            </Link>
 
-                          <td>
-                            <div className="admin-product-actions">
-
-                              <Link
-                                to={`/products/${product.slug}`}
-                                className="admin-product-action view"
-                                title="View product"
-                              >
-                                <Eye size={12} />
-                              </Link>
-
-                              <Link
-                                to={`/admin/products/${product.id}/edit`}
-                                className="admin-product-action edit"
-                                title="Edit product"
-                              >
-                                <Edit3 size={12} />
-                              </Link>
-
-                              <button
-                                type="button"
-                                className="admin-product-action delete"
-                                disabled={
-                                  deletingId ===
-                                  product.id
-                                }
-                                onClick={() =>
-                                  handleDelete(
-                                    product
-                                  )
-                                }
-                                title="Delete product"
-                              >
-                                <Trash2
-                                  size={12}
-                                />
-                              </button>
-
-                            </div>
-                          </td>
-
-                        </tr>
-                      );
-                    }
-                  )}
-
+                            <button
+                              type="button"
+                              className="admin-product-action delete"
+                              disabled={deletingId === product.id}
+                              onClick={() => handleDelete(product)}
+                              title="Delete product"
+                            >
+                              <Trash2 size={12} />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
-
               </table>
-
             </div>
 
             {/* =================================
@@ -768,172 +532,89 @@ function AdminProducts() {
             ================================== */}
 
             <div className="admin-products-mobile-grid">
+              {filteredProducts.map((product) => {
+                const imageUrl = getPrimaryImage(product);
 
-              {filteredProducts.map(
-                (product) => {
-                  const imageUrl =
-                    getPrimaryImage(
-                      product
-                    );
+                const finalPrice = getFinalPrice(product);
 
+                const stock = Number(product.stock || 0);
 
-                  const finalPrice =
-                    getFinalPrice(
-                      product
-                    );
+                return (
+                  <article
+                    className="admin-product-mobile-card"
+                    key={product.id}
+                  >
+                    <div className="admin-product-mobile-top">
+                      <div className="admin-product-mobile-image">
+                        {imageUrl ? (
+                          <img src={imageUrl} alt={product.name} />
+                        ) : (
+                          <Package size={16} />
+                        )}
+                      </div>
 
-                  const stock =
-                    Number(
-                      product.stock || 0
-                    );
+                      <div className="admin-product-mobile-info">
+                        <strong>{product.name}</strong>
 
-                  return (
-                    <article
-                      className="admin-product-mobile-card"
-                      key={product.id}
-                    >
+                        <span>{product.category?.name || "No category"}</span>
 
-                      <div className="admin-product-mobile-top">
+                        <small>SKU: {product.sku || "—"}</small>
+                      </div>
 
-                        <div className="admin-product-mobile-image">
+                      <strong className="admin-product-mobile-price">
+                        {formatPrice(finalPrice)}
+                      </strong>
+                    </div>
 
-                          {imageUrl ? (
-                            <img
-                              src={imageUrl}
-                              alt={
-                                product.name
-                              }
-                            />
-                          ) : (
-                            <Package
-                              size={16}
-                            />
-                          )}
+                    <div className="admin-product-mobile-bottom">
+                      <div>
+                        <span>Stock</span>
 
-                        </div>
-
-                        <div className="admin-product-mobile-info">
-
-                          <strong>
-                            {product.name}
-                          </strong>
-
-                          <span>
-                            {product
-                              .category
-                              ?.name ||
-                              "No category"}
-                          </span>
-
-                          <small>
-                            SKU:{" "}
-                            {product.sku ||
-                              "—"}
-                          </small>
-
-                        </div>
-
-                        <strong className="admin-product-mobile-price">
-                          {formatPrice(
-                            finalPrice
-                          )}
+                        <strong className={stock <= 10 ? "warning" : ""}>
+                          {stock}
                         </strong>
-
                       </div>
 
-                      <div className="admin-product-mobile-bottom">
+                      <div>
+                        <span>Status</span>
 
-                        <div>
-                          <span>
-                            Stock
-                          </span>
-
-                          <strong
-                            className={
-                              stock <= 10
-                                ? "warning"
-                                : ""
-                            }
-                          >
-                            {stock}
-                          </strong>
-                        </div>
-
-                        <div>
-                          <span>
-                            Status
-                          </span>
-
-                          <strong>
-                            {product.is_active
-                              ? "Active"
-                              : "Inactive"}
-                          </strong>
-                        </div>
-
-                        <div className="admin-product-mobile-actions">
-
-                          <Link
-                            to={`/products/${product.slug}`}
-                          >
-                            <Eye
-                              size={11}
-                            />
-                          </Link>
-
-                          <Link
-                            to={`/admin/products/${product.id}/edit`}
-                          >
-                            <Edit3
-                              size={11}
-                            />
-                          </Link>
-
-                          <button
-                            type="button"
-                            disabled={
-                              deletingId ===
-                              product.id
-                            }
-                            onClick={() =>
-                              handleDelete(
-                                product
-                              )
-                            }
-                          >
-                            <Trash2
-                              size={11}
-                            />
-                          </button>
-
-                        </div>
-
+                        <strong>
+                          {product.is_active ? "Active" : "Inactive"}
+                        </strong>
                       </div>
 
-                    </article>
-                  );
-                }
-              )}
+                      <div className="admin-product-mobile-actions">
+                        <Link to={`/products/${product.slug}`}>
+                          <Eye size={11} />
+                        </Link>
 
+                        <Link to={`/admin/products/${product.id}/edit`}>
+                          <Edit3 size={11} />
+                        </Link>
+
+                        <button
+                          type="button"
+                          disabled={deletingId === product.id}
+                          onClick={() => handleDelete(product)}
+                        >
+                          <Trash2 size={11} />
+                        </button>
+                      </div>
+                    </div>
+                  </article>
+                );
+              })}
             </div>
           </>
         ) : (
           <div className="admin-products-state">
-
             <Package size={24} />
 
-            <strong>
-              No products found
-            </strong>
+            <strong>No products found</strong>
 
-            <p>
-              Try changing your search
-              or filters.
-            </p>
-
+            <p>Try changing your search or filters.</p>
           </div>
         )}
-
       </div>
     </main>
   );

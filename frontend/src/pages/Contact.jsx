@@ -4,7 +4,7 @@ import { Mail, MapPin, Phone } from "lucide-react";
 
 import "./Contact.css";
 
-const API_URL = "http://127.0.0.1:8000/api";
+const API_URL = "https://ecommerce-platform-4vwn.onrender.com/api";
 
 const defaultStoreSettings = {
   store_name: "Nova Store",
@@ -14,50 +14,32 @@ const defaultStoreSettings = {
 };
 
 function Contact() {
-  const [storeSettings, setStoreSettings] = useState(
-    defaultStoreSettings
-  );
+  const [storeSettings, setStoreSettings] = useState(defaultStoreSettings);
 
   useEffect(() => {
     let cancelled = false;
 
     const loadStoreSettings = async () => {
       try {
-        const response = await axios.get(
-          `${API_URL}/store-settings`
-        );
+        const response = await axios.get(`${API_URL}/store-settings`);
 
         if (cancelled) {
           return;
         }
 
-        const data =
-          response.data?.data ||
-          response.data ||
-          {};
+        const data = response.data?.data || response.data || {};
 
         setStoreSettings({
-          store_name:
-            data.store_name ||
-            defaultStoreSettings.store_name,
+          store_name: data.store_name || defaultStoreSettings.store_name,
 
-          email:
-            data.email ||
-            defaultStoreSettings.email,
+          email: data.email || defaultStoreSettings.email,
 
-          phone:
-            data.phone ||
-            defaultStoreSettings.phone,
+          phone: data.phone || defaultStoreSettings.phone,
 
-          address:
-            data.address ||
-            defaultStoreSettings.address,
+          address: data.address || defaultStoreSettings.address,
         });
       } catch (error) {
-        console.error(
-          "Failed to load store settings:",
-          error
-        );
+        console.error("Failed to load store settings:", error);
       }
     };
 
@@ -82,14 +64,11 @@ function Contact() {
         <div className="contact-container">
           <span>WE&apos;RE HERE TO HELP</span>
 
-          <h1>
-            Contact {storeSettings.store_name}
-          </h1>
+          <h1>Contact {storeSettings.store_name}</h1>
 
           <p>
-            Have a question about an order or product?
-            Send us a message and our team will be happy
-            to help.
+            Have a question about an order or product? Send us a message and our
+            team will be happy to help.
           </p>
         </div>
       </section>
@@ -97,7 +76,6 @@ function Contact() {
       <section className="contact-content">
         <div className="contact-container contact-grid">
           <div className="contact-info">
-
             <a
               href={`mailto:${storeSettings.email}`}
               className="contact-info-card"
@@ -107,24 +85,17 @@ function Contact() {
               <div>
                 <strong>Email</strong>
 
-                <span>
-                  {storeSettings.email}
-                </span>
+                <span>{storeSettings.email}</span>
               </div>
             </a>
 
-            <a
-              href={`tel:${phoneLink}`}
-              className="contact-info-card"
-            >
+            <a href={`tel:${phoneLink}`} className="contact-info-card">
               <Phone size={22} />
 
               <div>
                 <strong>Phone</strong>
 
-                <span>
-                  {storeSettings.phone}
-                </span>
+                <span>{storeSettings.phone}</span>
               </div>
             </a>
 
@@ -139,31 +110,20 @@ function Contact() {
               <div>
                 <strong>Location</strong>
 
-                <span>
-                  {storeSettings.address}
-                </span>
+                <span>{storeSettings.address}</span>
               </div>
             </a>
-
           </div>
 
           <form className="contact-form">
             <div>
-              <label htmlFor="contact-name">
-                Name
-              </label>
+              <label htmlFor="contact-name">Name</label>
 
-              <input
-                id="contact-name"
-                type="text"
-                placeholder="Your name"
-              />
+              <input id="contact-name" type="text" placeholder="Your name" />
             </div>
 
             <div>
-              <label htmlFor="contact-email">
-                Email
-              </label>
+              <label htmlFor="contact-email">Email</label>
 
               <input
                 id="contact-email"
@@ -173,9 +133,7 @@ function Contact() {
             </div>
 
             <div>
-              <label htmlFor="contact-message">
-                Message
-              </label>
+              <label htmlFor="contact-message">Message</label>
 
               <textarea
                 id="contact-message"
@@ -184,9 +142,7 @@ function Contact() {
               />
             </div>
 
-            <button type="submit">
-              Send Message
-            </button>
+            <button type="submit">Send Message</button>
           </form>
         </div>
       </section>

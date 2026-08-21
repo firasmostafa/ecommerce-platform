@@ -1,8 +1,4 @@
-import {
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import {
   CalendarDays,
@@ -15,9 +11,7 @@ import {
   Users,
 } from "lucide-react";
 
-import {
-  Link,
-} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import axios from "axios";
 
@@ -25,31 +19,18 @@ import { useAuth } from "../../context/auth-context";
 
 import "./AdminCustomers.css";
 
-const API_URL =
-  "http://127.0.0.1:8000/api";
+const API_URL = "https://ecommerce-platform-4vwn.onrender.com/api";
 
 function AdminCustomers() {
   const { token } = useAuth();
 
-  const [
-    customers,
-    setCustomers,
-  ] = useState([]);
+  const [customers, setCustomers] = useState([]);
 
-  const [
-    search,
-    setSearch,
-  ] = useState("");
+  const [search, setSearch] = useState("");
 
-  const [
-    loading,
-    setLoading,
-  ] = useState(Boolean(token));
+  const [loading, setLoading] = useState(Boolean(token));
 
-  const [
-    error,
-    setError,
-  ] = useState("");
+  const [error, setError] = useState("");
 
   /* ========================================
      LOAD CUSTOMERS
@@ -64,33 +45,21 @@ function AdminCustomers() {
 
     const loadCustomers = async () => {
       try {
-        const response =
-          await axios.get(
-            `${API_URL}/admin/customers`,
-            {
-              headers: {
-                Authorization:
-                  `Bearer ${token}`,
+        const response = await axios.get(`${API_URL}/admin/customers`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
 
-                Accept:
-                  "application/json",
-              },
-            }
-          );
+            Accept: "application/json",
+          },
+        });
 
         if (cancelled) {
           return;
         }
 
-        const data =
-          response.data?.data ||
-          [];
+        const data = response.data?.data || [];
 
-        setCustomers(
-          Array.isArray(data)
-            ? data
-            : []
-        );
+        setCustomers(Array.isArray(data) ? data : []);
 
         setError("");
       } catch (err) {
@@ -98,15 +67,9 @@ function AdminCustomers() {
           return;
         }
 
-        console.error(
-          "Failed to load customers:",
-          err
-        );
+        console.error("Failed to load customers:", err);
 
-        setError(
-          err.response?.data?.message ||
-            "Unable to load customers."
-        );
+        setError(err.response?.data?.message || "Unable to load customers.");
       } finally {
         if (!cancelled) {
           setLoading(false);
@@ -125,92 +88,55 @@ function AdminCustomers() {
      FILTER
   ======================================== */
 
-  const filteredCustomers =
-    useMemo(() => {
-      const value =
-        search
-          .trim()
-          .toLowerCase();
+  const filteredCustomers = useMemo(() => {
+    const value = search.trim().toLowerCase();
 
-      if (!value) {
-        return customers;
-      }
+    if (!value) {
+      return customers;
+    }
 
-      return customers.filter(
-        (customer) =>
-          customer.name
-            ?.toLowerCase()
-            .includes(value) ||
-          customer.email
-            ?.toLowerCase()
-            .includes(value) ||
-          customer.phone
-            ?.toLowerCase()
-            .includes(value)
-      );
-    }, [
-      customers,
-      search,
-    ]);
+    return customers.filter(
+      (customer) =>
+        customer.name?.toLowerCase().includes(value) ||
+        customer.email?.toLowerCase().includes(value) ||
+        customer.phone?.toLowerCase().includes(value),
+    );
+  }, [customers, search]);
 
   /* ========================================
      SUMMARY
   ======================================== */
 
-  const totalCustomers =
-    customers.length;
+  const totalCustomers = customers.length;
 
-  const totalOrders =
-    customers.reduce(
-      (total, customer) =>
-        total +
-        Number(
-          customer.orders_count ||
-            0
-        ),
-      0
-    );
+  const totalOrders = customers.reduce(
+    (total, customer) => total + Number(customer.orders_count || 0),
+    0,
+  );
 
-  const totalSpent =
-    customers.reduce(
-      (total, customer) =>
-        total +
-        Number(
-          customer.total_spent ||
-            0
-        ),
-      0
-    );
+  const totalSpent = customers.reduce(
+    (total, customer) => total + Number(customer.total_spent || 0),
+    0,
+  );
 
   /* ========================================
      HELPERS
   ======================================== */
 
-  const formatMoney = (
-    value
-  ) => {
-    return `$${Number(
-      value || 0
-    ).toFixed(2)}`;
+  const formatMoney = (value) => {
+    return `$${Number(value || 0).toFixed(2)}`;
   };
 
-  const formatDate = (
-    value
-  ) => {
+  const formatDate = (value) => {
     if (!value) {
       return "—";
     }
 
-    return new Intl.DateTimeFormat(
-      "en-US",
-      {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-      }
-    ).format(
-      new Date(value)
-    );
+    return new Intl.DateTimeFormat("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    }).format(new Date(value));
   };
 
   /* ========================================
@@ -224,9 +150,7 @@ function AdminCustomers() {
           <div className="admin-customers-state">
             <span className="admin-customers-spinner" />
 
-            <strong>
-              Loading customers...
-            </strong>
+            <strong>Loading customers...</strong>
           </div>
         </div>
       </main>
@@ -236,94 +160,62 @@ function AdminCustomers() {
   return (
     <main className="admin-customers-page">
       <div className="admin-customers-container">
-
         {/* =================================
             HEADER
         ================================= */}
 
         <header className="admin-customers-heading">
-          <span>
-            CUSTOMER MANAGEMENT
-          </span>
+          <span>CUSTOMER MANAGEMENT</span>
 
-          <h1>
-            Customers
-          </h1>
+          <h1>Customers</h1>
 
-          <p>
-            View registered customers,
-            their orders and spending.
-          </p>
+          <p>View registered customers, their orders and spending.</p>
         </header>
 
         {/* =================================
             ERROR
         ================================= */}
 
-        {error && (
-          <div className="admin-customers-error">
-            {error}
-          </div>
-        )}
+        {error && <div className="admin-customers-error">{error}</div>}
 
         {/* =================================
             SUMMARY
         ================================= */}
 
         <section className="admin-customers-summary">
-
           <article>
             <span>
               <Users size={16} />
             </span>
 
             <div>
-              <small>
-                Customers
-              </small>
+              <small>Customers</small>
 
-              <strong>
-                {totalCustomers}
-              </strong>
+              <strong>{totalCustomers}</strong>
             </div>
           </article>
 
           <article>
             <span>
-              <ShoppingBag
-                size={16}
-              />
+              <ShoppingBag size={16} />
             </span>
 
             <div>
-              <small>
-                Orders
-              </small>
+              <small>Orders</small>
 
-              <strong>
-                {totalOrders}
-              </strong>
+              <strong>{totalOrders}</strong>
             </div>
           </article>
 
           <article>
-            <span>
-              $
-            </span>
+            <span>$</span>
 
             <div>
-              <small>
-                Paid Spending
-              </small>
+              <small>Paid Spending</small>
 
-              <strong>
-                {formatMoney(
-                  totalSpent
-                )}
-              </strong>
+              <strong>{formatMoney(totalSpent)}</strong>
             </div>
           </article>
-
         </section>
 
         {/* =================================
@@ -331,7 +223,6 @@ function AdminCustomers() {
         ================================= */}
 
         <section className="admin-customers-toolbar">
-
           <div className="admin-customers-search">
             <Search size={14} />
 
@@ -339,175 +230,97 @@ function AdminCustomers() {
               type="search"
               value={search}
               placeholder="Search name, email or phone..."
-              onChange={(
-                event
-              ) =>
-                setSearch(
-                  event.target.value
-                )
-              }
+              onChange={(event) => setSearch(event.target.value)}
             />
           </div>
-
         </section>
 
         {/* =================================
             CUSTOMERS
         ================================= */}
 
-        {filteredCustomers.length >
-        0 ? (
+        {filteredCustomers.length > 0 ? (
           <section className="admin-customers-list">
+            {filteredCustomers.map((customer) => (
+              <article className="admin-customer-row" key={customer.id}>
+                {/* IDENTITY */}
 
-            {filteredCustomers.map(
-              (customer) => (
-                <article
-                  className="admin-customer-row"
-                  key={
-                    customer.id
-                  }
-                >
+                <div className="admin-customer-identity">
+                  <span className="admin-customer-avatar">
+                    <UserRound size={18} />
+                  </span>
 
-                  {/* IDENTITY */}
+                  <div>
+                    <strong>{customer.name}</strong>
 
-                  <div className="admin-customer-identity">
+                    <small>Customer #{customer.id}</small>
+                  </div>
+                </div>
 
-                    <span className="admin-customer-avatar">
-                      <UserRound
-                        size={18}
-                      />
-                    </span>
+                {/* CONTACT */}
 
-                    <div>
-                      <strong>
-                        {
-                          customer.name
-                        }
-                      </strong>
+                <div className="admin-customer-contact">
+                  <div>
+                    <Mail size={12} />
 
-                      <small>
-                        Customer #
-                        {
-                          customer.id
-                        }
-                      </small>
-                    </div>
-
+                    <span>{customer.email}</span>
                   </div>
 
-                  {/* CONTACT */}
+                  <div>
+                    <Phone size={12} />
 
-                  <div className="admin-customer-contact">
-
-                    <div>
-                      <Mail
-                        size={12}
-                      />
-
-                      <span>
-                        {
-                          customer.email
-                        }
-                      </span>
-                    </div>
-
-                    <div>
-                      <Phone
-                        size={12}
-                      />
-
-                      <span>
-                        {customer.phone ||
-                          "No phone"}
-                      </span>
-                    </div>
-
+                    <span>{customer.phone || "No phone"}</span>
                   </div>
+                </div>
 
-                  {/* ORDERS */}
+                {/* ORDERS */}
 
-                  <div className="admin-customer-stat">
-                    <span>
-                      Orders
-                    </span>
+                <div className="admin-customer-stat">
+                  <span>Orders</span>
 
-                    <strong>
-                      {customer.orders_count ||
-                        0}
-                    </strong>
+                  <strong>{customer.orders_count || 0}</strong>
+                </div>
+
+                {/* SPENT */}
+
+                <div className="admin-customer-stat">
+                  <span>Paid Spending</span>
+
+                  <strong>{formatMoney(customer.total_spent)}</strong>
+                </div>
+
+                {/* DATE */}
+
+                <div className="admin-customer-date">
+                  <CalendarDays size={12} />
+
+                  <div>
+                    <span>Joined</span>
+
+                    <strong>{formatDate(customer.created_at)}</strong>
                   </div>
+                </div>
 
-                  {/* SPENT */}
+                {/* ACTION */}
 
-                  <div className="admin-customer-stat">
-                    <span>
-                      Paid Spending
-                    </span>
-
-                    <strong>
-                      {formatMoney(
-                        customer.total_spent
-                      )}
-                    </strong>
-                  </div>
-
-                  {/* DATE */}
-
-                  <div className="admin-customer-date">
-                    <CalendarDays
-                      size={12}
-                    />
-
-                    <div>
-                      <span>
-                        Joined
-                      </span>
-
-                      <strong>
-                        {formatDate(
-                          customer.created_at
-                        )}
-                      </strong>
-                    </div>
-                  </div>
-
-                  {/* ACTION */}
-
-                  <div className="admin-customer-actions">
-
-                    <Link
-                      to={`/admin/customers/${customer.id}`}
-                    >
-                      <Eye
-                        size={12}
-                      />
-
-                      View
-                    </Link>
-
-                  </div>
-
-                </article>
-              )
-            )}
-
+                <div className="admin-customer-actions">
+                  <Link to={`/admin/customers/${customer.id}`}>
+                    <Eye size={12} />
+                    View
+                  </Link>
+                </div>
+              </article>
+            ))}
           </section>
         ) : (
           <div className="admin-customers-state">
-
             <Users size={25} />
 
-            <strong>
-              No customers found
-            </strong>
+            <strong>No customers found</strong>
 
-            <p>
-              Try another search.
-            </p>
-
+            <p>Try another search.</p>
           </div>
         )}
-
       </div>
     </main>
   );

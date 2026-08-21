@@ -8,22 +8,16 @@ import { useCurrency } from "../context/useCurrency";
 
 import "./Checkout.css";
 
-const API_URL = "http://127.0.0.1:8000/api";
+const API_URL = "https://ecommerce-platform-4vwn.onrender.com/api";
 
 function Checkout() {
   const navigate = useNavigate();
 
   const { token } = useAuth();
 
-  const {
-    cartItems,
-    cartSubtotal,
-    clearCart,
-  } = useCart();
+  const { cartItems, cartSubtotal, clearCart } = useCart();
 
-  const {
-    formatPrice,
-  } = useCurrency();
+  const { formatPrice } = useCurrency();
 
   const [formData, setFormData] = useState({
     customer_name: "",
@@ -69,17 +63,13 @@ function Checkout() {
         })),
       };
 
-      const response = await axios.post(
-        `${API_URL}/orders`,
-        payload,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await axios.post(`${API_URL}/orders`, payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      });
 
       const order = response.data.data;
 
@@ -94,8 +84,7 @@ function Checkout() {
       console.error("Checkout failed:", err);
 
       const message =
-        err.response?.data?.message ||
-        "Unable to place your order right now.";
+        err.response?.data?.message || "Unable to place your order right now.";
 
       setError(message);
     } finally {
@@ -109,17 +98,9 @@ function Checkout() {
         <div className="checkout-empty">
           <h1>Your cart is empty</h1>
 
-          <p>
-            Add some products before continuing
-            to checkout.
-          </p>
+          <p>Add some products before continuing to checkout.</p>
 
-          <button
-            type="button"
-            onClick={() =>
-              navigate("/products")
-            }
-          >
+          <button type="button" onClick={() => navigate("/products")}>
             Back to Shop
           </button>
         </div>
@@ -131,35 +112,24 @@ function Checkout() {
     <main className="checkout-page">
       <div className="checkout-container">
         <div className="checkout-heading">
-          <span>
-            SECURE CHECKOUT
-          </span>
+          <span>SECURE CHECKOUT</span>
 
-          <h1>
-            Complete Your Order
-          </h1>
+          <h1>Complete Your Order</h1>
 
           <p>
-            Enter your delivery information and
-            review your order before confirming.
+            Enter your delivery information and review your order before
+            confirming.
           </p>
         </div>
 
         <div className="checkout-layout">
-          <form
-            className="checkout-form"
-            onSubmit={handleSubmit}
-          >
+          <form className="checkout-form" onSubmit={handleSubmit}>
             <div className="checkout-form-section">
-              <h2>
-                Customer Information
-              </h2>
+              <h2>Customer Information</h2>
 
               <div className="checkout-fields-grid">
                 <label>
-                  <span>
-                    Full Name *
-                  </span>
+                  <span>Full Name *</span>
 
                   <input
                     type="text"
@@ -171,9 +141,7 @@ function Checkout() {
                 </label>
 
                 <label>
-                  <span>
-                    Email
-                  </span>
+                  <span>Email</span>
 
                   <input
                     type="email"
@@ -184,9 +152,7 @@ function Checkout() {
                 </label>
 
                 <label>
-                  <span>
-                    Phone *
-                  </span>
+                  <span>Phone *</span>
 
                   <input
                     type="text"
@@ -200,15 +166,11 @@ function Checkout() {
             </div>
 
             <div className="checkout-form-section">
-              <h2>
-                Delivery Address
-              </h2>
+              <h2>Delivery Address</h2>
 
               <div className="checkout-fields-grid">
                 <label>
-                  <span>
-                    Country
-                  </span>
+                  <span>Country</span>
 
                   <input
                     type="text"
@@ -219,9 +181,7 @@ function Checkout() {
                 </label>
 
                 <label>
-                  <span>
-                    City *
-                  </span>
+                  <span>City *</span>
 
                   <input
                     type="text"
@@ -233,9 +193,7 @@ function Checkout() {
                 </label>
 
                 <label className="checkout-full-field">
-                  <span>
-                    Address *
-                  </span>
+                  <span>Address *</span>
 
                   <textarea
                     name="address"
@@ -247,9 +205,7 @@ function Checkout() {
                 </label>
 
                 <label className="checkout-full-field">
-                  <span>
-                    Order Notes
-                  </span>
+                  <span>Order Notes</span>
 
                   <textarea
                     name="customer_notes"
@@ -263,100 +219,63 @@ function Checkout() {
             </div>
 
             <div className="checkout-form-section">
-              <h2>
-                Payment Method
-              </h2>
+              <h2>Payment Method</h2>
 
               <label className="payment-option">
                 <input
                   type="radio"
                   name="payment_method"
                   value="cash_on_delivery"
-                  checked={
-                    formData.payment_method ===
-                    "cash_on_delivery"
-                  }
+                  checked={formData.payment_method === "cash_on_delivery"}
                   onChange={handleChange}
                 />
 
                 <div>
-                  <strong>
-                    Cash on Delivery
-                  </strong>
+                  <strong>Cash on Delivery</strong>
 
-                  <span>
-                    Pay when your order arrives.
-                  </span>
+                  <span>Pay when your order arrives.</span>
                 </div>
               </label>
             </div>
 
-            {error && (
-              <div className="checkout-error">
-                {error}
-              </div>
-            )}
+            {error && <div className="checkout-error">{error}</div>}
 
             <button
               type="submit"
               className="checkout-submit"
               disabled={submitting}
             >
-              {submitting
-                ? "Placing Order..."
-                : "Place Order"}
+              {submitting ? "Placing Order..." : "Place Order"}
             </button>
           </form>
 
           <aside className="checkout-summary">
-            <span>
-              ORDER SUMMARY
-            </span>
+            <span>ORDER SUMMARY</span>
 
-            <h2>
-              Your Order
-            </h2>
+            <h2>Your Order</h2>
 
             <div className="checkout-summary-items">
               {cartItems.map((item) => {
-                const regularPrice = Number(
-                  item.price || 0
-                );
+                const regularPrice = Number(item.price || 0);
 
-                const salePrice = Number(
-                  item.sale_price || 0
-                );
+                const salePrice = Number(item.sale_price || 0);
 
                 const finalPrice =
-                  salePrice > 0 &&
-                  salePrice < regularPrice
+                  salePrice > 0 && salePrice < regularPrice
                     ? salePrice
                     : regularPrice;
 
-                const itemTotal =
-                  finalPrice *
-                  Number(item.quantity || 0);
+                const itemTotal = finalPrice * Number(item.quantity || 0);
 
                 return (
-                  <div
-                    key={item.id}
-                    className="checkout-summary-item"
-                  >
+                  <div key={item.id} className="checkout-summary-item">
                     <div>
-                      <strong>
-                        {item.name}
-                      </strong>
+                      <strong>{item.name}</strong>
 
-                      <span>
-                        Qty: {item.quantity}
-                      </span>
+                      <span>Qty: {item.quantity}</span>
                     </div>
 
-                    <strong>
-                      {formatPrice(
-                        itemTotal
-                      )}
-                    </strong>
+                    <strong>{formatPrice(itemTotal)}</strong>
                   </div>
                 );
               })}
@@ -365,44 +284,27 @@ function Checkout() {
             <div className="checkout-summary-divider" />
 
             <div className="checkout-summary-row">
-              <span>
-                Subtotal
-              </span>
+              <span>Subtotal</span>
 
-              <strong>
-                {formatPrice(
-                  cartSubtotal
-                )}
-              </strong>
+              <strong>{formatPrice(cartSubtotal)}</strong>
             </div>
 
             <div className="checkout-summary-row">
-              <span>
-                Shipping
-              </span>
+              <span>Shipping</span>
 
-              <strong>
-                Calculated by store
-              </strong>
+              <strong>Calculated by store</strong>
             </div>
 
             <div className="checkout-summary-divider" />
 
             <div className="checkout-summary-total">
-              <span>
-                Estimated Total
-              </span>
+              <span>Estimated Total</span>
 
-              <strong>
-                {formatPrice(
-                  cartSubtotal
-                )}
-              </strong>
+              <strong>{formatPrice(cartSubtotal)}</strong>
             </div>
 
             <p>
-              Final shipping and tax values are
-              calculated securely by Laravel.
+              Final shipping and tax values are calculated securely by Laravel.
             </p>
           </aside>
         </div>

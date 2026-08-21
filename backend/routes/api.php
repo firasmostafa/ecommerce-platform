@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\CustomerController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\FavoriteController;
 use App\Http\Controllers\Api\HomeSettingController;
+use App\Http\Controllers\Api\ImageKitController;
 use App\Http\Controllers\Api\InvoiceController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\ProductController;
@@ -167,6 +168,17 @@ Route::middleware([
     Route::get('/dashboard', [
         DashboardController::class,
         'index',
+    ]);
+
+    /*
+    |--------------------------------------------------------------------------
+    | ImageKit Upload Authentication
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/imagekit-auth', [
+        ImageKitController::class,
+        'auth',
     ]);
 
     /*

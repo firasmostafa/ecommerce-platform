@@ -18,7 +18,7 @@ import { useAuth } from "../../context/auth-context";
 
 import "./AdminDashboard.css";
 
-const API_URL = "http://127.0.0.1:8000/api";
+const API_URL = "https://ecommerce-platform-4vwn.onrender.com/api";
 
 function AdminDashboard() {
   const { token } = useAuth();

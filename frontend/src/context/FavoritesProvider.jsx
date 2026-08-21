@@ -1,41 +1,20 @@
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import axios from "axios";
 
 import { FavoritesContext } from "./favorites-context";
 import { useAuth } from "./auth-context";
 
-const API_URL =
-  "http://127.0.0.1:8000/api";
+const API_URL = "https://ecommerce-platform-4vwn.onrender.com/api";
 
-export function FavoritesProvider({
-  children,
-}) {
-  const {
-    token,
-    isAuthenticated,
-    loading: authLoading,
-  } = useAuth();
+export function FavoritesProvider({ children }) {
+  const { token, isAuthenticated, loading: authLoading } = useAuth();
 
-  const [
-    favorites,
-    setFavorites,
-  ] = useState([]);
+  const [favorites, setFavorites] = useState([]);
 
-  const [
-    loadedForToken,
-    setLoadedForToken,
-  ] = useState(null);
+  const [loadedForToken, setLoadedForToken] = useState(null);
 
-  const [
-    error,
-    setError,
-  ] = useState("");
+  const [error, setError] = useState("");
 
   /*
   |--------------------------------------------------------------------------
@@ -44,42 +23,28 @@ export function FavoritesProvider({
   */
 
   useEffect(() => {
-    if (
-      authLoading ||
-      !token ||
-      !isAuthenticated
-    ) {
+    if (authLoading || !token || !isAuthenticated) {
       return undefined;
     }
 
     let cancelled = false;
 
     axios
-      .get(
-        `${API_URL}/favorites`,
-        {
-          headers: {
-            Authorization:
-              `Bearer ${token}`,
+      .get(`${API_URL}/favorites`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
 
-            Accept:
-              "application/json",
-          },
-        }
-      )
+          Accept: "application/json",
+        },
+      })
       .then((response) => {
         if (cancelled) {
           return;
         }
 
-        const products =
-          response.data?.data || [];
+        const products = response.data?.data || [];
 
-        setFavorites(
-          Array.isArray(products)
-            ? products
-            : []
-        );
+        setFavorites(Array.isArray(products) ? products : []);
 
         setLoadedForToken(token);
 
@@ -90,28 +55,19 @@ export function FavoritesProvider({
           return;
         }
 
-        console.error(
-          "Failed to load favorites:",
-          err
-        );
+        console.error("Failed to load favorites:", err);
 
         setFavorites([]);
 
         setLoadedForToken(token);
 
-        setError(
-          "Unable to load favorites."
-        );
+        setError("Unable to load favorites.");
       });
 
     return () => {
       cancelled = true;
     };
-  }, [
-    authLoading,
-    token,
-    isAuthenticated,
-  ]);
+  }, [authLoading, token, isAuthenticated]);
 
   /*
   |--------------------------------------------------------------------------
@@ -120,11 +76,7 @@ export function FavoritesProvider({
   */
 
   const currentFavorites =
-    isAuthenticated &&
-    token &&
-    loadedForToken === token
-      ? favorites
-      : [];
+    isAuthenticated && token && loadedForToken === token ? favorites : [];
 
   /*
   |--------------------------------------------------------------------------
@@ -132,17 +84,14 @@ export function FavoritesProvider({
   |--------------------------------------------------------------------------
   */
 
-  const isFavorite =
-    useCallback(
-      (productId) => {
-        return currentFavorites.some(
-          (product) =>
-            Number(product.id) ===
-            Number(productId)
-        );
-      },
-      [currentFavorites]
-    );
+  const isFavorite = useCallback(
+    (productId) => {
+      return currentFavorites.some(
+        (product) => Number(product.id) === Number(productId),
+      );
+    },
+    [currentFavorites],
+  );
 
   /*
   |--------------------------------------------------------------------------
@@ -150,75 +99,52 @@ export function FavoritesProvider({
   |--------------------------------------------------------------------------
   */
 
-  const addFavorite =
-    useCallback(
-      async (product) => {
-        if (
-          !token ||
-          !isAuthenticated ||
-          !product?.id
-        ) {
-          return false;
-        }
+  const addFavorite = useCallback(
+    async (product) => {
+      if (!token || !isAuthenticated || !product?.id) {
+        return false;
+      }
 
-        try {
-          await axios.post(
-            `${API_URL}/favorites/${product.id}`,
-            {},
-            {
-              headers: {
-                Authorization:
-                  `Bearer ${token}`,
+      try {
+        await axios.post(
+          `${API_URL}/favorites/${product.id}`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
 
-                Accept:
-                  "application/json",
-              },
-            }
+              Accept: "application/json",
+            },
+          },
+        );
+
+        setFavorites((current) => {
+          const exists = current.some(
+            (item) => Number(item.id) === Number(product.id),
           );
 
-          setFavorites(
-            (current) => {
-              const exists =
-                current.some(
-                  (item) =>
-                    Number(item.id) ===
-                    Number(product.id)
-                );
+          if (exists) {
+            return current;
+          }
 
-              if (exists) {
-                return current;
-              }
+          return [...current, product];
+        });
 
-              return [
-                ...current,
-                product,
-              ];
-            }
-          );
+        setLoadedForToken(token);
 
-          setLoadedForToken(token);
+        setError("");
 
-          setError("");
+        return true;
+      } catch (err) {
+        console.error("Failed to add favorite:", err);
 
-          return true;
-        } catch (err) {
-          console.error(
-            "Failed to add favorite:",
-            err
-          );
+        setError("Unable to add favorite.");
 
-          setError(
-            "Unable to add favorite."
-          );
-
-          return false;
-        }
-      },
-      [
-        token,
-        isAuthenticated,
-      ]
-    );
+        return false;
+      }
+    },
+    [token, isAuthenticated],
+  );
 
   /*
   |--------------------------------------------------------------------------
@@ -226,63 +152,40 @@ export function FavoritesProvider({
   |--------------------------------------------------------------------------
   */
 
-  const removeFavorite =
-    useCallback(
-      async (productId) => {
-        if (
-          !token ||
-          !isAuthenticated ||
-          !productId
-        ) {
-          return false;
-        }
+  const removeFavorite = useCallback(
+    async (productId) => {
+      if (!token || !isAuthenticated || !productId) {
+        return false;
+      }
 
-        try {
-          await axios.delete(
-            `${API_URL}/favorites/${productId}`,
-            {
-              headers: {
-                Authorization:
-                  `Bearer ${token}`,
+      try {
+        await axios.delete(`${API_URL}/favorites/${productId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
 
-                Accept:
-                  "application/json",
-              },
-            }
-          );
+            Accept: "application/json",
+          },
+        });
 
-          setFavorites(
-            (current) =>
-              current.filter(
-                (product) =>
-                  Number(product.id) !==
-                  Number(productId)
-              )
-          );
+        setFavorites((current) =>
+          current.filter((product) => Number(product.id) !== Number(productId)),
+        );
 
-          setLoadedForToken(token);
+        setLoadedForToken(token);
 
-          setError("");
+        setError("");
 
-          return true;
-        } catch (err) {
-          console.error(
-            "Failed to remove favorite:",
-            err
-          );
+        return true;
+      } catch (err) {
+        console.error("Failed to remove favorite:", err);
 
-          setError(
-            "Unable to remove favorite."
-          );
+        setError("Unable to remove favorite.");
 
-          return false;
-        }
-      },
-      [
-        token,
-        isAuthenticated,
-      ]
-    );
+        return false;
+      }
+    },
+    [token, isAuthenticated],
+  );
 
   /*
   |--------------------------------------------------------------------------
@@ -290,34 +193,24 @@ export function FavoritesProvider({
   |--------------------------------------------------------------------------
   */
 
-  const toggleFavorite =
-    useCallback(
-      async (product) => {
-        if (!product?.id) {
-          return false;
-        }
+  const toggleFavorite = useCallback(
+    async (product) => {
+      if (!product?.id) {
+        return false;
+      }
 
-        const exists =
-          currentFavorites.some(
-            (item) =>
-              Number(item.id) ===
-              Number(product.id)
-          );
+      const exists = currentFavorites.some(
+        (item) => Number(item.id) === Number(product.id),
+      );
 
-        if (exists) {
-          return removeFavorite(
-            product.id
-          );
-        }
+      if (exists) {
+        return removeFavorite(product.id);
+      }
 
-        return addFavorite(product);
-      },
-      [
-        currentFavorites,
-        addFavorite,
-        removeFavorite,
-      ]
-    );
+      return addFavorite(product);
+    },
+    [currentFavorites, addFavorite, removeFavorite],
+  );
 
   /*
   |--------------------------------------------------------------------------
@@ -325,63 +218,39 @@ export function FavoritesProvider({
   |--------------------------------------------------------------------------
   */
 
-  const loadFavorites =
-    useCallback(async () => {
-      if (
-        !token ||
-        !isAuthenticated
-      ) {
-        return [];
-      }
+  const loadFavorites = useCallback(async () => {
+    if (!token || !isAuthenticated) {
+      return [];
+    }
 
-      try {
-        const response =
-          await axios.get(
-            `${API_URL}/favorites`,
-            {
-              headers: {
-                Authorization:
-                  `Bearer ${token}`,
+    try {
+      const response = await axios.get(`${API_URL}/favorites`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
 
-                Accept:
-                  "application/json",
-              },
-            }
-          );
+          Accept: "application/json",
+        },
+      });
 
-        const products =
-          response.data?.data || [];
+      const products = response.data?.data || [];
 
-        const safeProducts =
-          Array.isArray(products)
-            ? products
-            : [];
+      const safeProducts = Array.isArray(products) ? products : [];
 
-        setFavorites(
-          safeProducts
-        );
+      setFavorites(safeProducts);
 
-        setLoadedForToken(token);
+      setLoadedForToken(token);
 
-        setError("");
+      setError("");
 
-        return safeProducts;
-      } catch (err) {
-        console.error(
-          "Failed to reload favorites:",
-          err
-        );
+      return safeProducts;
+    } catch (err) {
+      console.error("Failed to reload favorites:", err);
 
-        setError(
-          "Unable to load favorites."
-        );
+      setError("Unable to load favorites.");
 
-        return [];
-      }
-    }, [
-      token,
-      isAuthenticated,
-    ]);
+      return [];
+    }
+  }, [token, isAuthenticated]);
 
   /*
   |--------------------------------------------------------------------------
@@ -389,61 +258,37 @@ export function FavoritesProvider({
   |--------------------------------------------------------------------------
   */
 
-  const clearFavorites =
-    useCallback(async () => {
-      if (
-        !token ||
-        !isAuthenticated ||
-        currentFavorites.length === 0
-      ) {
-        return;
-      }
+  const clearFavorites = useCallback(async () => {
+    if (!token || !isAuthenticated || currentFavorites.length === 0) {
+      return;
+    }
 
-      const productIds =
-        currentFavorites.map(
-          (product) =>
-            product.id
-        );
+    const productIds = currentFavorites.map((product) => product.id);
 
-      try {
-        await Promise.all(
-          productIds.map(
-            (productId) =>
-              axios.delete(
-                `${API_URL}/favorites/${productId}`,
-                {
-                  headers: {
-                    Authorization:
-                      `Bearer ${token}`,
+    try {
+      await Promise.all(
+        productIds.map((productId) =>
+          axios.delete(`${API_URL}/favorites/${productId}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
 
-                    Accept:
-                      "application/json",
-                  },
-                }
-              )
-          )
-        );
+              Accept: "application/json",
+            },
+          }),
+        ),
+      );
 
-        setFavorites([]);
+      setFavorites([]);
 
-        setLoadedForToken(token);
+      setLoadedForToken(token);
 
-        setError("");
-      } catch (err) {
-        console.error(
-          "Failed to clear favorites:",
-          err
-        );
+      setError("");
+    } catch (err) {
+      console.error("Failed to clear favorites:", err);
 
-        setError(
-          "Unable to clear favorites."
-        );
-      }
-    }, [
-      token,
-      isAuthenticated,
-      currentFavorites,
-    ]);
+      setError("Unable to clear favorites.");
+    }
+  }, [token, isAuthenticated, currentFavorites]);
 
   /*
   |--------------------------------------------------------------------------
@@ -451,21 +296,15 @@ export function FavoritesProvider({
   |--------------------------------------------------------------------------
   */
 
-  const favoritesCount =
-    currentFavorites.length;
+  const favoritesCount = currentFavorites.length;
 
   const loading =
     authLoading ||
-    (
-      Boolean(token) &&
-      isAuthenticated &&
-      loadedForToken !== token
-    );
+    (Boolean(token) && isAuthenticated && loadedForToken !== token);
 
   const value = useMemo(
     () => ({
-      favorites:
-        currentFavorites,
+      favorites: currentFavorites,
 
       favoritesCount,
 
@@ -490,13 +329,11 @@ export function FavoritesProvider({
       toggleFavorite,
       clearFavorites,
       loadFavorites,
-    ]
+    ],
   );
 
   return (
-    <FavoritesContext.Provider
-      value={value}
-    >
+    <FavoritesContext.Provider value={value}>
       {children}
     </FavoritesContext.Provider>
   );

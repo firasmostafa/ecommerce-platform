@@ -1,8 +1,4 @@
-import {
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import {
   CheckCircle2,
@@ -23,11 +19,7 @@ import { useAuth } from "../../context/auth-context";
 
 import "./AdminCategories.css";
 
-const API_URL =
-  "http://127.0.0.1:8000/api";
-
-const STORAGE_URL =
-  "http://127.0.0.1:8000/storage";
+const API_URL = "https://ecommerce-platform-4vwn.onrender.com/api";
 
 const initialForm = {
   name: "",
@@ -37,45 +29,22 @@ const initialForm = {
 function AdminCategories() {
   const { token } = useAuth();
 
-  const [categories, setCategories] =
-    useState([]);
+  const [categories, setCategories] = useState([]);
+  const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [deletingId, setDeletingId] = useState(null);
 
-  const [search, setSearch] =
-    useState("");
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
-  const [loading, setLoading] =
-    useState(true);
+  const [formOpen, setFormOpen] = useState(false);
+  const [editingCategory, setEditingCategory] = useState(null);
 
-  const [saving, setSaving] =
-    useState(false);
+  const [form, setForm] = useState(initialForm);
 
-  const [deletingId, setDeletingId] =
-    useState(null);
-
-  const [error, setError] =
-    useState("");
-
-  const [success, setSuccess] =
-    useState("");
-
-  const [formOpen, setFormOpen] =
-    useState(false);
-
-  const [
-    editingCategory,
-    setEditingCategory,
-  ] = useState(null);
-
-  const [form, setForm] =
-    useState(initialForm);
-
-  const [image, setImage] =
-    useState(null);
-
-  const [
-    imagePreview,
-    setImagePreview,
-  ] = useState("");
+  const [image, setImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState("");
 
   /* ========================================
      LOAD CATEGORIES
@@ -86,10 +55,7 @@ function AdminCategories() {
 
     const loadCategories = async () => {
       try {
-        const response =
-          await axios.get(
-            `${API_URL}/categories`
-          );
+        const response = await axios.get(`${API_URL}/categories`);
 
         if (cancelled) {
           return;
@@ -100,26 +66,18 @@ function AdminCategories() {
           response.data?.data ||
           [];
 
-        setCategories(
-          Array.isArray(data)
-            ? data
-            : []
-        );
-
+        setCategories(Array.isArray(data) ? data : []);
         setError("");
       } catch (err) {
         if (cancelled) {
           return;
         }
 
-        console.error(
-          "Failed to load categories:",
-          err
-        );
+        console.error("Failed to load categories:", err);
 
         setError(
           err.response?.data?.message ||
-            "Unable to load categories."
+            "Unable to load categories.",
         );
       } finally {
         if (!cancelled) {
@@ -144,10 +102,9 @@ function AdminCategories() {
       return undefined;
     }
 
-    const timer =
-      window.setTimeout(() => {
-        setSuccess("");
-      }, 4000);
+    const timer = window.setTimeout(() => {
+      setSuccess("");
+    }, 4000);
 
     return () => {
       window.clearTimeout(timer);
@@ -162,13 +119,9 @@ function AdminCategories() {
     return () => {
       if (
         imagePreview &&
-        imagePreview.startsWith(
-          "blob:"
-        )
+        imagePreview.startsWith("blob:")
       ) {
-        URL.revokeObjectURL(
-          imagePreview
-        );
+        URL.revokeObjectURL(imagePreview);
       }
     };
   }, [imagePreview]);
@@ -177,64 +130,113 @@ function AdminCategories() {
      FILTER
   ======================================== */
 
-  const filteredCategories =
-    useMemo(() => {
-      const value =
-        search
-          .trim()
-          .toLowerCase();
+  const filteredCategories = useMemo(() => {
+    const value = search.trim().toLowerCase();
 
-      if (!value) {
-        return categories;
-      }
+    if (!value) {
+      return categories;
+    }
 
-      return categories.filter(
-        (category) =>
-          category.name
-            ?.toLowerCase()
-            .includes(value) ||
-          category.slug
-            ?.toLowerCase()
-            .includes(value) ||
-          category.description
-            ?.toLowerCase()
-            .includes(value)
-      );
-    }, [
-      categories,
-      search,
-    ]);
+    return categories.filter(
+      (category) =>
+        category.name?.toLowerCase().includes(value) ||
+        category.slug?.toLowerCase().includes(value) ||
+        category.description
+          ?.toLowerCase()
+          .includes(value),
+    );
+  }, [categories, search]);
 
   /* ========================================
      HELPERS
   ======================================== */
 
-  const getCategoryImage = (
-    category
-  ) => {
+  const getCategoryImage = (category) => {
     if (!category?.image) {
       return null;
     }
 
-    if (
-      category.image.startsWith(
-        "http"
-      )
-    ) {
+    if (category.image.startsWith("http")) {
       return category.image;
     }
 
-    return `${STORAGE_URL}/${category.image}`;
+    return category.image;
   };
 
-  const getProductCount = (
-    category
-  ) => {
+  const getProductCount = (category) => {
     return (
       category.products_count ??
       category.products?.length ??
       0
     );
+  };
+
+  /* ========================================
+     IMAGEKIT UPLOAD
+  ======================================== */
+
+  const uploadImageToImageKit = async (file) => {
+    const authResponse = await axios.get(
+      `${API_URL}/admin/imagekit-auth`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+        },
+      },
+    );
+
+    const {
+      token: imageKitToken,
+      expire,
+      signature,
+      publicKey,
+    } = authResponse.data;
+
+    if (
+      !imageKitToken ||
+      !expire ||
+      !signature ||
+      !publicKey
+    ) {
+      throw new Error(
+        "ImageKit authentication data is missing.",
+      );
+    }
+
+    const uploadData = new FormData();
+
+    uploadData.append("file", file);
+
+    uploadData.append(
+      "fileName",
+      `category-${Date.now()}-${file.name}`,
+    );
+
+    uploadData.append("token", imageKitToken);
+    uploadData.append("expire", expire);
+    uploadData.append("signature", signature);
+    uploadData.append("publicKey", publicKey);
+
+    uploadData.append(
+      "folder",
+      "/ecommerce/categories",
+    );
+
+    const uploadResponse = await axios.post(
+      "https://upload.imagekit.io/api/v1/files/upload",
+      uploadData,
+    );
+
+    const uploadedUrl = uploadResponse.data?.url;
+
+    if (!uploadedUrl) {
+      throw new Error(
+        "ImageKit did not return an image URL.",
+      );
+    }
+
+    return uploadedUrl;
   };
 
   /* ========================================
@@ -258,27 +260,18 @@ function AdminCategories() {
      OPEN EDIT FORM
   ======================================== */
 
-  const handleEdit = (
-    category
-  ) => {
-    setEditingCategory(
-      category
-    );
+  const handleEdit = (category) => {
+    setEditingCategory(category);
 
     setForm({
-      name:
-        category.name || "",
-
-      description:
-        category.description || "",
+      name: category.name || "",
+      description: category.description || "",
     });
 
     setImage(null);
 
     setImagePreview(
-      getCategoryImage(
-        category
-      ) || ""
+      getCategoryImage(category) || "",
     );
 
     setError("");
@@ -293,13 +286,9 @@ function AdminCategories() {
   const handleCloseForm = () => {
     if (
       imagePreview &&
-      imagePreview.startsWith(
-        "blob:"
-      )
+      imagePreview.startsWith("blob:")
     ) {
-      URL.revokeObjectURL(
-        imagePreview
-      );
+      URL.revokeObjectURL(imagePreview);
     }
 
     setFormOpen(false);
@@ -318,20 +307,13 @@ function AdminCategories() {
      INPUT CHANGE
   ======================================== */
 
-  const handleChange = (
-    event
-  ) => {
-    const {
-      name,
-      value,
-    } = event.target;
+  const handleChange = (event) => {
+    const { name, value } = event.target;
 
-    setForm(
-      (current) => ({
-        ...current,
-        [name]: value,
-      })
-    );
+    setForm((current) => ({
+      ...current,
+      [name]: value,
+    }));
 
     setError("");
   };
@@ -340,48 +322,58 @@ function AdminCategories() {
      IMAGE CHANGE
   ======================================== */
 
-  const handleImageChange = (
-    event
-  ) => {
-    const file =
-      event.target.files?.[0];
+  const handleImageChange = (event) => {
+    const file = event.target.files?.[0];
 
     if (!file) {
       return;
     }
 
+    const allowedTypes = [
+      "image/jpeg",
+      "image/png",
+      "image/webp",
+    ];
+
+    if (!allowedTypes.includes(file.type)) {
+      setError(
+        "Please choose a JPG, PNG or WEBP image.",
+      );
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      setError(
+        "Image size must be less than 5MB.",
+      );
+      return;
+    }
+
     if (
       imagePreview &&
-      imagePreview.startsWith(
-        "blob:"
-      )
+      imagePreview.startsWith("blob:")
     ) {
-      URL.revokeObjectURL(
-        imagePreview
-      );
+      URL.revokeObjectURL(imagePreview);
     }
 
     setImage(file);
 
     setImagePreview(
-      URL.createObjectURL(file)
+      URL.createObjectURL(file),
     );
+
+    setError("");
   };
 
   /* ========================================
      SAVE CATEGORY
   ======================================== */
 
-  const handleSubmit = async (
-    event
-  ) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     if (!form.name.trim()) {
-      setError(
-        "Category name is required."
-      );
-
+      setError("Category name is required.");
       return;
     }
 
@@ -391,63 +383,46 @@ function AdminCategories() {
       setError("");
       setSuccess("");
 
-      const formData =
-        new FormData();
-
-      formData.append(
-        "name",
-        form.name.trim()
-      );
-
-      formData.append(
-        "description",
-        form.description.trim()
-      );
+      let imageUrl =
+        editingCategory?.image || null;
 
       if (image) {
-        formData.append(
-          "image",
-          image
-        );
+        imageUrl =
+          await uploadImageToImageKit(image);
       }
+
+      const payload = {
+        name: form.name.trim(),
+        description: form.description.trim(),
+        image: imageUrl,
+      };
 
       let response;
 
       if (editingCategory) {
-        formData.append(
-          "_method",
-          "PUT"
+        response = await axios.put(
+          `${API_URL}/admin/categories/${editingCategory.id}`,
+          payload,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+          },
         );
-
-        response =
-          await axios.post(
-            `${API_URL}/admin/categories/${editingCategory.id}`,
-            formData,
-            {
-              headers: {
-                Authorization:
-                  `Bearer ${token}`,
-
-                Accept:
-                  "application/json",
-              },
-            }
-          );
       } else {
-        response =
-          await axios.post(
-            `${API_URL}/admin/categories`,
-            formData,
-            {
-              headers: {
-                Authorization:
-                  `Bearer ${token}`,
-
-                Accept:
-                  "application/json",
-              },
-            }
-          );
+        response = await axios.post(
+          `${API_URL}/admin/categories`,
+          payload,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+          },
+        );
       }
 
       const savedCategory =
@@ -455,33 +430,29 @@ function AdminCategories() {
         response.data;
 
       if (editingCategory) {
-        setCategories(
-          (current) =>
-            current.map(
-              (category) =>
-                category.id ===
-                editingCategory.id
-                  ? {
-                      ...category,
-                      ...savedCategory,
-                    }
-                  : category
-            )
+        setCategories((current) =>
+          current.map((category) =>
+            category.id ===
+            editingCategory.id
+              ? {
+                  ...category,
+                  ...savedCategory,
+                }
+              : category,
+          ),
         );
 
         setSuccess(
-          "Category updated successfully."
+          "Category updated successfully.",
         );
       } else {
-        setCategories(
-          (current) => [
-            savedCategory,
-            ...current,
-          ]
-        );
+        setCategories((current) => [
+          savedCategory,
+          ...current,
+        ]);
 
         setSuccess(
-          "Category created successfully."
+          "Category created successfully.",
         );
       }
 
@@ -489,26 +460,28 @@ function AdminCategories() {
     } catch (err) {
       console.error(
         "Failed to save category:",
-        err
+        err,
       );
 
       const errors =
         err.response?.data?.errors;
 
       if (errors) {
-        const firstError =
-          Object.values(errors)
-            .flat()
-            .find(Boolean);
+        const firstError = Object.values(
+          errors,
+        )
+          .flat()
+          .find(Boolean);
 
         setError(
           firstError ||
-            "Please check the category information."
+            "Please check the category information.",
         );
       } else {
         setError(
           err.response?.data?.message ||
-            "Unable to save category."
+            err.message ||
+            "Unable to save category.",
         );
       }
     } finally {
@@ -520,22 +493,17 @@ function AdminCategories() {
      DELETE CATEGORY
   ======================================== */
 
-  const handleDelete = async (
-    category
-  ) => {
-    const confirmed =
-      window.confirm(
-        `Delete "${category.name}"?`
-      );
+  const handleDelete = async (category) => {
+    const confirmed = window.confirm(
+      `Delete "${category.name}"?`,
+    );
 
     if (!confirmed) {
       return;
     }
 
     try {
-      setDeletingId(
-        category.id
-      );
+      setDeletingId(category.id);
 
       setError("");
       setSuccess("");
@@ -544,36 +512,31 @@ function AdminCategories() {
         `${API_URL}/admin/categories/${category.id}`,
         {
           headers: {
-            Authorization:
-              `Bearer ${token}`,
-
-            Accept:
-              "application/json",
+            Authorization: `Bearer ${token}`,
+            Accept: "application/json",
           },
-        }
+        },
       );
 
-      setCategories(
-        (current) =>
-          current.filter(
-            (item) =>
-              item.id !==
-              category.id
-          )
+      setCategories((current) =>
+        current.filter(
+          (item) =>
+            item.id !== category.id,
+        ),
       );
 
       setSuccess(
-        `"${category.name}" deleted successfully.`
+        `"${category.name}" deleted successfully.`,
       );
     } catch (err) {
       console.error(
         "Failed to delete category:",
-        err
+        err,
       );
 
       setError(
         err.response?.data?.message ||
-          "Unable to delete this category."
+          "Unable to delete this category.",
       );
     } finally {
       setDeletingId(null);
@@ -603,22 +566,15 @@ function AdminCategories() {
   return (
     <main className="admin-categories-page">
       <div className="admin-categories-container">
-
-        {/* HEADER */}
-
         <header className="admin-categories-heading">
           <div>
-            <span>
-              STORE ORGANIZATION
-            </span>
+            <span>STORE ORGANIZATION</span>
 
-            <h1>
-              Categories
-            </h1>
+            <h1>Categories</h1>
 
             <p>
-              Organize products into
-              clear store categories.
+              Organize products into clear
+              store categories.
             </p>
           </div>
 
@@ -633,17 +589,11 @@ function AdminCategories() {
           </button>
         </header>
 
-        {/* SUCCESS */}
-
         {success && (
           <div className="admin-categories-success">
-            <CheckCircle2
-              size={16}
-            />
+            <CheckCircle2 size={16} />
 
-            <strong>
-              {success}
-            </strong>
+            <strong>{success}</strong>
 
             <button
               type="button"
@@ -657,70 +607,50 @@ function AdminCategories() {
           </div>
         )}
 
-        {/* ERROR */}
-
-        {error &&
-          !formOpen && (
-            <div className="admin-categories-error">
-              {error}
-            </div>
-          )}
-
-        {/* SUMMARY */}
+        {error && !formOpen && (
+          <div className="admin-categories-error">
+            {error}
+          </div>
+        )}
 
         <section className="admin-categories-summary">
           <article>
             <span>
-              <FolderOpen
-                size={16}
-              />
+              <FolderOpen size={16} />
             </span>
 
             <div>
-              <small>
-                Categories
-              </small>
+              <small>Categories</small>
 
               <strong>
-                {
-                  categories.length
-                }
+                {categories.length}
               </strong>
             </div>
           </article>
 
           <article>
             <span>
-              <Package
-                size={16}
-              />
+              <Package size={16} />
             </span>
 
             <div>
-              <small>
-                Products
-              </small>
+              <small>Products</small>
 
               <strong>
                 {categories.reduce(
-                  (
-                    total,
-                    category
-                  ) =>
+                  (total, category) =>
                     total +
                     Number(
                       getProductCount(
-                        category
-                      )
+                        category,
+                      ),
                     ),
-                  0
+                  0,
                 )}
               </strong>
             </div>
           </article>
         </section>
-
-        {/* SEARCH */}
 
         <section className="admin-categories-toolbar">
           <div className="admin-categories-search">
@@ -730,12 +660,9 @@ function AdminCategories() {
               type="search"
               value={search}
               placeholder="Search categories..."
-              onChange={(
-                event
-              ) =>
+              onChange={(event) =>
                 setSearch(
-                  event.target
-                    .value
+                  event.target.value,
                 )
               }
             />
@@ -747,15 +674,11 @@ function AdminCategories() {
               setSearch("")
             }
           >
-            <RefreshCw
-              size={13}
-            />
+            <RefreshCw size={13} />
 
             Reset
           </button>
         </section>
-
-        {/* CATEGORIES */}
 
         {filteredCategories.length >
         0 ? (
@@ -764,22 +687,18 @@ function AdminCategories() {
               (category) => {
                 const imageUrl =
                   getCategoryImage(
-                    category
+                    category,
                   );
 
                 return (
                   <article
                     className="admin-category-card"
-                    key={
-                      category.id
-                    }
+                    key={category.id}
                   >
                     <div className="admin-category-image">
                       {imageUrl ? (
                         <img
-                          src={
-                            imageUrl
-                          }
+                          src={imageUrl}
                           alt={
                             category.name
                           }
@@ -808,7 +727,7 @@ function AdminCategories() {
 
                         <span className="admin-category-count">
                           {getProductCount(
-                            category
+                            category,
                           )}{" "}
                           products
                         </span>
@@ -825,7 +744,7 @@ function AdminCategories() {
                           className="edit"
                           onClick={() =>
                             handleEdit(
-                              category
+                              category,
                             )
                           }
                         >
@@ -845,7 +764,7 @@ function AdminCategories() {
                           }
                           onClick={() =>
                             handleDelete(
-                              category
+                              category,
                             )
                           }
                         >
@@ -862,14 +781,12 @@ function AdminCategories() {
                     </div>
                   </article>
                 );
-              }
+              },
             )}
           </section>
         ) : (
           <div className="admin-categories-state">
-            <FolderOpen
-              size={25}
-            />
+            <FolderOpen size={25} />
 
             <strong>
               No categories found
@@ -883,10 +800,6 @@ function AdminCategories() {
         )}
       </div>
 
-      {/* =====================================
-          ADD / EDIT MODAL
-      ====================================== */}
-
       {formOpen && (
         <div
           className="admin-category-modal-backdrop"
@@ -896,9 +809,7 @@ function AdminCategories() {
         >
           <div
             className="admin-category-modal"
-            onMouseDown={(
-              event
-            ) =>
+            onMouseDown={(event) =>
               event.stopPropagation()
             }
           >
@@ -939,9 +850,7 @@ function AdminCategories() {
             )}
 
             <form
-              onSubmit={
-                handleSubmit
-              }
+              onSubmit={handleSubmit}
             >
               <label className="admin-category-field">
                 <span>
@@ -985,9 +894,7 @@ function AdminCategories() {
                 <label className="admin-category-upload">
                   {imagePreview ? (
                     <img
-                      src={
-                        imagePreview
-                      }
+                      src={imagePreview}
                       alt="Category preview"
                     />
                   ) : (
@@ -1033,7 +940,9 @@ function AdminCategories() {
                   disabled={saving}
                 >
                   {saving
-                    ? "Saving..."
+                    ? image
+                      ? "Uploading & Saving..."
+                      : "Saving..."
                     : editingCategory
                       ? "Update Category"
                       : "Create Category"}

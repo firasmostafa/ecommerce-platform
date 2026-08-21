@@ -1,16 +1,12 @@
 import { useEffect, useState } from "react";
 
-import {
-  Link,
-  NavLink,
-} from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 import {
   ChevronDown,
   ChevronRight,
   CircleDollarSign,
   Heart,
-
   LogIn,
   LogOut,
   Menu,
@@ -32,8 +28,8 @@ import axios from "axios";
 
 import "./Navbar.css";
 
-const API_URL = "http://127.0.0.1:8000/api";
-const STORAGE_URL = "http://127.0.0.1:8000/storage";
+const API_URL = "https://ecommerce-platform-4vwn.onrender.com/api";
+const STORAGE_URL = "https://ecommerce-platform-4vwn.onrender.com/storage";
 
 const defaultStoreSettings = {
   store_name: "NOVA",
@@ -44,88 +40,48 @@ const defaultStoreSettings = {
 };
 
 function Navbar() {
-  const [
-    mobileMenuOpen,
-    setMobileMenuOpen,
-  ] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const [
-    searchOpen,
-    setSearchOpen,
-  ] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
 
-  const [
-    currencyOpen,
-    setCurrencyOpen,
-  ] = useState(false);
+  const [currencyOpen, setCurrencyOpen] = useState(false);
 
-  const [
-    storeSettings,
-    setStoreSettings,
-  ] = useState(defaultStoreSettings);
+  const [storeSettings, setStoreSettings] = useState(defaultStoreSettings);
 
   const { cartCount } = useCart();
   const { favoritesCount } = useFavorites();
 
-  const {
-    user,
-    isAuthenticated,
-    logout,
-  } = useAuth();
+  const { user, isAuthenticated, logout } = useAuth();
 
-  const {
-    currency,
-    currencies,
-    setCurrency,
-    formatPrice,
-  } = useCurrency();
+  const { currency, currencies, setCurrency, formatPrice } = useCurrency();
 
   useEffect(() => {
     let cancelled = false;
 
     const loadStoreSettings = async () => {
       try {
-        const response = await axios.get(
-          `${API_URL}/store-settings`
-        );
+        const response = await axios.get(`${API_URL}/store-settings`);
 
         if (cancelled) {
           return;
         }
 
-        const data =
-          response.data?.data ||
-          response.data ||
-          {};
+        const data = response.data?.data || response.data || {};
 
         setStoreSettings({
-          store_name:
-            data.store_name ||
-            data.name ||
-            "NOVA",
+          store_name: data.store_name || data.name || "NOVA",
 
-          logo:
-            data.logo || "",
+          logo: data.logo || "",
 
-          announcement_enabled:
-            data.announcement_enabled ??
-            true,
+          announcement_enabled: data.announcement_enabled ?? true,
 
           announcement_text:
-            data.announcement_text ||
-            "Free shipping on orders over",
+            data.announcement_text || "Free shipping on orders over",
 
-          free_shipping_threshold:
-            Number(
-              data.free_shipping_threshold ??
-              100
-            ),
+          free_shipping_threshold: Number(data.free_shipping_threshold ?? 100),
         });
       } catch (error) {
-        console.error(
-          "Failed to load store settings:",
-          error
-        );
+        console.error("Failed to load store settings:", error);
       }
     };
 
@@ -136,17 +92,13 @@ function Navbar() {
     };
   }, []);
 
-  const storeName =
-    storeSettings.store_name || "NOVA";
+  const storeName = storeSettings.store_name || "NOVA";
 
-  const storeLogoUrl =
-    storeSettings.logo
-      ? `${STORAGE_URL}/${storeSettings.logo}`
-      : "";
+  const storeLogoUrl = storeSettings.logo
+    ? `${STORAGE_URL}/${storeSettings.logo}`
+    : "";
 
-  const storeInitial =
-    storeName.trim().charAt(0).toUpperCase() ||
-    "N";
+  const storeInitial = storeName.trim().charAt(0).toUpperCase() || "N";
 
   const closeMobileMenu = () => {
     setMobileMenuOpen(false);
@@ -156,20 +108,14 @@ function Navbar() {
     setCurrencyOpen(false);
   };
 
-  const handleCurrencyChange = (
-    currencyCode
-  ) => {
+  const handleCurrencyChange = (currencyCode) => {
     setCurrency(currencyCode);
 
     closeCurrencyMenu();
   };
 
-  const handleMobileCurrencyChange = (
-    event
-  ) => {
-    setCurrency(
-      event.target.value
-    );
+  const handleMobileCurrencyChange = (event) => {
+    setCurrency(event.target.value);
   };
 
   const handleLogout = async () => {
@@ -195,15 +141,11 @@ function Navbar() {
             <p>
               {storeSettings.announcement_text}{" "}
               <strong>
-                {formatPrice(
-                  storeSettings.free_shipping_threshold
-                )}
+                {formatPrice(storeSettings.free_shipping_threshold)}
               </strong>
             </p>
 
-            <Link to="/sale">
-              Shop offers →
-            </Link>
+            <Link to="/sale">Shop offers →</Link>
           </div>
         </div>
       )}
@@ -214,7 +156,6 @@ function Navbar() {
 
       <header className="navbar">
         <div className="navbar-container">
-
           {/* ===============================
               MOBILE LEFT ACTIONS
           =============================== */}
@@ -254,11 +195,7 @@ function Navbar() {
               type="button"
               className="mobile-header-action mobile-header-search"
               aria-label="Search"
-              onClick={() =>
-                setSearchOpen(
-                  (current) => !current
-                )
-              }
+              onClick={() => setSearchOpen((current) => !current)}
             >
               <Search size={21} />
             </button>
@@ -266,11 +203,7 @@ function Navbar() {
 
           {/* LOGO */}
 
-          <Link
-            to="/"
-            className="navbar-logo"
-            onClick={closeMobileMenu}
-          >
+          <Link to="/" className="navbar-logo" onClick={closeMobileMenu}>
             {storeLogoUrl ? (
               <img
                 src={storeLogoUrl}
@@ -278,17 +211,13 @@ function Navbar() {
                 className="navbar-logo-image"
               />
             ) : (
-              <span className="logo-icon">
-                {storeInitial}
-              </span>
+              <span className="logo-icon">{storeInitial}</span>
             )}
 
             <span className="logo-text">
               {storeName}
 
-              <small>
-                STORE
-              </small>
+              <small>STORE</small>
             </span>
           </Link>
 
@@ -346,16 +275,11 @@ function Navbar() {
               onChange={handleMobileCurrencyChange}
               aria-label="Select currency"
             >
-              {Object.values(currencies).map(
-                (currencyItem) => (
-                  <option
-                    key={currencyItem.code}
-                    value={currencyItem.code}
-                  >
-                    {currencyItem.code}
-                  </option>
-                )
-              )}
+              {Object.values(currencies).map((currencyItem) => (
+                <option key={currencyItem.code} value={currencyItem.code}>
+                  {currencyItem.code}
+                </option>
+              ))}
             </select>
 
             <ChevronDown size={11} />
@@ -366,20 +290,10 @@ function Navbar() {
           <button
             type="button"
             className={`mobile-header-menu-button ${
-              mobileMenuOpen
-                ? "mobile-header-menu-button-active"
-                : ""
+              mobileMenuOpen ? "mobile-header-menu-button-active" : ""
             }`}
-            aria-label={
-              mobileMenuOpen
-                ? "Close menu"
-                : "Open menu"
-            }
-            onClick={() =>
-              setMobileMenuOpen(
-                (current) => !current
-              )
-            }
+            aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+            onClick={() => setMobileMenuOpen((current) => !current)}
           >
             <Menu size={23} />
           </button>
@@ -389,49 +303,28 @@ function Navbar() {
           =============================== */}
 
           <nav className="desktop-navigation">
-            <NavLink to="/">
-              Home
-            </NavLink>
+            <NavLink to="/">Home</NavLink>
 
-            <NavLink to="/products">
-              Shop
-            </NavLink>
+            <NavLink to="/products">Shop</NavLink>
 
-            <NavLink to="/categories">
-              Categories
-            </NavLink>
+            <NavLink to="/categories">Categories</NavLink>
 
-            <NavLink to="/featured">
-              Featured
-            </NavLink>
+            <NavLink to="/featured">Featured</NavLink>
 
-            <NavLink
-              to="/sale"
-              className="sale-link"
-            >
+            <NavLink to="/sale" className="sale-link">
               Sale
             </NavLink>
 
-            <NavLink to="/about">
-              About
-            </NavLink>
+            <NavLink to="/about">About</NavLink>
 
-            <NavLink to="/contact">
-              Contact
-            </NavLink>
+            <NavLink to="/contact">Contact</NavLink>
 
-            <NavLink
-              to="/favorites"
-              className="desktop-favorites-link"
-            >
+            <NavLink to="/favorites" className="desktop-favorites-link">
               Favorites
             </NavLink>
 
             {isAuthenticated && (
-              <NavLink
-                to="/my-orders"
-                className="desktop-orders-link"
-              >
+              <NavLink to="/my-orders" className="desktop-orders-link">
                 My Orders
               </NavLink>
             )}
@@ -442,7 +335,6 @@ function Navbar() {
           =============================== */}
 
           <div className="navbar-actions">
-
             {/* ===============================
                 DESKTOP CURRENCY
             =============================== */}
@@ -451,88 +343,43 @@ function Navbar() {
               <button
                 type="button"
                 className={`navbar-currency-button ${
-                  currencyOpen
-                    ? "navbar-currency-button-open"
-                    : ""
+                  currencyOpen ? "navbar-currency-button-open" : ""
                 }`}
                 aria-label="Select currency"
                 aria-expanded={currencyOpen}
-                onClick={() =>
-                  setCurrencyOpen(
-                    (current) =>
-                      !current
-                  )
-                }
+                onClick={() => setCurrencyOpen((current) => !current)}
               >
-                <CircleDollarSign
-                  size={16}
-                />
+                <CircleDollarSign size={16} />
 
-                <span>
-                  {currency}
-                </span>
+                <span>{currency}</span>
 
-                <ChevronDown
-                  size={13}
-                />
+                <ChevronDown size={13} />
               </button>
 
               {currencyOpen && (
                 <div className="navbar-currency-menu">
+                  {Object.values(currencies).map((currencyItem) => (
+                    <button
+                      type="button"
+                      key={currencyItem.code}
+                      className={currency === currencyItem.code ? "active" : ""}
+                      onClick={() => handleCurrencyChange(currencyItem.code)}
+                    >
+                      <span className="navbar-currency-symbol">
+                        {currencyItem.symbol}
+                      </span>
 
-                  {Object.values(
-                    currencies
-                  ).map(
-                    (
-                      currencyItem
-                    ) => (
-                      <button
-                        type="button"
-                        key={
-                          currencyItem.code
-                        }
-                        className={
-                          currency ===
-                          currencyItem.code
-                            ? "active"
-                            : ""
-                        }
-                        onClick={() =>
-                          handleCurrencyChange(
-                            currencyItem.code
-                          )
-                        }
-                      >
-                        <span className="navbar-currency-symbol">
-                          {
-                            currencyItem.symbol
-                          }
-                        </span>
+                      <span className="navbar-currency-info">
+                        <strong>{currencyItem.code}</strong>
 
-                        <span className="navbar-currency-info">
-                          <strong>
-                            {
-                              currencyItem.code
-                            }
-                          </strong>
+                        <small>{currencyItem.label}</small>
+                      </span>
 
-                          <small>
-                            {
-                              currencyItem.label
-                            }
-                          </small>
-                        </span>
-
-                        {currency ===
-                          currencyItem.code && (
-                          <span className="navbar-currency-check">
-                            ✓
-                          </span>
-                        )}
-                      </button>
-                    )
-                  )}
-
+                      {currency === currencyItem.code && (
+                        <span className="navbar-currency-check">✓</span>
+                      )}
+                    </button>
+                  ))}
                 </div>
               )}
             </div>
@@ -543,12 +390,7 @@ function Navbar() {
               type="button"
               className="navbar-action-button search-button"
               aria-label="Search"
-              onClick={() =>
-                setSearchOpen(
-                  (current) =>
-                    !current
-                )
-              }
+              onClick={() => setSearchOpen((current) => !current)}
             >
               <Search size={21} />
             </button>
@@ -557,25 +399,17 @@ function Navbar() {
 
             {isAuthenticated ? (
               <div className="navbar-user-area">
-
                 <Link
                   to="/my-orders"
                   className="navbar-action-button account-button"
                   aria-label="My account"
                 >
-                  <UserRound
-                    size={21}
-                  />
+                  <UserRound size={21} />
 
                   <span className="account-text">
-                    <small>
-                      Welcome
-                    </small>
+                    <small>Welcome</small>
 
-                    <strong>
-                      {user?.name ||
-                        "Account"}
-                    </strong>
+                    <strong>{user?.name || "Account"}</strong>
                   </span>
                 </Link>
 
@@ -586,29 +420,18 @@ function Navbar() {
                 >
                   Logout
                 </button>
-
               </div>
             ) : (
-              <Link
-                to="/login"
-                className="navbar-action-button account-button"
-              >
-                <UserRound
-                  size={21}
-                />
+              <Link to="/login" className="navbar-action-button account-button">
+                <UserRound size={21} />
 
                 <span className="account-text">
-                  <small>
-                    Welcome
-                  </small>
+                  <small>Welcome</small>
 
-                  <strong>
-                    Sign In
-                  </strong>
+                  <strong>Sign In</strong>
                 </span>
               </Link>
             )}
-
           </div>
         </div>
 
@@ -617,11 +440,7 @@ function Navbar() {
         =============================== */}
 
         <div
-          className={`navbar-search ${
-            searchOpen
-              ? "navbar-search-open"
-              : ""
-          }`}
+          className={`navbar-search ${searchOpen ? "navbar-search-open" : ""}`}
         >
           <div className="navbar-search-inner">
             <Search size={20} />
@@ -634,9 +453,7 @@ function Navbar() {
 
             <button
               type="button"
-              onClick={() =>
-                setSearchOpen(false)
-              }
+              onClick={() => setSearchOpen(false)}
               aria-label="Close search"
             >
               <X size={19} />
@@ -652,9 +469,7 @@ function Navbar() {
       <button
         type="button"
         className={`mobile-menu-overlay ${
-          mobileMenuOpen
-            ? "mobile-menu-overlay-open"
-            : ""
+          mobileMenuOpen ? "mobile-menu-overlay-open" : ""
         }`}
         aria-label="Close mobile menu"
         onClick={closeMobileMenu}
@@ -666,12 +481,9 @@ function Navbar() {
 
       <aside
         className={`mobile-navigation ${
-          mobileMenuOpen
-            ? "mobile-navigation-open"
-            : ""
+          mobileMenuOpen ? "mobile-navigation-open" : ""
         }`}
       >
-
         {/* DRAWER HEADER */}
 
         <div className="mobile-navigation-header">
@@ -687,19 +499,13 @@ function Navbar() {
                 className="mobile-navigation-logo-image"
               />
             ) : (
-              <span className="mobile-navigation-logo">
-                {storeInitial}
-              </span>
+              <span className="mobile-navigation-logo">{storeInitial}</span>
             )}
 
             <div>
-              <strong>
-                {storeName}
-              </strong>
+              <strong>{storeName}</strong>
 
-              <small>
-                STORE
-              </small>
+              <small>STORE</small>
             </div>
           </Link>
 
@@ -717,24 +523,15 @@ function Navbar() {
 
         {isAuthenticated ? (
           <div className="mobile-user-card">
-
             <div className="mobile-user-icon">
-              <UserRound
-                size={17}
-              />
+              <UserRound size={17} />
             </div>
 
             <div>
-              <span>
-                Welcome
-              </span>
+              <span>Welcome</span>
 
-              <strong>
-                {user?.name ||
-                  "Account"}
-              </strong>
+              <strong>{user?.name || "Account"}</strong>
             </div>
-
           </div>
         ) : (
           <Link
@@ -743,24 +540,16 @@ function Navbar() {
             onClick={closeMobileMenu}
           >
             <div className="mobile-user-icon">
-              <LogIn
-                size={17}
-              />
+              <LogIn size={17} />
             </div>
 
             <div>
-              <span>
-                Welcome
-              </span>
+              <span>Welcome</span>
 
-              <strong>
-                Sign In
-              </strong>
+              <strong>Sign In</strong>
             </div>
 
-            <ChevronRight
-              size={16}
-            />
+            <ChevronRight size={16} />
           </Link>
         )}
 
@@ -769,108 +558,52 @@ function Navbar() {
         =============================== */}
 
         <div className="mobile-currency-section">
-
           <div className="mobile-currency-heading">
-            <span>
-              CURRENCY
-            </span>
+            <span>CURRENCY</span>
 
-            <strong>
-              {currency}
-            </strong>
+            <strong>{currency}</strong>
           </div>
 
           <div className="mobile-currency-select-wrapper">
-
-            <CircleDollarSign
-              size={15}
-            />
+            <CircleDollarSign size={15} />
 
             <select
               value={currency}
-              onChange={
-                handleMobileCurrencyChange
-              }
+              onChange={handleMobileCurrencyChange}
               aria-label="Select currency"
             >
-              {Object.values(
-                currencies
-              ).map(
-                (
-                  currencyItem
-                ) => (
-                  <option
-                    key={
-                      currencyItem.code
-                    }
-                    value={
-                      currencyItem.code
-                    }
-                  >
-                    {
-                      currencyItem.code
-                    }{" "}
-                    —{" "}
-                    {
-                      currencyItem.label
-                    }
-                  </option>
-                )
-              )}
+              {Object.values(currencies).map((currencyItem) => (
+                <option key={currencyItem.code} value={currencyItem.code}>
+                  {currencyItem.code} — {currencyItem.label}
+                </option>
+              ))}
             </select>
 
-            <ChevronDown
-              size={13}
-            />
-
+            <ChevronDown size={13} />
           </div>
         </div>
 
         {/* NAVIGATION */}
 
         <nav className="mobile-navigation-links">
+          <span className="mobile-menu-section-title">SHOP</span>
 
-          <span className="mobile-menu-section-title">
-            SHOP
-          </span>
+          <NavLink to="/products" onClick={closeMobileMenu}>
+            <span>Shop</span>
 
-          <NavLink
-            to="/products"
-            onClick={closeMobileMenu}
-          >
-            <span>
-              Shop
-            </span>
-
-            <ChevronRight
-              size={15}
-            />
+            <ChevronRight size={15} />
           </NavLink>
 
-          <NavLink
-            to="/categories"
-            onClick={closeMobileMenu}
-          >
-            <span>
-              Categories
-            </span>
+          <NavLink to="/categories" onClick={closeMobileMenu}>
+            <span>Categories</span>
 
-            <ChevronRight
-              size={15}
-            />
+            <ChevronRight size={15} />
           </NavLink>
 
-          <NavLink
-            to="/featured"
-            onClick={closeMobileMenu}
-          >
-            <span>
-              Featured
-            </span>
+          <NavLink to="/featured" onClick={closeMobileMenu}>
+            <span>Featured</span>
 
-            <ChevronRight
-              size={15}
-            />
+            <ChevronRight size={15} />
           </NavLink>
 
           <NavLink
@@ -878,13 +611,9 @@ function Navbar() {
             className="mobile-sale-link"
             onClick={closeMobileMenu}
           >
-            <span>
-              Sale
-            </span>
+            <span>Sale</span>
 
-            <ChevronRight
-              size={15}
-            />
+            <ChevronRight size={15} />
           </NavLink>
 
           {isAuthenticated && (
@@ -893,19 +622,10 @@ function Navbar() {
                 ACCOUNT
               </span>
 
-              <NavLink
-                to="/my-orders"
-                onClick={
-                  closeMobileMenu
-                }
-              >
-                <span>
-                  My Orders
-                </span>
+              <NavLink to="/my-orders" onClick={closeMobileMenu}>
+                <span>My Orders</span>
 
-                <ChevronRight
-                  size={15}
-                />
+                <ChevronRight size={15} />
               </NavLink>
             </>
           )}
@@ -914,56 +634,32 @@ function Navbar() {
             INFORMATION
           </span>
 
-          <NavLink
-            to="/about"
-            onClick={closeMobileMenu}
-          >
-            <span>
-              About
-            </span>
+          <NavLink to="/about" onClick={closeMobileMenu}>
+            <span>About</span>
 
-            <ChevronRight
-              size={15}
-            />
+            <ChevronRight size={15} />
           </NavLink>
 
-          <NavLink
-            to="/contact"
-            onClick={closeMobileMenu}
-          >
-            <span>
-              Contact
-            </span>
+          <NavLink to="/contact" onClick={closeMobileMenu}>
+            <span>Contact</span>
 
-            <ChevronRight
-              size={15}
-            />
+            <ChevronRight size={15} />
           </NavLink>
-
         </nav>
 
         {/* DRAWER BOTTOM */}
 
         <div className="mobile-navigation-bottom">
-
           <Link
             to="/cart"
             className="mobile-drawer-cart"
             onClick={closeMobileMenu}
           >
-            <ShoppingBag
-              size={16}
-            />
+            <ShoppingBag size={16} />
 
-            <span>
-              Shopping Cart
-            </span>
+            <span>Shopping Cart</span>
 
-            {cartCount > 0 && (
-              <strong>
-                {cartCount}
-              </strong>
-            )}
+            {cartCount > 0 && <strong>{cartCount}</strong>}
           </Link>
 
           {isAuthenticated && (
@@ -979,7 +675,6 @@ function Navbar() {
               <span>Logout</span>
             </button>
           )}
-
         </div>
       </aside>
     </>

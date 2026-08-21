@@ -1,14 +1,9 @@
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import axios from "axios";
 
 import { AuthContext } from "./auth-context";
 
-const API_URL = "http://127.0.0.1:8000/api";
+const API_URL = "https://ecommerce-platform-4vwn.onrender.com/api";
 
 export function AuthProvider({ children }) {
   const [token, setToken] = useState(() => {
@@ -18,9 +13,7 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
 
   const [loading, setLoading] = useState(() => {
-    return Boolean(
-      localStorage.getItem("auth_token")
-    );
+    return Boolean(localStorage.getItem("auth_token"));
   });
 
   /*
@@ -49,9 +42,7 @@ export function AuthProvider({ children }) {
         }
 
         const authenticatedUser =
-          response.data.data ||
-          response.data.user ||
-          response.data;
+          response.data.data || response.data.user || response.data;
 
         setUser(authenticatedUser);
       })
@@ -60,10 +51,7 @@ export function AuthProvider({ children }) {
           return;
         }
 
-        console.error(
-          "Failed to restore authenticated user:",
-          error
-        );
+        console.error("Failed to restore authenticated user:", error);
 
         localStorage.removeItem("auth_token");
 
@@ -88,37 +76,24 @@ export function AuthProvider({ children }) {
   */
 
   const login = useCallback(async (credentials) => {
-    const response = await axios.post(
-      `${API_URL}/login`,
-      credentials,
-      {
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const response = await axios.post(`${API_URL}/login`, credentials, {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    });
 
     const responseData = response.data;
 
-    const newToken =
-      responseData.token ||
-      responseData.data?.token;
+    const newToken = responseData.token || responseData.data?.token;
 
-    const authenticatedUser =
-      responseData.user ||
-      responseData.data?.user;
+    const authenticatedUser = responseData.user || responseData.data?.user;
 
     if (!newToken) {
-      throw new Error(
-        "The server did not return an authentication token."
-      );
+      throw new Error("The server did not return an authentication token.");
     }
 
-    localStorage.setItem(
-      "auth_token",
-      newToken
-    );
+    localStorage.setItem("auth_token", newToken);
 
     setToken(newToken);
 
@@ -138,37 +113,24 @@ export function AuthProvider({ children }) {
   */
 
   const register = useCallback(async (data) => {
-    const response = await axios.post(
-      `${API_URL}/register`,
-      data,
-      {
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const response = await axios.post(`${API_URL}/register`, data, {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    });
 
     const responseData = response.data;
 
-    const newToken =
-      responseData.token ||
-      responseData.data?.token;
+    const newToken = responseData.token || responseData.data?.token;
 
-    const registeredUser =
-      responseData.user ||
-      responseData.data?.user;
+    const registeredUser = responseData.user || responseData.data?.user;
 
     if (!newToken) {
-      throw new Error(
-        "The server did not return an authentication token."
-      );
+      throw new Error("The server did not return an authentication token.");
     }
 
-    localStorage.setItem(
-      "auth_token",
-      newToken
-    );
+    localStorage.setItem("auth_token", newToken);
 
     setToken(newToken);
 
@@ -188,8 +150,7 @@ export function AuthProvider({ children }) {
   */
 
   const logout = useCallback(async () => {
-    const currentToken =
-      localStorage.getItem("auth_token");
+    const currentToken = localStorage.getItem("auth_token");
 
     try {
       if (currentToken) {
@@ -198,22 +159,16 @@ export function AuthProvider({ children }) {
           {},
           {
             headers: {
-              Authorization:
-                `Bearer ${currentToken}`,
+              Authorization: `Bearer ${currentToken}`,
               Accept: "application/json",
             },
-          }
+          },
         );
       }
     } catch (error) {
-      console.error(
-        "Logout request failed:",
-        error
-      );
+      console.error("Logout request failed:", error);
     } finally {
-      localStorage.removeItem(
-        "auth_token"
-      );
+      localStorage.removeItem("auth_token");
 
       setToken(null);
       setUser(null);
@@ -233,27 +188,14 @@ export function AuthProvider({ children }) {
       token,
       loading,
 
-      isAuthenticated: Boolean(
-        user && token
-      ),
+      isAuthenticated: Boolean(user && token),
 
       login,
       register,
       logout,
     }),
-    [
-      user,
-      token,
-      loading,
-      login,
-      register,
-      logout,
-    ]
+    [user, token, loading, login, register, logout],
   );
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

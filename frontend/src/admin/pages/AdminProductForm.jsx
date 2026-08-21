@@ -9,11 +9,7 @@ import {
   Tag,
 } from "lucide-react";
 
-import {
-  Link,
-  useNavigate,
-  useParams,
-} from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 import axios from "axios";
 
@@ -21,8 +17,8 @@ import { useAuth } from "../../context/auth-context";
 
 import "./AdminProductForm.css";
 
-const API_URL = "http://127.0.0.1:8000/api";
-const STORAGE_URL = "http://127.0.0.1:8000/storage";
+const API_URL = "https://ecommerce-platform-4vwn.onrender.com/api";
+const STORAGE_URL = "https://ecommerce-platform-4vwn.onrender.com/storage";
 
 const initialForm = {
   name: "",
@@ -47,32 +43,23 @@ function AdminProductForm() {
 
   const isEditMode = Boolean(productId);
 
-  const [form, setForm] =
-    useState(initialForm);
+  const [form, setForm] = useState(initialForm);
 
-  const [categories, setCategories] =
-    useState([]);
+  const [categories, setCategories] = useState([]);
 
-  const [images, setImages] =
-    useState([]);
+  const [images, setImages] = useState([]);
 
-  const [imagePreviews, setImagePreviews] =
-    useState([]);
+  const [imagePreviews, setImagePreviews] = useState([]);
 
-  const [existingImages, setExistingImages] =
-    useState([]);
+  const [existingImages, setExistingImages] = useState([]);
 
-  const [loading, setLoading] =
-    useState(isEditMode);
+  const [loading, setLoading] = useState(isEditMode);
 
-  const [saving, setSaving] =
-    useState(false);
+  const [saving, setSaving] = useState(false);
 
-  const [error, setError] =
-    useState("");
+  const [error, setError] = useState("");
 
-  const [success, setSuccess] =
-    useState("");
+  const [success, setSuccess] = useState("");
 
   /* ========================================
      LOAD CATEGORIES + PRODUCT
@@ -83,10 +70,7 @@ function AdminProductForm() {
 
     const loadData = async () => {
       try {
-        const categoriesResponse =
-          await axios.get(
-            `${API_URL}/categories`
-          );
+        const categoriesResponse = await axios.get(`${API_URL}/categories`);
 
         if (cancelled) {
           return;
@@ -97,73 +81,48 @@ function AdminProductForm() {
           categoriesResponse.data?.data ||
           [];
 
-        setCategories(
-          Array.isArray(categoriesData)
-            ? categoriesData
-            : []
-        );
+        setCategories(Array.isArray(categoriesData) ? categoriesData : []);
 
         if (!isEditMode) {
           setLoading(false);
           return;
         }
 
-        const productResponse =
-          await axios.get(
-            `${API_URL}/products/${productId}`
-          );
+        const productResponse = await axios.get(
+          `${API_URL}/products/${productId}`,
+        );
 
         if (cancelled) {
           return;
         }
 
-        const product =
-          productResponse.data?.data ||
-          productResponse.data;
+        const product = productResponse.data?.data || productResponse.data;
 
         setForm({
-          name:
-            product?.name || "",
+          name: product?.name || "",
 
-          sku:
-            product?.sku || "",
+          sku: product?.sku || "",
 
-          category_id:
-            product?.category_id ||
-            product?.category?.id ||
-            "",
+          category_id: product?.category_id || product?.category?.id || "",
 
-          price:
-            product?.price ?? "",
+          price: product?.price ?? "",
 
-          sale_price:
-            product?.sale_price ?? "",
+          sale_price: product?.sale_price ?? "",
 
-          stock:
-            product?.stock ?? "",
+          stock: product?.stock ?? "",
 
-          low_stock_threshold:
-            product?.low_stock_threshold ?? 5,
+          low_stock_threshold: product?.low_stock_threshold ?? 5,
 
-          short_description:
-            product?.short_description ||
-            "",
+          short_description: product?.short_description || "",
 
-          description:
-            product?.description || "",
+          description: product?.description || "",
 
-          is_active:
-            Boolean(product?.is_active),
+          is_active: Boolean(product?.is_active),
 
-          is_featured:
-            Boolean(product?.is_featured),
+          is_featured: Boolean(product?.is_featured),
         });
 
-        setExistingImages(
-          Array.isArray(product?.images)
-            ? product.images
-            : []
-        );
+        setExistingImages(Array.isArray(product?.images) ? product.images : []);
 
         setLoading(false);
       } catch (err) {
@@ -171,14 +130,10 @@ function AdminProductForm() {
           return;
         }
 
-        console.error(
-          "Failed to load product form:",
-          err
-        );
+        console.error("Failed to load product form:", err);
 
         setError(
-          err.response?.data?.message ||
-            "Unable to load product information."
+          err.response?.data?.message || "Unable to load product information.",
         );
 
         setLoading(false);
@@ -190,10 +145,7 @@ function AdminProductForm() {
     return () => {
       cancelled = true;
     };
-  }, [
-    productId,
-    isEditMode,
-  ]);
+  }, [productId, isEditMode]);
 
   /* ========================================
      CLEAN IMAGE PREVIEWS
@@ -201,11 +153,9 @@ function AdminProductForm() {
 
   useEffect(() => {
     return () => {
-      imagePreviews.forEach(
-        (preview) => {
-          URL.revokeObjectURL(preview);
-        }
-      );
+      imagePreviews.forEach((preview) => {
+        URL.revokeObjectURL(preview);
+      });
     };
   }, [imagePreviews]);
 
@@ -214,20 +164,12 @@ function AdminProductForm() {
   ======================================== */
 
   const handleChange = (event) => {
-    const {
-      name,
-      value,
-      type,
-      checked,
-    } = event.target;
+    const { name, value, type, checked } = event.target;
 
     setForm((current) => ({
       ...current,
 
-      [name]:
-        type === "checkbox"
-          ? checked
-          : value,
+      [name]: type === "checkbox" ? checked : value,
     }));
 
     setError("");
@@ -239,24 +181,15 @@ function AdminProductForm() {
   ======================================== */
 
   const handleImagesChange = (event) => {
-    const selectedFiles =
-      Array.from(
-        event.target.files || []
-      );
+    const selectedFiles = Array.from(event.target.files || []);
 
-    imagePreviews.forEach(
-      (preview) => {
-        URL.revokeObjectURL(preview);
-      }
-    );
+    imagePreviews.forEach((preview) => {
+      URL.revokeObjectURL(preview);
+    });
 
     setImages(selectedFiles);
 
-    setImagePreviews(
-      selectedFiles.map((file) =>
-        URL.createObjectURL(file)
-      )
-    );
+    setImagePreviews(selectedFiles.map((file) => URL.createObjectURL(file)));
   };
 
   /* ========================================
@@ -272,32 +205,22 @@ function AdminProductForm() {
       return "Please select a category.";
     }
 
-    if (
-      form.price === "" ||
-      Number(form.price) < 0
-    ) {
+    if (form.price === "" || Number(form.price) < 0) {
       return "Please enter a valid price.";
     }
 
-    if (
-      form.sale_price !== "" &&
-      Number(form.sale_price) < 0
-    ) {
+    if (form.sale_price !== "" && Number(form.sale_price) < 0) {
       return "Sale price cannot be negative.";
     }
 
     if (
       form.sale_price !== "" &&
-      Number(form.sale_price) >=
-        Number(form.price)
+      Number(form.sale_price) >= Number(form.price)
     ) {
       return "Sale price must be lower than the regular price.";
     }
 
-    if (
-      form.stock === "" ||
-      Number(form.stock) < 0
-    ) {
+    if (form.stock === "" || Number(form.stock) < 0) {
       return "Please enter valid stock.";
     }
 
@@ -318,8 +241,7 @@ function AdminProductForm() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const validationError =
-      validateForm();
+    const validationError = validateForm();
 
     if (validationError) {
       setError(validationError);
@@ -332,159 +254,89 @@ function AdminProductForm() {
       setError("");
       setSuccess("");
 
-      const formData =
-        new FormData();
+      const formData = new FormData();
 
-      formData.append(
-        "name",
-        form.name.trim()
-      );
+      formData.append("name", form.name.trim());
 
-      formData.append(
-        "sku",
-        form.sku.trim()
-      );
+      formData.append("sku", form.sku.trim());
 
-      formData.append(
-        "category_id",
-        form.category_id
-      );
+      formData.append("category_id", form.category_id);
 
-      formData.append(
-        "price",
-        form.price
-      );
+      formData.append("price", form.price);
 
       if (form.sale_price !== "") {
-        formData.append(
-          "sale_price",
-          form.sale_price
-        );
+        formData.append("sale_price", form.sale_price);
       }
 
-      formData.append(
-        "stock",
-        form.stock
-      );
+      formData.append("stock", form.stock);
 
-      formData.append(
-        "low_stock_threshold",
-        form.low_stock_threshold
-      );
+      formData.append("low_stock_threshold", form.low_stock_threshold);
 
-      formData.append(
-        "short_description",
-        form.short_description
-      );
+      formData.append("short_description", form.short_description);
 
-      formData.append(
-        "description",
-        form.description
-      );
+      formData.append("description", form.description);
 
-      formData.append(
-        "is_active",
-        form.is_active ? "1" : "0"
-      );
+      formData.append("is_active", form.is_active ? "1" : "0");
 
-      formData.append(
-        "is_featured",
-        form.is_featured
-          ? "1"
-          : "0"
-      );
+      formData.append("is_featured", form.is_featured ? "1" : "0");
 
       images.forEach((image) => {
-        formData.append(
-          "images[]",
-          image
-        );
+        formData.append("images[]", image);
       });
 
       let response;
 
       if (isEditMode) {
-        formData.append(
-          "_method",
-          "PUT"
+        formData.append("_method", "PUT");
+
+        response = await axios.post(
+          `${API_URL}/admin/products/${productId}`,
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+
+              Accept: "application/json",
+            },
+          },
         );
-
-        response =
-          await axios.post(
-            `${API_URL}/admin/products/${productId}`,
-            formData,
-            {
-              headers: {
-                Authorization:
-                  `Bearer ${token}`,
-
-                Accept:
-                  "application/json",
-              },
-            }
-          );
       } else {
-        response =
-          await axios.post(
-            `${API_URL}/admin/products`,
-            formData,
-            {
-              headers: {
-                Authorization:
-                  `Bearer ${token}`,
+        response = await axios.post(`${API_URL}/admin/products`, formData, {
+          headers: {
+            Authorization: `Bearer ${token}`,
 
-                Accept:
-                  "application/json",
-              },
-            }
-          );
+            Accept: "application/json",
+          },
+        });
       }
-const savedProduct =
-  response.data?.data;
+      const savedProduct = response.data?.data;
 
-const successMessage =
-  isEditMode
-    ? "Product updated successfully."
-    : "Product created successfully.";
+      const successMessage = isEditMode
+        ? "Product updated successfully."
+        : "Product created successfully.";
 
-setSuccess(successMessage);
+      setSuccess(successMessage);
 
-window.setTimeout(() => {
-  navigate("/admin/products", {
-    state: {
-      successMessage,
-    },
-  });
-}, 900);
+      window.setTimeout(() => {
+        navigate("/admin/products", {
+          state: {
+            successMessage,
+          },
+        });
+      }, 900);
 
-return savedProduct;
-
+      return savedProduct;
     } catch (err) {
-      console.error(
-        "Failed to save product:",
-        err
-      );
+      console.error("Failed to save product:", err);
 
-      const validationErrors =
-        err.response?.data?.errors;
+      const validationErrors = err.response?.data?.errors;
 
       if (validationErrors) {
-        const firstError =
-          Object.values(
-            validationErrors
-          )
-            .flat()
-            .find(Boolean);
+        const firstError = Object.values(validationErrors).flat().find(Boolean);
 
-        setError(
-          firstError ||
-            "Please check the product information."
-        );
+        setError(firstError || "Please check the product information.");
       } else {
-        setError(
-          err.response?.data?.message ||
-            "Unable to save this product."
-        );
+        setError(err.response?.data?.message || "Unable to save this product.");
       }
     } finally {
       setSaving(false);
@@ -502,9 +354,7 @@ return savedProduct;
           <div className="admin-product-form-state">
             <span className="admin-product-form-spinner" />
 
-            <strong>
-              Loading product...
-            </strong>
+            <strong>Loading product...</strong>
           </div>
         </div>
       </main>
@@ -514,30 +364,20 @@ return savedProduct;
   return (
     <main className="admin-product-form-page">
       <div className="admin-product-form-container">
-
         {/* =================================
             HEADER
         ================================= */}
 
         <header className="admin-product-form-header">
-          <Link
-            to="/admin/products"
-            className="admin-product-form-back"
-          >
+          <Link to="/admin/products" className="admin-product-form-back">
             <ArrowLeft size={14} />
             Products
           </Link>
 
           <div className="admin-product-form-title">
-            <span>
-              PRODUCT MANAGEMENT
-            </span>
+            <span>PRODUCT MANAGEMENT</span>
 
-            <h1>
-              {isEditMode
-                ? "Edit Product"
-                : "Add Product"}
-            </h1>
+            <h1>{isEditMode ? "Edit Product" : "Add Product"}</h1>
 
             <p>
               {isEditMode
@@ -570,12 +410,8 @@ return savedProduct;
             FORM
         ================================= */}
 
-        <form
-          className="admin-product-form"
-          onSubmit={handleSubmit}
-        >
+        <form className="admin-product-form" onSubmit={handleSubmit}>
           <div className="admin-product-form-grid">
-
             {/* PRODUCT INFORMATION */}
 
             <div className="admin-product-form-main">
@@ -584,120 +420,76 @@ return savedProduct;
                   <Package size={15} />
 
                   <div>
-                    <h2>
-                      Product Information
-                    </h2>
+                    <h2>Product Information</h2>
 
-                    <p>
-                      Basic information about
-                      this product.
-                    </p>
+                    <p>Basic information about this product.</p>
                   </div>
                 </div>
 
                 <div className="admin-product-fields-grid">
                   <label className="admin-product-field admin-product-field-wide">
-                    <span>
-                      Product Name *
-                    </span>
+                    <span>Product Name *</span>
 
                     <input
                       type="text"
                       name="name"
                       value={form.name}
                       placeholder="Product name"
-                      onChange={
-                        handleChange
-                      }
+                      onChange={handleChange}
                     />
                   </label>
 
                   <label className="admin-product-field">
-                    <span>
-                      SKU
-                    </span>
+                    <span>SKU</span>
 
                     <input
                       type="text"
                       name="sku"
                       value={form.sku}
                       placeholder="SKU-001"
-                      onChange={
-                        handleChange
-                      }
+                      onChange={handleChange}
                     />
                   </label>
 
                   <label className="admin-product-field">
-                    <span>
-                      Category *
-                    </span>
+                    <span>Category *</span>
 
                     <select
                       name="category_id"
-                      value={
-                        form.category_id
-                      }
-                      onChange={
-                        handleChange
-                      }
+                      value={form.category_id}
+                      onChange={handleChange}
                     >
-                      <option value="">
-                        Select Category
-                      </option>
+                      <option value="">Select Category</option>
 
-                      {categories.map(
-                        (category) => (
-                          <option
-                            key={
-                              category.id
-                            }
-                            value={
-                              category.id
-                            }
-                          >
-                            {
-                              category.name
-                            }
-                          </option>
-                        )
-                      )}
+                      {categories.map((category) => (
+                        <option key={category.id} value={category.id}>
+                          {category.name}
+                        </option>
+                      ))}
                     </select>
                   </label>
 
                   <label className="admin-product-field admin-product-field-wide">
-                    <span>
-                      Short Description
-                    </span>
+                    <span>Short Description</span>
 
                     <input
                       type="text"
                       name="short_description"
-                      value={
-                        form.short_description
-                      }
+                      value={form.short_description}
                       placeholder="Short product description"
-                      onChange={
-                        handleChange
-                      }
+                      onChange={handleChange}
                     />
                   </label>
 
                   <label className="admin-product-field admin-product-field-wide">
-                    <span>
-                      Description
-                    </span>
+                    <span>Description</span>
 
                     <textarea
                       name="description"
-                      value={
-                        form.description
-                      }
+                      value={form.description}
                       rows="5"
                       placeholder="Write product details..."
-                      onChange={
-                        handleChange
-                      }
+                      onChange={handleChange}
                     />
                   </label>
                 </div>
@@ -710,22 +502,15 @@ return savedProduct;
                   <Tag size={15} />
 
                   <div>
-                    <h2>
-                      Price & Stock
-                    </h2>
+                    <h2>Price & Stock</h2>
 
-                    <p>
-                      Manage pricing and
-                      inventory.
-                    </p>
+                    <p>Manage pricing and inventory.</p>
                   </div>
                 </div>
 
                 <div className="admin-product-price-grid">
                   <label className="admin-product-field">
-                    <span>
-                      Price *
-                    </span>
+                    <span>Price *</span>
 
                     <div className="admin-product-money-input">
                       <span>$</span>
@@ -737,17 +522,13 @@ return savedProduct;
                         min="0"
                         step="0.01"
                         placeholder="0.00"
-                        onChange={
-                          handleChange
-                        }
+                        onChange={handleChange}
                       />
                     </div>
                   </label>
 
                   <label className="admin-product-field">
-                    <span>
-                      Sale Price
-                    </span>
+                    <span>Sale Price</span>
 
                     <div className="admin-product-money-input">
                       <span>$</span>
@@ -755,23 +536,17 @@ return savedProduct;
                       <input
                         type="number"
                         name="sale_price"
-                        value={
-                          form.sale_price
-                        }
+                        value={form.sale_price}
                         min="0"
                         step="0.01"
                         placeholder="Optional"
-                        onChange={
-                          handleChange
-                        }
+                        onChange={handleChange}
                       />
                     </div>
                   </label>
 
                   <label className="admin-product-field">
-                    <span>
-                      Stock *
-                    </span>
+                    <span>Stock *</span>
 
                     <input
                       type="number"
@@ -780,34 +555,26 @@ return savedProduct;
                       min="0"
                       step="1"
                       placeholder="0"
-                      onChange={
-                        handleChange
-                      }
+                      onChange={handleChange}
                     />
                   </label>
 
                   <label className="admin-product-field">
-                    <span>
-                      Low Stock Warning At *
-                    </span>
+                    <span>Low Stock Warning At *</span>
 
                     <input
                       type="number"
                       name="low_stock_threshold"
-                      value={
-                        form.low_stock_threshold
-                      }
+                      value={form.low_stock_threshold}
                       min="0"
                       step="1"
                       placeholder="5"
-                      onChange={
-                        handleChange
-                      }
+                      onChange={handleChange}
                     />
 
                     <small>
-                      Customers will see "Low Stock"
-                      when inventory reaches this amount.
+                      Customers will see "Low Stock" when inventory reaches this
+                      amount.
                     </small>
                   </label>
                 </div>
@@ -822,106 +589,61 @@ return savedProduct;
                   <ImagePlus size={15} />
 
                   <div>
-                    <h2>
-                      Product Images
-                    </h2>
+                    <h2>Product Images</h2>
 
-                    <p>
-                      Upload product photos.
-                    </p>
+                    <p>Upload product photos.</p>
                   </div>
                 </div>
 
                 <label className="admin-product-image-upload">
                   <ImagePlus size={22} />
 
-                  <strong>
-                    Choose Images
-                  </strong>
+                  <strong>Choose Images</strong>
 
-                  <span>
-                    JPG, PNG or WEBP
-                  </span>
+                  <span>JPG, PNG or WEBP</span>
 
                   <input
                     type="file"
                     accept="image/png,image/jpeg,image/webp"
                     multiple
-                    onChange={
-                      handleImagesChange
-                    }
+                    onChange={handleImagesChange}
                   />
                 </label>
 
-                {imagePreviews.length >
-                  0 && (
+                {imagePreviews.length > 0 && (
                   <div className="admin-product-image-preview-grid">
-                    {imagePreviews.map(
-                      (
-                        preview,
-                        index
-                      ) => (
-                        <div
-                          className="admin-product-image-preview"
-                          key={
-                            preview
-                          }
-                        >
-                          <img
-                            src={
-                              preview
-                            }
-                            alt={`New product ${
-                              index + 1
-                            }`}
-                          />
+                    {imagePreviews.map((preview, index) => (
+                      <div
+                        className="admin-product-image-preview"
+                        key={preview}
+                      >
+                        <img src={preview} alt={`New product ${index + 1}`} />
 
-                          {index === 0 && (
-                            <span>
-                              Primary
-                            </span>
-                          )}
-                        </div>
-                      )
-                    )}
+                        {index === 0 && <span>Primary</span>}
+                      </div>
+                    ))}
                   </div>
                 )}
 
                 {isEditMode &&
-                  imagePreviews.length ===
-                    0 &&
-                  existingImages.length >
-                    0 && (
+                  imagePreviews.length === 0 &&
+                  existingImages.length > 0 && (
                     <div className="admin-product-image-preview-grid">
-                      {existingImages.map(
-                        (
-                          image,
-                          index
-                        ) => (
-                          <div
-                            className="admin-product-image-preview"
-                            key={
-                              image.id ||
-                              image.image
-                            }
-                          >
-                            <img
-                              src={`${STORAGE_URL}/${image.image}`}
-                              alt={`Product ${
-                                index + 1
-                              }`}
-                            />
+                      {existingImages.map((image, index) => (
+                        <div
+                          className="admin-product-image-preview"
+                          key={image.id || image.image}
+                        >
+                          <img
+                            src={`${STORAGE_URL}/${image.image}`}
+                            alt={`Product ${index + 1}`}
+                          />
 
-                            {(image.is_primary ||
-                              index ===
-                                0) && (
-                              <span>
-                                Primary
-                              </span>
-                            )}
-                          </div>
-                        )
-                      )}
+                          {(image.is_primary || index === 0) && (
+                            <span>Primary</span>
+                          )}
+                        </div>
+                      ))}
                     </div>
                   )}
               </section>
@@ -931,62 +653,39 @@ return savedProduct;
                   <Star size={15} />
 
                   <div>
-                    <h2>
-                      Visibility
-                    </h2>
+                    <h2>Visibility</h2>
 
-                    <p>
-                      Product availability
-                      options.
-                    </p>
+                    <p>Product availability options.</p>
                   </div>
                 </div>
 
                 <label className="admin-product-toggle-row">
                   <div>
-                    <strong>
-                      Active Product
-                    </strong>
+                    <strong>Active Product</strong>
 
-                    <span>
-                      Show this product in
-                      the store.
-                    </span>
+                    <span>Show this product in the store.</span>
                   </div>
 
                   <input
                     type="checkbox"
                     name="is_active"
-                    checked={
-                      form.is_active
-                    }
-                    onChange={
-                      handleChange
-                    }
+                    checked={form.is_active}
+                    onChange={handleChange}
                   />
                 </label>
 
                 <label className="admin-product-toggle-row">
                   <div>
-                    <strong>
-                      Featured Product
-                    </strong>
+                    <strong>Featured Product</strong>
 
-                    <span>
-                      Show in featured
-                      products.
-                    </span>
+                    <span>Show in featured products.</span>
                   </div>
 
                   <input
                     type="checkbox"
                     name="is_featured"
-                    checked={
-                      form.is_featured
-                    }
-                    onChange={
-                      handleChange
-                    }
+                    checked={form.is_featured}
+                    onChange={handleChange}
                   />
                 </label>
               </section>
@@ -998,10 +697,7 @@ return savedProduct;
           ================================= */}
 
           <div className="admin-product-form-actions">
-            <Link
-              to="/admin/products"
-              className="admin-product-form-cancel"
-            >
+            <Link to="/admin/products" className="admin-product-form-cancel">
               Cancel
             </Link>
 

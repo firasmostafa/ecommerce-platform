@@ -1,8 +1,4 @@
-import {
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Search,
   SlidersHorizontal,
@@ -10,19 +6,16 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
-import {
-  useSearchParams,
-} from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import axios from "axios";
 
 import ProductCard from "../components/ProductCard";
 import "./Products.css";
 
-const API_URL = "http://127.0.0.1:8000/api";
+const API_URL = "https://ecommerce-platform-4vwn.onrender.com/api";
 
 function Products() {
-  const [searchParams, setSearchParams] =
-    useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -30,47 +23,36 @@ function Products() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const [search, setSearch] = useState(
-    searchParams.get("search") || ""
+  const [search, setSearch] = useState(searchParams.get("search") || "");
+
+  const [selectedCategory, setSelectedCategory] = useState(
+    searchParams.get("category") || "",
   );
 
-  const [selectedCategory, setSelectedCategory] =
-    useState(
-      searchParams.get("category") || ""
-    );
+  const [specialFilter, setSpecialFilter] = useState(() => {
+    if (searchParams.get("featured") === "1") {
+      return "featured";
+    }
 
-  const [specialFilter, setSpecialFilter] =
-    useState(() => {
-      if (
-        searchParams.get("featured") === "1"
-      ) {
-        return "featured";
-      }
+    if (
+      searchParams.get("sale") === "1" ||
+      searchParams.get("on_sale") === "1"
+    ) {
+      return "sale";
+    }
 
-      if (
-        searchParams.get("sale") === "1" ||
-        searchParams.get("on_sale") === "1"
-      ) {
-        return "sale";
-      }
+    return "";
+  });
 
-      return "";
-    });
+  const [sortBy, setSortBy] = useState("newest");
 
-  const [sortBy, setSortBy] =
-    useState("newest");
+  const [minPrice, setMinPrice] = useState("");
 
-  const [minPrice, setMinPrice] =
-    useState("");
+  const [maxPrice, setMaxPrice] = useState("");
 
-  const [maxPrice, setMaxPrice] =
-    useState("");
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const [currentPage, setCurrentPage] =
-    useState(1);
-
-  const [filtersOpen, setFiltersOpen] =
-    useState(false);
+  const [filtersOpen, setFiltersOpen] = useState(false);
 
   const productsPerPage = 12;
 
@@ -78,47 +60,29 @@ function Products() {
     let cancelled = false;
 
     Promise.all([
-      axios.get(
-        `${API_URL}/products?per_page=100`
-      ),
+      axios.get(`${API_URL}/products?per_page=100`),
 
-      axios.get(
-        `${API_URL}/categories`
-      ),
+      axios.get(`${API_URL}/categories`),
     ])
-      .then(
-        ([
-          productsResponse,
-          categoriesResponse,
-        ]) => {
-          if (cancelled) {
-            return;
-          }
-
-          setProducts(
-            productsResponse.data.data?.data ||
-              productsResponse.data.data ||
-              []
-          );
-
-          setCategories(
-            categoriesResponse.data.data || []
-          );
+      .then(([productsResponse, categoriesResponse]) => {
+        if (cancelled) {
+          return;
         }
-      )
+
+        setProducts(
+          productsResponse.data.data?.data || productsResponse.data.data || [],
+        );
+
+        setCategories(categoriesResponse.data.data || []);
+      })
       .catch((err) => {
         if (cancelled) {
           return;
         }
 
-        console.error(
-          "Failed to load shop:",
-          err
-        );
+        console.error("Failed to load shop:", err);
 
-        setError(
-          "We could not load the store products right now."
-        );
+        setError("We could not load the store products right now.");
       })
       .finally(() => {
         if (!cancelled) {
@@ -134,42 +98,25 @@ function Products() {
   const filteredProducts = useMemo(() => {
     let result = [...products];
 
-    const normalizedSearch = search
-      .trim()
-      .toLowerCase();
+    const normalizedSearch = search.trim().toLowerCase();
 
     if (normalizedSearch) {
-      result = result.filter(
-        (product) => {
-          const name =
-            product.name?.toLowerCase() ||
-            "";
+      result = result.filter((product) => {
+        const name = product.name?.toLowerCase() || "";
 
-          const description =
-            product.short_description
-              ?.toLowerCase() ||
-            product.description
-              ?.toLowerCase() ||
-            "";
+        const description =
+          product.short_description?.toLowerCase() ||
+          product.description?.toLowerCase() ||
+          "";
 
-          const categoryName =
-            product.category?.name
-              ?.toLowerCase() ||
-            "";
+        const categoryName = product.category?.name?.toLowerCase() || "";
 
-          return (
-            name.includes(
-              normalizedSearch
-            ) ||
-            description.includes(
-              normalizedSearch
-            ) ||
-            categoryName.includes(
-              normalizedSearch
-            )
-          );
-        }
-      );
+        return (
+          name.includes(normalizedSearch) ||
+          description.includes(normalizedSearch) ||
+          categoryName.includes(normalizedSearch)
+        );
+      });
     }
 
     /*
@@ -188,97 +135,54 @@ function Products() {
 
     if (selectedCategory) {
       result = result.filter(
-        (product) =>
-          product.category?.slug ===
-          selectedCategory
+        (product) => product.category?.slug === selectedCategory,
       );
     }
 
-    if (
-      specialFilter === "featured"
-    ) {
+    if (specialFilter === "featured") {
       result = result.filter(
-        (product) =>
-          product.is_featured === true ||
-          product.is_featured === 1
+        (product) => product.is_featured === true || product.is_featured === 1,
       );
     }
 
     if (specialFilter === "sale") {
-      result = result.filter(
-        (product) => {
-          const price = Number(
-            product.price || 0
-          );
+      result = result.filter((product) => {
+        const price = Number(product.price || 0);
 
-          const salePrice = Number(
-            product.sale_price || 0
-          );
+        const salePrice = Number(product.sale_price || 0);
 
-          return (
-            salePrice > 0 &&
-            price > 0 &&
-            salePrice < price
-          );
-        }
-      );
+        return salePrice > 0 && price > 0 && salePrice < price;
+      });
     }
 
     if (minPrice !== "") {
-      const minimum =
-        Number(minPrice);
+      const minimum = Number(minPrice);
 
-      result = result.filter(
-        (product) =>
-          getProductPrice(product) >=
-          minimum
-      );
+      result = result.filter((product) => getProductPrice(product) >= minimum);
     }
 
     if (maxPrice !== "") {
-      const maximum =
-        Number(maxPrice);
+      const maximum = Number(maxPrice);
 
-      result = result.filter(
-        (product) =>
-          getProductPrice(product) <=
-          maximum
-      );
+      result = result.filter((product) => getProductPrice(product) <= maximum);
     }
 
     switch (sortBy) {
       case "price-low":
-        result.sort(
-          (a, b) =>
-            getProductPrice(a) -
-            getProductPrice(b)
-        );
+        result.sort((a, b) => getProductPrice(a) - getProductPrice(b));
         break;
 
       case "price-high":
-        result.sort(
-          (a, b) =>
-            getProductPrice(b) -
-            getProductPrice(a)
-        );
+        result.sort((a, b) => getProductPrice(b) - getProductPrice(a));
         break;
 
       case "name":
-        result.sort(
-          (a, b) =>
-            (a.name || "").localeCompare(
-              b.name || ""
-            )
-        );
+        result.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
         break;
 
       case "newest":
       default:
-        result.sort(
-          (a, b) =>
-            Number(b.id || 0) -
-            Number(a.id || 0)
-        );
+        result.sort((a, b) => Number(b.id || 0) - Number(a.id || 0));
         break;
     }
 
@@ -295,71 +199,45 @@ function Products() {
 
   const totalPages = Math.max(
     1,
-    Math.ceil(
-      filteredProducts.length /
-        productsPerPage
-    )
+    Math.ceil(filteredProducts.length / productsPerPage),
   );
 
-  const safeCurrentPage =
-    Math.min(
-      currentPage,
-      totalPages
-    );
+  const safeCurrentPage = Math.min(currentPage, totalPages);
 
-  const startIndex =
-    (safeCurrentPage - 1) *
-    productsPerPage;
+  const startIndex = (safeCurrentPage - 1) * productsPerPage;
 
-  const visibleProducts =
-    filteredProducts.slice(
-      startIndex,
-      startIndex +
-        productsPerPage
-    );
+  const visibleProducts = filteredProducts.slice(
+    startIndex,
+    startIndex + productsPerPage,
+  );
 
   const updateUrl = ({
     category = selectedCategory,
     filter = specialFilter,
     searchValue = search,
   } = {}) => {
-    const params =
-      new URLSearchParams();
+    const params = new URLSearchParams();
 
     if (category) {
-      params.set(
-        "category",
-        category
-      );
+      params.set("category", category);
     }
 
     if (filter === "featured") {
-      params.set(
-        "featured",
-        "1"
-      );
+      params.set("featured", "1");
     }
 
     if (filter === "sale") {
-      params.set(
-        "sale",
-        "1"
-      );
+      params.set("sale", "1");
     }
 
     if (searchValue.trim()) {
-      params.set(
-        "search",
-        searchValue.trim()
-      );
+      params.set("search", searchValue.trim());
     }
 
     setSearchParams(params);
   };
 
-  const handleSearchChange = (
-    value
-  ) => {
+  const handleSearchChange = (value) => {
     setSearch(value);
     setCurrentPage(1);
 
@@ -368,9 +246,7 @@ function Products() {
     });
   };
 
-  const handleCategoryChange = (
-    slug
-  ) => {
+  const handleCategoryChange = (slug) => {
     setSelectedCategory(slug);
     setCurrentPage(1);
 
@@ -379,9 +255,7 @@ function Products() {
     });
   };
 
-  const handleSpecialFilterChange = (
-    value
-  ) => {
+  const handleSpecialFilterChange = (value) => {
     setSpecialFilter(value);
     setCurrentPage(1);
 
@@ -390,23 +264,17 @@ function Products() {
     });
   };
 
-  const handleMinPriceChange = (
-    value
-  ) => {
+  const handleMinPriceChange = (value) => {
     setMinPrice(value);
     setCurrentPage(1);
   };
 
-  const handleMaxPriceChange = (
-    value
-  ) => {
+  const handleMaxPriceChange = (value) => {
     setMaxPrice(value);
     setCurrentPage(1);
   };
 
-  const handleSortChange = (
-    value
-  ) => {
+  const handleSortChange = (value) => {
     setSortBy(value);
     setCurrentPage(1);
   };
@@ -424,26 +292,17 @@ function Products() {
   };
 
   const hasActiveFilters =
-    search ||
-    selectedCategory ||
-    specialFilter ||
-    minPrice ||
-    maxPrice;
+    search || selectedCategory || specialFilter || minPrice || maxPrice;
 
-  const selectedCategoryName =
-    categories.find(
-      (category) =>
-        category.slug ===
-        selectedCategory
-    )?.name;
+  const selectedCategoryName = categories.find(
+    (category) => category.slug === selectedCategory,
+  )?.name;
 
   return (
     <main className="shop-page">
       <section className="shop-hero">
         <div className="shop-container">
-          <span className="shop-eyebrow">
-            NOVA COLLECTION
-          </span>
+          <span className="shop-eyebrow">NOVA COLLECTION</span>
 
           <h1>
             {selectedCategoryName
@@ -463,11 +322,7 @@ function Products() {
             <input
               type="search"
               value={search}
-              onChange={(event) =>
-                handleSearchChange(
-                  event.target.value
-                )
-              }
+              onChange={(event) => handleSearchChange(event.target.value)}
               placeholder="Search products, categories..."
               aria-label="Search products"
             />
@@ -475,9 +330,7 @@ function Products() {
             {search && (
               <button
                 type="button"
-                onClick={() =>
-                  handleSearchChange("")
-                }
+                onClick={() => handleSearchChange("")}
                 aria-label="Clear search"
               >
                 <X size={18} />
@@ -491,17 +344,10 @@ function Products() {
         <div className="shop-container">
           <div className="shop-toolbar">
             <div>
-              <strong>
-                {
-                  filteredProducts.length
-                }
-              </strong>
+              <strong>{filteredProducts.length}</strong>
 
               <span>
-                {filteredProducts.length ===
-                1
-                  ? " product"
-                  : " products"}
+                {filteredProducts.length === 1 ? " product" : " products"}
               </span>
             </div>
 
@@ -509,40 +355,24 @@ function Products() {
               <button
                 type="button"
                 className="mobile-filter-button"
-                onClick={() =>
-                  setFiltersOpen(true)
-                }
+                onClick={() => setFiltersOpen(true)}
               >
-                <SlidersHorizontal
-                  size={17}
-                />
+                <SlidersHorizontal size={17} />
                 Filters
               </button>
 
               <select
                 value={sortBy}
-                onChange={(event) =>
-                  handleSortChange(
-                    event.target.value
-                  )
-                }
+                onChange={(event) => handleSortChange(event.target.value)}
                 aria-label="Sort products"
               >
-                <option value="newest">
-                  Newest
-                </option>
+                <option value="newest">Newest</option>
 
-                <option value="price-low">
-                  Price: Low to High
-                </option>
+                <option value="price-low">Price: Low to High</option>
 
-                <option value="price-high">
-                  Price: High to Low
-                </option>
+                <option value="price-high">Price: High to Low</option>
 
-                <option value="name">
-                  Name: A-Z
-                </option>
+                <option value="name">Name: A-Z</option>
               </select>
             </div>
           </div>
@@ -550,28 +380,20 @@ function Products() {
           <div className="shop-layout">
             <aside
               className={`shop-sidebar ${
-                filtersOpen
-                  ? "shop-sidebar-open"
-                  : ""
+                filtersOpen ? "shop-sidebar-open" : ""
               }`}
             >
               <div className="shop-sidebar-header">
                 <div>
-                  <SlidersHorizontal
-                    size={18}
-                  />
+                  <SlidersHorizontal size={18} />
 
-                  <strong>
-                    Filters
-                  </strong>
+                  <strong>Filters</strong>
                 </div>
 
                 <button
                   type="button"
                   className="close-filter-button"
-                  onClick={() =>
-                    setFiltersOpen(false)
-                  }
+                  onClick={() => setFiltersOpen(false)}
                   aria-label="Close filters"
                 >
                   <X size={20} />
@@ -584,63 +406,42 @@ function Products() {
                 <button
                   type="button"
                   className={
-                    selectedCategory ===
-                    ""
+                    selectedCategory === ""
                       ? "filter-option active"
                       : "filter-option"
                   }
-                  onClick={() =>
-                    handleCategoryChange(
-                      ""
-                    )
-                  }
+                  onClick={() => handleCategoryChange("")}
                 >
                   All Categories
                 </button>
 
-                {categories.map(
-                  (category) => (
-                    <button
-                      key={
-                        category.id
-                      }
-                      type="button"
-                      className={
-                        selectedCategory ===
-                        category.slug
-                          ? "filter-option active"
-                          : "filter-option"
-                      }
-                      onClick={() =>
-                        handleCategoryChange(
-                          category.slug
-                        )
-                      }
-                    >
-                      {category.name}
-                    </button>
-                  )
-                )}
+                {categories.map((category) => (
+                  <button
+                    key={category.id}
+                    type="button"
+                    className={
+                      selectedCategory === category.slug
+                        ? "filter-option active"
+                        : "filter-option"
+                    }
+                    onClick={() => handleCategoryChange(category.slug)}
+                  >
+                    {category.name}
+                  </button>
+                ))}
               </div>
 
               <div className="filter-group">
-                <h3>
-                  Collection
-                </h3>
+                <h3>Collection</h3>
 
                 <button
                   type="button"
                   className={
-                    specialFilter ===
-                    ""
+                    specialFilter === ""
                       ? "filter-option active"
                       : "filter-option"
                   }
-                  onClick={() =>
-                    handleSpecialFilterChange(
-                      ""
-                    )
-                  }
+                  onClick={() => handleSpecialFilterChange("")}
                 >
                   All Products
                 </button>
@@ -648,16 +449,11 @@ function Products() {
                 <button
                   type="button"
                   className={
-                    specialFilter ===
-                    "featured"
+                    specialFilter === "featured"
                       ? "filter-option active"
                       : "filter-option"
                   }
-                  onClick={() =>
-                    handleSpecialFilterChange(
-                      "featured"
-                    )
-                  }
+                  onClick={() => handleSpecialFilterChange("featured")}
                 >
                   Featured
                 </button>
@@ -665,25 +461,18 @@ function Products() {
                 <button
                   type="button"
                   className={
-                    specialFilter ===
-                    "sale"
+                    specialFilter === "sale"
                       ? "filter-option active"
                       : "filter-option"
                   }
-                  onClick={() =>
-                    handleSpecialFilterChange(
-                      "sale"
-                    )
-                  }
+                  onClick={() => handleSpecialFilterChange("sale")}
                 >
                   On Sale
                 </button>
               </div>
 
               <div className="filter-group">
-                <h3>
-                  Price Range
-                </h3>
+                <h3>Price Range</h3>
 
                 <div className="price-filter">
                   <label>
@@ -694,17 +483,13 @@ function Products() {
                       min="0"
                       value={minPrice}
                       onChange={(event) =>
-                        handleMinPriceChange(
-                          event.target.value
-                        )
+                        handleMinPriceChange(event.target.value)
                       }
                       placeholder="$0"
                     />
                   </label>
 
-                  <span className="price-divider">
-                    —
-                  </span>
+                  <span className="price-divider">—</span>
 
                   <label>
                     <span>Max</span>
@@ -714,9 +499,7 @@ function Products() {
                       min="0"
                       value={maxPrice}
                       onChange={(event) =>
-                        handleMaxPriceChange(
-                          event.target.value
-                        )
+                        handleMaxPriceChange(event.target.value)
                       }
                       placeholder="$1000"
                     />
@@ -728,9 +511,7 @@ function Products() {
                 <button
                   type="button"
                   className="clear-filters-button"
-                  onClick={
-                    clearFilters
-                  }
+                  onClick={clearFilters}
                 >
                   <X size={16} />
                   Clear Filters
@@ -742,11 +523,7 @@ function Products() {
               <button
                 type="button"
                 className="filter-backdrop"
-                onClick={() =>
-                  setFiltersOpen(
-                    false
-                  )
-                }
+                onClick={() => setFiltersOpen(false)}
                 aria-label="Close filters"
               />
             )}
@@ -756,179 +533,83 @@ function Products() {
                 <div className="shop-state">
                   <span className="shop-spinner" />
 
-                  <p>
-                    Loading
-                    products...
-                  </p>
+                  <p>Loading products...</p>
                 </div>
               )}
 
-              {!loading &&
-                error && (
-                  <div className="shop-state">
-                    <strong>
-                      Something went
-                      wrong
-                    </strong>
+              {!loading && error && (
+                <div className="shop-state">
+                  <strong>Something went wrong</strong>
 
-                    <p>
-                      {error}
-                    </p>
+                  <p>{error}</p>
+                </div>
+              )}
+
+              {!loading && !error && visibleProducts.length > 0 && (
+                <>
+                  <div className="shop-products-grid">
+                    {visibleProducts.map((product) => (
+                      <ProductCard key={product.id} product={product} />
+                    ))}
                   </div>
-                )}
 
-              {!loading &&
-                !error &&
-                visibleProducts.length >
-                  0 && (
-                  <>
-                    <div className="shop-products-grid">
-                      {visibleProducts.map(
-                        (
-                          product
-                        ) => (
-                          <ProductCard
-                            key={
-                              product.id
-                            }
-                            product={
-                              product
-                            }
-                          />
-                        )
-                      )}
-                    </div>
+                  {totalPages > 1 && (
+                    <div className="shop-pagination">
+                      <button
+                        type="button"
+                        disabled={safeCurrentPage === 1}
+                        onClick={() =>
+                          setCurrentPage((page) => Math.max(1, page - 1))
+                        }
+                      >
+                        <ChevronLeft size={18} />
+                      </button>
 
-                    {totalPages >
-                      1 && (
-                      <div className="shop-pagination">
+                      {Array.from(
+                        {
+                          length: totalPages,
+                        },
+                        (_, index) => index + 1,
+                      ).map((page) => (
                         <button
+                          key={page}
                           type="button"
-                          disabled={
-                            safeCurrentPage ===
-                            1
-                          }
-                          onClick={() =>
-                            setCurrentPage(
-                              (
-                                page
-                              ) =>
-                                Math.max(
-                                  1,
-                                  page -
-                                    1
-                                )
-                            )
-                          }
+                          className={page === safeCurrentPage ? "active" : ""}
+                          onClick={() => setCurrentPage(page)}
                         >
-                          <ChevronLeft
-                            size={
-                              18
-                            }
-                          />
+                          {page}
                         </button>
+                      ))}
 
-                        {Array.from(
-                          {
-                            length:
-                              totalPages,
-                          },
-                          (
-                            _,
-                            index
-                          ) =>
-                            index +
-                            1
-                        ).map(
-                          (
-                            page
-                          ) => (
-                            <button
-                              key={
-                                page
-                              }
-                              type="button"
-                              className={
-                                page ===
-                                safeCurrentPage
-                                  ? "active"
-                                  : ""
-                              }
-                              onClick={() =>
-                                setCurrentPage(
-                                  page
-                                )
-                              }
-                            >
-                              {
-                                page
-                              }
-                            </button>
+                      <button
+                        type="button"
+                        disabled={safeCurrentPage === totalPages}
+                        onClick={() =>
+                          setCurrentPage((page) =>
+                            Math.min(totalPages, page + 1),
                           )
-                        )}
+                        }
+                      >
+                        <ChevronRight size={18} />
+                      </button>
+                    </div>
+                  )}
+                </>
+              )}
 
-                        <button
-                          type="button"
-                          disabled={
-                            safeCurrentPage ===
-                            totalPages
-                          }
-                          onClick={() =>
-                            setCurrentPage(
-                              (
-                                page
-                              ) =>
-                                Math.min(
-                                  totalPages,
-                                  page +
-                                    1
-                                )
-                            )
-                          }
-                        >
-                          <ChevronRight
-                            size={
-                              18
-                            }
-                          />
-                        </button>
-                      </div>
-                    )}
-                  </>
-                )}
+              {!loading && !error && visibleProducts.length === 0 && (
+                <div className="shop-state shop-empty">
+                  <Search size={30} />
 
-              {!loading &&
-                !error &&
-                visibleProducts.length ===
-                  0 && (
-                  <div className="shop-state shop-empty">
-                    <Search
-                      size={30}
-                    />
+                  <strong>No products found</strong>
 
-                    <strong>
-                      No products
-                      found
-                    </strong>
+                  <p>There are no products in this category yet.</p>
 
-                    <p>
-                      There are no
-                      products in
-                      this category
-                      yet.
-                    </p>
-
-                    <button
-                      type="button"
-                      onClick={
-                        clearFilters
-                      }
-                    >
-                      View All
-                      Products
-                    </button>
-                  </div>
-                )}
+                  <button type="button" onClick={clearFilters}>
+                    View All Products
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -938,19 +619,11 @@ function Products() {
 }
 
 function getProductPrice(product) {
-  const price = Number(
-    product.price || 0
-  );
+  const price = Number(product.price || 0);
 
-  const salePrice = Number(
-    product.sale_price || 0
-  );
+  const salePrice = Number(product.sale_price || 0);
 
-  if (
-    salePrice > 0 &&
-    price > 0 &&
-    salePrice < price
-  ) {
+  if (salePrice > 0 && price > 0 && salePrice < price) {
     return salePrice;
   }
 

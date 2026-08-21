@@ -1,7 +1,4 @@
-import {
-  useEffect,
-  useState,
-} from "react";
+import { useEffect, useState } from "react";
 
 import {
   CheckCircle2,
@@ -23,8 +20,7 @@ import { useAuth } from "../../context/auth-context";
 
 import "./AdminSettings.css";
 
-const API_URL =
-  "http://127.0.0.1:8000/api";
+const API_URL = "https://ecommerce-platform-4vwn.onrender.com/api";
 
 const initialStoreSettings = {
   store_name: "",
@@ -44,14 +40,12 @@ const initialHomeSettings = {
   hero_button_text: "",
   hero_button_link: "",
 
-  categories_title:
-    "Shop by Category",
+  categories_title: "Shop by Category",
 
   categories_subtitle:
     "Explore our collections and find exactly what you need.",
 
-  featured_title:
-    "Featured Products",
+  featured_title: "Featured Products",
 
   featured_subtitle:
     "A selection of our highlighted products, chosen from across the store.",
@@ -60,41 +54,21 @@ const initialHomeSettings = {
 function AdminSettings() {
   const { token } = useAuth();
 
-  const [
-    storeSettings,
-    setStoreSettings,
-  ] = useState(
-    initialStoreSettings
-  );
+  const [storeSettings, setStoreSettings] = useState(initialStoreSettings);
 
-  const [logoPreview, setLogoPreview] =
-    useState("");
+  const [logoPreview, setLogoPreview] = useState("");
 
-  const [
-    homeSettings,
-    setHomeSettings,
-  ] = useState(
-    initialHomeSettings
-  );
+  const [homeSettings, setHomeSettings] = useState(initialHomeSettings);
 
-  const [loading, setLoading] =
-    useState(true);
+  const [loading, setLoading] = useState(true);
 
-  const [
-    savingStore,
-    setSavingStore,
-  ] = useState(false);
+  const [savingStore, setSavingStore] = useState(false);
 
-  const [
-    savingHome,
-    setSavingHome,
-  ] = useState(false);
+  const [savingHome, setSavingHome] = useState(false);
 
-  const [error, setError] =
-    useState("");
+  const [error, setError] = useState("");
 
-  const [success, setSuccess] =
-    useState("");
+  const [success, setSuccess] = useState("");
 
   /* ========================================
      LOAD SETTINGS
@@ -105,100 +79,63 @@ function AdminSettings() {
 
     const loadSettings = async () => {
       try {
-        const [
-          storeResponse,
-          homeResponse,
-        ] = await Promise.all([
-          axios.get(
-            `${API_URL}/store-settings`
-          ),
+        const [storeResponse, homeResponse] = await Promise.all([
+          axios.get(`${API_URL}/store-settings`),
 
-          axios.get(
-            `${API_URL}/home-settings`
-          ),
+          axios.get(`${API_URL}/home-settings`),
         ]);
 
         if (cancelled) {
           return;
         }
 
-        const storeData =
-          storeResponse.data?.data ||
-          storeResponse.data ||
-          {};
+        const storeData = storeResponse.data?.data || storeResponse.data || {};
 
-        const homeData =
-          homeResponse.data?.data ||
-          homeResponse.data ||
-          {};
+        const homeData = homeResponse.data?.data || homeResponse.data || {};
 
         setStoreSettings({
-          store_name:
-            storeData.store_name ||
-            storeData.name ||
-            "",
+          store_name: storeData.store_name || storeData.name || "",
 
-          email:
-            storeData.email || "",
+          email: storeData.email || "",
 
-          phone:
-            storeData.phone || "",
+          phone: storeData.phone || "",
 
-          address:
-            storeData.address || "",
+          address: storeData.address || "",
 
           logo: null,
 
-          logo_path:
-            storeData.logo || "",
+          logo_path: storeData.logo || "",
 
-          announcement_enabled:
-            storeData.announcement_enabled ??
-            true,
+          announcement_enabled: storeData.announcement_enabled ?? true,
 
           announcement_text:
-            storeData.announcement_text ||
-            "Free delivery on orders over",
+            storeData.announcement_text || "Free delivery on orders over",
 
-          free_shipping_threshold:
-            storeData.free_shipping_threshold ??
-            "100",
+          free_shipping_threshold: storeData.free_shipping_threshold ?? "100",
         });
 
         if (storeData.logo) {
           setLogoPreview(
-            `http://127.0.0.1:8000/storage/${storeData.logo}`
+            `https://ecommerce-platform-4vwn.onrender.com/storage/${storeData.logo}`,
           );
         }
 
         setHomeSettings({
-          hero_title:
-            homeData.hero_title ||
-            "",
+          hero_title: homeData.hero_title || "",
 
-          hero_subtitle:
-            homeData.hero_subtitle ||
-            "",
+          hero_subtitle: homeData.hero_subtitle || "",
 
-          hero_button_text:
-            homeData.hero_button_text ||
-            "",
+          hero_button_text: homeData.hero_button_text || "",
 
-          hero_button_link:
-            homeData.hero_button_link ||
-            "",
+          hero_button_link: homeData.hero_button_link || "",
 
-          categories_title:
-            homeData.categories_title ||
-            "Shop by Category",
+          categories_title: homeData.categories_title || "Shop by Category",
 
           categories_subtitle:
             homeData.categories_subtitle ||
             "Explore our collections and find exactly what you need.",
 
-          featured_title:
-            homeData.featured_title ||
-            "Featured Products",
+          featured_title: homeData.featured_title || "Featured Products",
 
           featured_subtitle:
             homeData.featured_subtitle ||
@@ -211,14 +148,10 @@ function AdminSettings() {
           return;
         }
 
-        console.error(
-          "Failed to load settings:",
-          err
-        );
+        console.error("Failed to load settings:", err);
 
         setError(
-          err.response?.data?.message ||
-            "Unable to load store settings."
+          err.response?.data?.message || "Unable to load store settings.",
         );
       } finally {
         if (!cancelled) {
@@ -243,10 +176,9 @@ function AdminSettings() {
       return undefined;
     }
 
-    const timer =
-      window.setTimeout(() => {
-        setSuccess("");
-      }, 4000);
+    const timer = window.setTimeout(() => {
+      setSuccess("");
+    }, 4000);
 
     return () => {
       window.clearTimeout(timer);
@@ -257,45 +189,28 @@ function AdminSettings() {
      STORE CHANGE
   ======================================== */
 
-  const handleStoreChange = (
-    event
-  ) => {
-    const {
-      name,
-      value,
-      type,
-      checked,
-    } = event.target;
+  const handleStoreChange = (event) => {
+    const { name, value, type, checked } = event.target;
 
-    setStoreSettings(
-      (current) => ({
-        ...current,
-        [name]:
-          type === "checkbox"
-            ? checked
-            : value,
-      })
-    );
+    setStoreSettings((current) => ({
+      ...current,
+      [name]: type === "checkbox" ? checked : value,
+    }));
 
     setError("");
     setSuccess("");
   };
 
   const handleLogoChange = (event) => {
-    const file =
-      event.target.files?.[0] || null;
+    const file = event.target.files?.[0] || null;
 
-    setStoreSettings(
-      (current) => ({
-        ...current,
-        logo: file,
-      })
-    );
+    setStoreSettings((current) => ({
+      ...current,
+      logo: file,
+    }));
 
     if (file) {
-      setLogoPreview(
-        URL.createObjectURL(file)
-      );
+      setLogoPreview(URL.createObjectURL(file));
     }
 
     setError("");
@@ -306,20 +221,13 @@ function AdminSettings() {
      HOME CHANGE
   ======================================== */
 
-  const handleHomeChange = (
-    event
-  ) => {
-    const {
-      name,
-      value,
-    } = event.target;
+  const handleHomeChange = (event) => {
+    const { name, value } = event.target;
 
-    setHomeSettings(
-      (current) => ({
-        ...current,
-        [name]: value,
-      })
-    );
+    setHomeSettings((current) => ({
+      ...current,
+      [name]: value,
+    }));
 
     setError("");
     setSuccess("");
@@ -329,9 +237,7 @@ function AdminSettings() {
      SAVE STORE SETTINGS
   ======================================== */
 
-  const handleSaveStore = async (
-    event
-  ) => {
+  const handleSaveStore = async (event) => {
     event.preventDefault();
 
     try {
@@ -342,53 +248,30 @@ function AdminSettings() {
 
       const formData = new FormData();
 
-      formData.append(
-        "_method",
-        "PUT"
-      );
+      formData.append("_method", "PUT");
 
-      formData.append(
-        "store_name",
-        storeSettings.store_name
-      );
+      formData.append("store_name", storeSettings.store_name);
 
-      formData.append(
-        "email",
-        storeSettings.email
-      );
+      formData.append("email", storeSettings.email);
 
-      formData.append(
-        "phone",
-        storeSettings.phone
-      );
+      formData.append("phone", storeSettings.phone);
 
-      formData.append(
-        "address",
-        storeSettings.address
-      );
+      formData.append("address", storeSettings.address);
 
       formData.append(
         "announcement_enabled",
-        storeSettings.announcement_enabled
-          ? "1"
-          : "0"
+        storeSettings.announcement_enabled ? "1" : "0",
       );
 
-      formData.append(
-        "announcement_text",
-        storeSettings.announcement_text
-      );
+      formData.append("announcement_text", storeSettings.announcement_text);
 
       formData.append(
         "free_shipping_threshold",
-        storeSettings.free_shipping_threshold
+        storeSettings.free_shipping_threshold,
       );
 
       if (storeSettings.logo) {
-        formData.append(
-          "logo",
-          storeSettings.logo
-        );
+        formData.append("logo", storeSettings.logo);
       }
 
       const response = await axios.post(
@@ -396,60 +279,40 @@ function AdminSettings() {
         formData,
         {
           headers: {
-            Authorization:
-              `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
 
-            Accept:
-              "application/json",
+            Accept: "application/json",
           },
-        }
+        },
       );
 
-      const savedSettings =
-        response.data?.data || {};
+      const savedSettings = response.data?.data || {};
 
-      setStoreSettings(
-        (current) => ({
-          ...current,
-          logo: null,
-          logo_path:
-            savedSettings.logo ||
-            current.logo_path,
-        })
-      );
+      setStoreSettings((current) => ({
+        ...current,
+        logo: null,
+        logo_path: savedSettings.logo || current.logo_path,
+      }));
 
       if (savedSettings.logo) {
         setLogoPreview(
-          `http://127.0.0.1:8000/storage/${savedSettings.logo}`
+          `https://ecommerce-platform-4vwn.onrender.com/storage/${savedSettings.logo}`,
         );
       }
 
-      setSuccess(
-        "Store settings updated successfully."
-      );
+      setSuccess("Store settings updated successfully.");
     } catch (err) {
-      console.error(
-        "Failed to update store settings:",
-        err
-      );
+      console.error("Failed to update store settings:", err);
 
-      const errors =
-        err.response?.data?.errors;
+      const errors = err.response?.data?.errors;
 
       if (errors) {
-        const firstError =
-          Object.values(errors)
-            .flat()
-            .find(Boolean);
+        const firstError = Object.values(errors).flat().find(Boolean);
 
-        setError(
-          firstError ||
-            "Please check the store settings."
-        );
+        setError(firstError || "Please check the store settings.");
       } else {
         setError(
-          err.response?.data?.message ||
-            "Unable to update store settings."
+          err.response?.data?.message || "Unable to update store settings.",
         );
       }
     } finally {
@@ -461,9 +324,7 @@ function AdminSettings() {
      SAVE HOMEPAGE SETTINGS
   ======================================== */
 
-  const handleSaveHome = async (
-    event
-  ) => {
+  const handleSaveHome = async (event) => {
     event.preventDefault();
 
     try {
@@ -472,46 +333,27 @@ function AdminSettings() {
       setError("");
       setSuccess("");
 
-      await axios.put(
-        `${API_URL}/admin/home-settings`,
-        homeSettings,
-        {
-          headers: {
-            Authorization:
-              `Bearer ${token}`,
+      await axios.put(`${API_URL}/admin/home-settings`, homeSettings, {
+        headers: {
+          Authorization: `Bearer ${token}`,
 
-            Accept:
-              "application/json",
-          },
-        }
-      );
+          Accept: "application/json",
+        },
+      });
 
-      setSuccess(
-        "Homepage settings updated successfully."
-      );
+      setSuccess("Homepage settings updated successfully.");
     } catch (err) {
-      console.error(
-        "Failed to update homepage settings:",
-        err
-      );
+      console.error("Failed to update homepage settings:", err);
 
-      const errors =
-        err.response?.data?.errors;
+      const errors = err.response?.data?.errors;
 
       if (errors) {
-        const firstError =
-          Object.values(errors)
-            .flat()
-            .find(Boolean);
+        const firstError = Object.values(errors).flat().find(Boolean);
 
-        setError(
-          firstError ||
-            "Please check the homepage settings."
-        );
+        setError(firstError || "Please check the homepage settings.");
       } else {
         setError(
-          err.response?.data?.message ||
-            "Unable to update homepage settings."
+          err.response?.data?.message || "Unable to update homepage settings.",
         );
       }
     } finally {
@@ -528,14 +370,9 @@ function AdminSettings() {
       <main className="admin-settings-page">
         <div className="admin-settings-container">
           <div className="admin-settings-state">
-            <Loader2
-              size={22}
-              className="admin-settings-loader"
-            />
+            <Loader2 size={22} className="admin-settings-loader" />
 
-            <strong>
-              Loading settings...
-            </strong>
+            <strong>Loading settings...</strong>
           </div>
         </div>
       </main>
@@ -545,37 +382,25 @@ function AdminSettings() {
   return (
     <main className="admin-settings-page">
       <div className="admin-settings-container">
-
         {/* =================================
             HEADER
         ================================= */}
 
         <header className="admin-settings-heading">
-          <span>
-            STORE MANAGEMENT
-          </span>
+          <span>STORE MANAGEMENT</span>
 
-          <h1>
-            Settings
-          </h1>
+          <h1>Settings</h1>
 
-          <p>
-            Manage store information
-            and customize your homepage.
-          </p>
+          <p>Manage store information and customize your homepage.</p>
         </header>
 
         {/* SUCCESS */}
 
         {success && (
           <div className="admin-settings-message admin-settings-success">
-            <CheckCircle2
-              size={15}
-            />
+            <CheckCircle2 size={15} />
 
-            <strong>
-              {success}
-            </strong>
+            <strong>{success}</strong>
           </div>
         )}
 
@@ -591,103 +416,67 @@ function AdminSettings() {
             STORE INFORMATION
         ================================= */}
 
-        <form
-          className="admin-settings-card"
-          onSubmit={
-            handleSaveStore
-          }
-        >
+        <form className="admin-settings-card" onSubmit={handleSaveStore}>
           <div className="admin-settings-card-heading">
             <span className="admin-settings-card-icon">
               <Store size={16} />
             </span>
 
             <div>
-              <h2>
-                Store Information
-              </h2>
+              <h2>Store Information</h2>
 
-              <p>
-                Basic information about
-                your store.
-              </p>
+              <p>Basic information about your store.</p>
             </div>
           </div>
 
           <div className="admin-settings-fields">
-
             <label className="admin-settings-field">
-              <span>
-                Store Name
-              </span>
+              <span>Store Name</span>
 
               <input
                 type="text"
                 name="store_name"
-                value={
-                  storeSettings.store_name
-                }
+                value={storeSettings.store_name}
                 placeholder="NOVA Store"
-                onChange={
-                  handleStoreChange
-                }
+                onChange={handleStoreChange}
               />
             </label>
 
             <label className="admin-settings-field">
-              <span>
-                Store Email
-              </span>
+              <span>Store Email</span>
 
               <input
                 type="email"
                 name="email"
-                value={
-                  storeSettings.email
-                }
+                value={storeSettings.email}
                 placeholder="store@example.com"
-                onChange={
-                  handleStoreChange
-                }
+                onChange={handleStoreChange}
               />
             </label>
 
             <label className="admin-settings-field">
-              <span>
-                Phone
-              </span>
+              <span>Phone</span>
 
               <input
                 type="text"
                 name="phone"
-                value={
-                  storeSettings.phone
-                }
+                value={storeSettings.phone}
                 placeholder="+961 ..."
-                onChange={
-                  handleStoreChange
-                }
+                onChange={handleStoreChange}
               />
             </label>
 
             <label className="admin-settings-field admin-settings-field-full">
-              <span>
-                Store Address
-              </span>
+              <span>Store Address</span>
 
               <input
                 type="text"
                 name="address"
-                value={
-                  storeSettings.address
-                }
+                value={storeSettings.address}
                 placeholder="Store address"
-                onChange={
-                  handleStoreChange
-                }
+                onChange={handleStoreChange}
               />
             </label>
-
           </div>
 
           <div className="admin-settings-section-divider" />
@@ -699,24 +488,18 @@ function AdminSettings() {
 
           <div className="admin-settings-fields">
             <label className="admin-settings-field admin-settings-field-full">
-              <span>
-                Store Logo
-              </span>
+              <span>Store Logo</span>
 
               <input
                 type="file"
                 accept="image/png,image/jpeg,image/webp"
-                onChange={
-                  handleLogoChange
-                }
+                onChange={handleLogoChange}
               />
             </label>
 
             {logoPreview && (
               <div className="admin-settings-field admin-settings-field-full">
-                <span>
-                  Current Logo
-                </span>
+                <span>Current Logo</span>
 
                 <div
                   style={{
@@ -741,10 +524,7 @@ function AdminSettings() {
                     }}
                   />
 
-                  <small>
-                    This logo will be used
-                    across the storefront.
-                  </small>
+                  <small>This logo will be used across the storefront.</small>
                 </div>
               </div>
             )}
@@ -760,70 +540,47 @@ function AdminSettings() {
           <div className="admin-settings-fields">
             <label className="admin-product-toggle-row">
               <div>
-                <strong>
-                  Enable Announcement
-                </strong>
+                <strong>Enable Announcement</strong>
 
-                <span>
-                  Show the offer bar at the
-                  top of the storefront.
-                </span>
+                <span>Show the offer bar at the top of the storefront.</span>
               </div>
 
               <input
                 type="checkbox"
                 name="announcement_enabled"
-                checked={
-                  storeSettings.announcement_enabled
-                }
-                onChange={
-                  handleStoreChange
-                }
+                checked={storeSettings.announcement_enabled}
+                onChange={handleStoreChange}
               />
             </label>
 
             <label className="admin-settings-field admin-settings-field-full">
-              <span>
-                Announcement Text
-              </span>
+              <span>Announcement Text</span>
 
               <input
                 type="text"
                 name="announcement_text"
-                value={
-                  storeSettings.announcement_text
-                }
+                value={storeSettings.announcement_text}
                 placeholder="Free delivery on orders over"
-                onChange={
-                  handleStoreChange
-                }
+                onChange={handleStoreChange}
               />
             </label>
 
             <label className="admin-settings-field">
-              <span>
-                Free Delivery From ($)
-              </span>
+              <span>Free Delivery From ($)</span>
 
               <input
                 type="number"
                 name="free_shipping_threshold"
-                value={
-                  storeSettings.free_shipping_threshold
-                }
+                value={storeSettings.free_shipping_threshold}
                 min="0"
                 step="0.01"
                 placeholder="100"
-                onChange={
-                  handleStoreChange
-                }
+                onChange={handleStoreChange}
               />
             </label>
 
             <div className="admin-settings-field">
-              <span>
-                Preview
-              </span>
+              <span>Preview</span>
 
               <div
                 style={{
@@ -847,27 +604,19 @@ function AdminSettings() {
                   {storeSettings.announcement_text ||
                     "Free delivery on orders over"}{" "}
                   $
-                  {Number(
-                    storeSettings.free_shipping_threshold ||
-                      0
-                  ).toFixed(2)}
+                  {Number(storeSettings.free_shipping_threshold || 0).toFixed(
+                    2,
+                  )}
                 </strong>
               </div>
             </div>
           </div>
 
           <div className="admin-settings-actions">
-            <button
-              type="submit"
-              disabled={
-                savingStore
-              }
-            >
+            <button type="submit" disabled={savingStore}>
               <Save size={13} />
 
-              {savingStore
-                ? "Saving..."
-                : "Save Store Information"}
+              {savingStore ? "Saving..." : "Save Store Information"}
             </button>
           </div>
         </form>
@@ -876,26 +625,16 @@ function AdminSettings() {
             HERO SECTION
         ================================= */}
 
-        <form
-          className="admin-settings-card"
-          onSubmit={
-            handleSaveHome
-          }
-        >
+        <form className="admin-settings-card" onSubmit={handleSaveHome}>
           <div className="admin-settings-card-heading">
             <span className="admin-settings-card-icon">
               <Home size={16} />
             </span>
 
             <div>
-              <h2>
-                Homepage
-              </h2>
+              <h2>Homepage</h2>
 
-              <p>
-                Customize text displayed
-                on the homepage.
-              </p>
+              <p>Customize text displayed on the homepage.</p>
             </div>
           </div>
 
@@ -907,79 +646,53 @@ function AdminSettings() {
           </div>
 
           <div className="admin-settings-fields">
-
             <label className="admin-settings-field admin-settings-field-full">
-              <span>
-                Hero Title
-              </span>
+              <span>Hero Title</span>
 
               <input
                 type="text"
                 name="hero_title"
-                value={
-                  homeSettings.hero_title
-                }
+                value={homeSettings.hero_title}
                 placeholder="Discover your next favorite product"
-                onChange={
-                  handleHomeChange
-                }
+                onChange={handleHomeChange}
               />
             </label>
 
             <label className="admin-settings-field admin-settings-field-full">
-              <span>
-                Hero Subtitle
-              </span>
+              <span>Hero Subtitle</span>
 
               <textarea
                 name="hero_subtitle"
-                value={
-                  homeSettings.hero_subtitle
-                }
+                value={homeSettings.hero_subtitle}
                 rows="3"
                 placeholder="Homepage hero description..."
-                onChange={
-                  handleHomeChange
-                }
+                onChange={handleHomeChange}
               />
             </label>
 
             <label className="admin-settings-field">
-              <span>
-                Button Text
-              </span>
+              <span>Button Text</span>
 
               <input
                 type="text"
                 name="hero_button_text"
-                value={
-                  homeSettings.hero_button_text
-                }
+                value={homeSettings.hero_button_text}
                 placeholder="Shop Now"
-                onChange={
-                  handleHomeChange
-                }
+                onChange={handleHomeChange}
               />
             </label>
 
             <label className="admin-settings-field">
-              <span>
-                Button Link
-              </span>
+              <span>Button Link</span>
 
               <input
                 type="text"
                 name="hero_button_link"
-                value={
-                  homeSettings.hero_button_link
-                }
+                value={homeSettings.hero_button_link}
                 placeholder="/products"
-                onChange={
-                  handleHomeChange
-                }
+                onChange={handleHomeChange}
               />
             </label>
-
           </div>
 
           {/* =================================
@@ -994,43 +707,29 @@ function AdminSettings() {
           </div>
 
           <div className="admin-settings-fields">
-
             <label className="admin-settings-field admin-settings-field-full">
-              <span>
-                Section Title
-              </span>
+              <span>Section Title</span>
 
               <input
                 type="text"
                 name="categories_title"
-                value={
-                  homeSettings.categories_title
-                }
+                value={homeSettings.categories_title}
                 placeholder="Shop by Category"
-                onChange={
-                  handleHomeChange
-                }
+                onChange={handleHomeChange}
               />
             </label>
 
             <label className="admin-settings-field admin-settings-field-full">
-              <span>
-                Section Description
-              </span>
+              <span>Section Description</span>
 
               <textarea
                 name="categories_subtitle"
-                value={
-                  homeSettings.categories_subtitle
-                }
+                value={homeSettings.categories_subtitle}
                 rows="2"
                 placeholder="Explore our collections..."
-                onChange={
-                  handleHomeChange
-                }
+                onChange={handleHomeChange}
               />
             </label>
-
           </div>
 
           {/* =================================
@@ -1045,70 +744,46 @@ function AdminSettings() {
           </div>
 
           <div className="admin-settings-fields">
-
             <label className="admin-settings-field admin-settings-field-full">
-              <span>
-                Section Title
-              </span>
+              <span>Section Title</span>
 
               <input
                 type="text"
                 name="featured_title"
-                value={
-                  homeSettings.featured_title
-                }
+                value={homeSettings.featured_title}
                 placeholder="Featured Products"
-                onChange={
-                  handleHomeChange
-                }
+                onChange={handleHomeChange}
               />
             </label>
 
             <label className="admin-settings-field admin-settings-field-full">
-              <span>
-                Section Description
-              </span>
+              <span>Section Description</span>
 
               <textarea
                 name="featured_subtitle"
-                value={
-                  homeSettings.featured_subtitle
-                }
+                value={homeSettings.featured_subtitle}
                 rows="2"
                 placeholder="A selection of our highlighted products..."
-                onChange={
-                  handleHomeChange
-                }
+                onChange={handleHomeChange}
               />
             </label>
-
           </div>
 
           {/* SAVE */}
 
           <div className="admin-settings-actions">
-            <button
-              type="submit"
-              disabled={
-                savingHome
-              }
-            >
+            <button type="submit" disabled={savingHome}>
               <Save size={13} />
 
-              {savingHome
-                ? "Saving..."
-                : "Save Homepage Settings"}
+              {savingHome ? "Saving..." : "Save Homepage Settings"}
             </button>
           </div>
         </form>
 
         <div className="admin-settings-note">
           <Settings size={13} />
-
-          Homepage changes are
-          reflected on the storefront.
+          Homepage changes are reflected on the storefront.
         </div>
-
       </div>
     </main>
   );

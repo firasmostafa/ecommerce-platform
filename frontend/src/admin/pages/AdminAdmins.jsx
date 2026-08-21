@@ -1,8 +1,4 @@
-import {
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import {
   CheckCircle2,
@@ -23,8 +19,7 @@ import { useAuth } from "../../context/auth-context";
 
 import "./AdminAdmins.css";
 
-const API_URL =
-  "http://127.0.0.1:8000/api";
+const API_URL = "https://ecommerce-platform-4vwn.onrender.com/api";
 
 const initialForm = {
   name: "",
@@ -35,60 +30,27 @@ const initialForm = {
 };
 
 function AdminAdmins() {
-  const {
-    token,
-    user,
-  } = useAuth();
+  const { token, user } = useAuth();
 
-  const [
-    admins,
-    setAdmins,
-  ] = useState([]);
+  const [admins, setAdmins] = useState([]);
 
-  const [
-    search,
-    setSearch,
-  ] = useState("");
+  const [search, setSearch] = useState("");
 
-  const [
-    loading,
-    setLoading,
-  ] = useState(Boolean(token));
+  const [loading, setLoading] = useState(Boolean(token));
 
-  const [
-    saving,
-    setSaving,
-  ] = useState(false);
+  const [saving, setSaving] = useState(false);
 
-  const [
-    deletingId,
-    setDeletingId,
-  ] = useState(null);
+  const [deletingId, setDeletingId] = useState(null);
 
-  const [
-    formOpen,
-    setFormOpen,
-  ] = useState(false);
+  const [formOpen, setFormOpen] = useState(false);
 
-  const [
-    editingAdmin,
-    setEditingAdmin,
-  ] = useState(null);
+  const [editingAdmin, setEditingAdmin] = useState(null);
 
-  const [
-    form,
-    setForm,
-  ] = useState(initialForm);
+  const [form, setForm] = useState(initialForm);
 
-  const [
-    error,
-    setError,
-  ] = useState("");
+  const [error, setError] = useState("");
 
-  const [
-    success,
-    setSuccess,
-  ] = useState("");
+  const [success, setSuccess] = useState("");
 
   /* ========================================
      LOAD ADMINS
@@ -103,33 +65,21 @@ function AdminAdmins() {
 
     const loadAdmins = async () => {
       try {
-        const response =
-          await axios.get(
-            `${API_URL}/admin/admins`,
-            {
-              headers: {
-                Authorization:
-                  `Bearer ${token}`,
+        const response = await axios.get(`${API_URL}/admin/admins`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
 
-                Accept:
-                  "application/json",
-              },
-            }
-          );
+            Accept: "application/json",
+          },
+        });
 
         if (cancelled) {
           return;
         }
 
-        const data =
-          response.data?.data ||
-          [];
+        const data = response.data?.data || [];
 
-        setAdmins(
-          Array.isArray(data)
-            ? data
-            : []
-        );
+        setAdmins(Array.isArray(data) ? data : []);
 
         setError("");
       } catch (err) {
@@ -137,14 +87,10 @@ function AdminAdmins() {
           return;
         }
 
-        console.error(
-          "Failed to load administrators:",
-          err
-        );
+        console.error("Failed to load administrators:", err);
 
         setError(
-          err.response?.data?.message ||
-            "Unable to load administrators."
+          err.response?.data?.message || "Unable to load administrators.",
         );
       } finally {
         if (!cancelled) {
@@ -169,10 +115,9 @@ function AdminAdmins() {
       return undefined;
     }
 
-    const timer =
-      window.setTimeout(() => {
-        setSuccess("");
-      }, 4000);
+    const timer = window.setTimeout(() => {
+      setSuccess("");
+    }, 4000);
 
     return () => {
       window.clearTimeout(timer);
@@ -183,33 +128,20 @@ function AdminAdmins() {
      FILTER ADMINS
   ======================================== */
 
-  const filteredAdmins =
-    useMemo(() => {
-      const value =
-        search
-          .trim()
-          .toLowerCase();
+  const filteredAdmins = useMemo(() => {
+    const value = search.trim().toLowerCase();
 
-      if (!value) {
-        return admins;
-      }
+    if (!value) {
+      return admins;
+    }
 
-      return admins.filter(
-        (admin) =>
-          admin.name
-            ?.toLowerCase()
-            .includes(value) ||
-          admin.email
-            ?.toLowerCase()
-            .includes(value) ||
-          admin.phone
-            ?.toLowerCase()
-            .includes(value)
-      );
-    }, [
-      admins,
-      search,
-    ]);
+    return admins.filter(
+      (admin) =>
+        admin.name?.toLowerCase().includes(value) ||
+        admin.email?.toLowerCase().includes(value) ||
+        admin.phone?.toLowerCase().includes(value),
+    );
+  }, [admins, search]);
 
   /* ========================================
      OPEN ADD FORM
@@ -230,25 +162,19 @@ function AdminAdmins() {
      OPEN EDIT FORM
   ======================================== */
 
-  const handleEdit = (
-    admin
-  ) => {
+  const handleEdit = (admin) => {
     setEditingAdmin(admin);
 
     setForm({
-      name:
-        admin.name || "",
+      name: admin.name || "",
 
-      email:
-        admin.email || "",
+      email: admin.email || "",
 
-      phone:
-        admin.phone || "",
+      phone: admin.phone || "",
 
       password: "",
 
-      password_confirmation:
-        "",
+      password_confirmation: "",
     });
 
     setError("");
@@ -275,20 +201,13 @@ function AdminAdmins() {
      INPUT CHANGE
   ======================================== */
 
-  const handleChange = (
-    event
-  ) => {
-    const {
-      name,
-      value,
-    } = event.target;
+  const handleChange = (event) => {
+    const { name, value } = event.target;
 
-    setForm(
-      (current) => ({
-        ...current,
-        [name]: value,
-      })
-    );
+    setForm((current) => ({
+      ...current,
+      [name]: value,
+    }));
 
     setError("");
   };
@@ -297,46 +216,29 @@ function AdminAdmins() {
      SAVE ADMIN
   ======================================== */
 
-  const handleSubmit = async (
-    event
-  ) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     if (!form.name.trim()) {
-      setError(
-        "Administrator name is required."
-      );
+      setError("Administrator name is required.");
 
       return;
     }
 
     if (!form.email.trim()) {
-      setError(
-        "Administrator email is required."
-      );
+      setError("Administrator email is required.");
 
       return;
     }
 
-    if (
-      !editingAdmin &&
-      !form.password
-    ) {
-      setError(
-        "Password is required for a new administrator."
-      );
+    if (!editingAdmin && !form.password) {
+      setError("Password is required for a new administrator.");
 
       return;
     }
 
-    if (
-      form.password &&
-      form.password !==
-        form.password_confirmation
-    ) {
-      setError(
-        "Password confirmation does not match."
-      );
+    if (form.password && form.password !== form.password_confirmation) {
+      setError("Password confirmation does not match.");
 
       return;
     }
@@ -348,117 +250,77 @@ function AdminAdmins() {
       setSuccess("");
 
       const payload = {
-        name:
-          form.name.trim(),
+        name: form.name.trim(),
 
-        email:
-          form.email.trim(),
+        email: form.email.trim(),
 
-        phone:
-          form.phone.trim() ||
-          null,
+        phone: form.phone.trim() || null,
       };
 
       if (form.password) {
-        payload.password =
-          form.password;
+        payload.password = form.password;
 
-        payload.password_confirmation =
-          form.password_confirmation;
+        payload.password_confirmation = form.password_confirmation;
       }
 
       let response;
 
       if (editingAdmin) {
-        response =
-          await axios.put(
-            `${API_URL}/admin/admins/${editingAdmin.id}`,
-            payload,
-            {
-              headers: {
-                Authorization:
-                  `Bearer ${token}`,
+        response = await axios.put(
+          `${API_URL}/admin/admins/${editingAdmin.id}`,
+          payload,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
 
-                Accept:
-                  "application/json",
-              },
-            }
-          );
+              Accept: "application/json",
+            },
+          },
+        );
       } else {
-        response =
-          await axios.post(
-            `${API_URL}/admin/admins`,
-            payload,
-            {
-              headers: {
-                Authorization:
-                  `Bearer ${token}`,
+        response = await axios.post(`${API_URL}/admin/admins`, payload, {
+          headers: {
+            Authorization: `Bearer ${token}`,
 
-                Accept:
-                  "application/json",
-              },
-            }
-          );
+            Accept: "application/json",
+          },
+        });
       }
 
-      const savedAdmin =
-        response.data?.data;
+      const savedAdmin = response.data?.data;
 
       if (editingAdmin) {
-        setAdmins(
-          (current) =>
-            current.map(
-              (admin) =>
-                admin.id ===
-                editingAdmin.id
-                  ? {
-                      ...admin,
-                      ...savedAdmin,
-                    }
-                  : admin
-            )
+        setAdmins((current) =>
+          current.map((admin) =>
+            admin.id === editingAdmin.id
+              ? {
+                  ...admin,
+                  ...savedAdmin,
+                }
+              : admin,
+          ),
         );
 
-        setSuccess(
-          "Administrator updated successfully."
-        );
+        setSuccess("Administrator updated successfully.");
       } else {
-        setAdmins(
-          (current) => [
-            savedAdmin,
-            ...current,
-          ]
-        );
+        setAdmins((current) => [savedAdmin, ...current]);
 
-        setSuccess(
-          "Administrator created successfully."
-        );
+        setSuccess("Administrator created successfully.");
       }
 
       handleCloseForm();
     } catch (err) {
-      console.error(
-        "Failed to save administrator:",
-        err
-      );
+      console.error("Failed to save administrator:", err);
 
-      const errors =
-        err.response?.data?.errors;
+      const errors = err.response?.data?.errors;
 
       if (errors) {
-        const firstError =
-          Object.values(errors)
-            .flat()
-            .find(Boolean);
+        const firstError = Object.values(errors).flat().find(Boolean);
 
-        setError(
-          firstError ||
-            "Please check the administrator information."
-        );
+        setError(firstError || "Please check the administrator information.");
       } else {
         setError(
-          err.response?.data?.message ||
-            "Unable to save administrator."
+          err.response?.data?.message || "Unable to save administrator.",
         );
       }
     } finally {
@@ -470,71 +332,41 @@ function AdminAdmins() {
      DELETE ADMIN
   ======================================== */
 
-  const handleDelete = async (
-    admin
-  ) => {
-    if (
-      Number(user?.id) ===
-      Number(admin.id)
-    ) {
-      setError(
-        "You cannot delete your own administrator account."
-      );
+  const handleDelete = async (admin) => {
+    if (Number(user?.id) === Number(admin.id)) {
+      setError("You cannot delete your own administrator account.");
 
       return;
     }
 
-    const confirmed =
-      window.confirm(
-        `Delete administrator "${admin.name}"?`
-      );
+    const confirmed = window.confirm(`Delete administrator "${admin.name}"?`);
 
     if (!confirmed) {
       return;
     }
 
     try {
-      setDeletingId(
-        admin.id
-      );
+      setDeletingId(admin.id);
 
       setError("");
       setSuccess("");
 
-      await axios.delete(
-        `${API_URL}/admin/admins/${admin.id}`,
-        {
-          headers: {
-            Authorization:
-              `Bearer ${token}`,
+      await axios.delete(`${API_URL}/admin/admins/${admin.id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
 
-            Accept:
-              "application/json",
-          },
-        }
-      );
+          Accept: "application/json",
+        },
+      });
 
-      setAdmins(
-        (current) =>
-          current.filter(
-            (item) =>
-              item.id !==
-              admin.id
-          )
-      );
+      setAdmins((current) => current.filter((item) => item.id !== admin.id));
 
-      setSuccess(
-        `"${admin.name}" deleted successfully.`
-      );
+      setSuccess(`"${admin.name}" deleted successfully.`);
     } catch (err) {
-      console.error(
-        "Failed to delete administrator:",
-        err
-      );
+      console.error("Failed to delete administrator:", err);
 
       setError(
-        err.response?.data?.message ||
-          "Unable to delete this administrator."
+        err.response?.data?.message || "Unable to delete this administrator.",
       );
     } finally {
       setDeletingId(null);
@@ -545,23 +377,16 @@ function AdminAdmins() {
      DATE FORMAT
   ======================================== */
 
-  const formatDate = (
-    date
-  ) => {
+  const formatDate = (date) => {
     if (!date) {
       return "—";
     }
 
-    return new Intl.DateTimeFormat(
-      "en-US",
-      {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-      }
-    ).format(
-      new Date(date)
-    );
+    return new Intl.DateTimeFormat("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    }).format(new Date(date));
   };
 
   /* ========================================
@@ -575,9 +400,7 @@ function AdminAdmins() {
           <div className="admin-admins-state">
             <span className="admin-admins-spinner" />
 
-            <strong>
-              Loading administrators...
-            </strong>
+            <strong>Loading administrators...</strong>
           </div>
         </div>
       </main>
@@ -587,25 +410,18 @@ function AdminAdmins() {
   return (
     <main className="admin-admins-page">
       <div className="admin-admins-container">
-
         {/* =================================
             HEADER
         ================================= */}
 
         <header className="admin-admins-heading">
           <div>
-            <span>
-              ACCESS MANAGEMENT
-            </span>
+            <span>ACCESS MANAGEMENT</span>
 
-            <h1>
-              Administrators
-            </h1>
+            <h1>Administrators</h1>
 
             <p>
-              Manage accounts with
-              access to the store
-              administration panel.
+              Manage accounts with access to the store administration panel.
             </p>
           </div>
 
@@ -615,7 +431,6 @@ function AdminAdmins() {
             onClick={handleAdd}
           >
             <Plus size={14} />
-
             Add Admin
           </button>
         </header>
@@ -626,19 +441,13 @@ function AdminAdmins() {
 
         {success && (
           <div className="admin-admins-message admin-admins-success">
-            <CheckCircle2
-              size={15}
-            />
+            <CheckCircle2 size={15} />
 
-            <strong>
-              {success}
-            </strong>
+            <strong>{success}</strong>
 
             <button
               type="button"
-              onClick={() =>
-                setSuccess("")
-              }
+              onClick={() => setSuccess("")}
               aria-label="Close success message"
             >
               <X size={13} />
@@ -650,12 +459,9 @@ function AdminAdmins() {
             ERROR
         ================================= */}
 
-        {error &&
-          !formOpen && (
-            <div className="admin-admins-message admin-admins-error">
-              {error}
-            </div>
-          )}
+        {error && !formOpen && (
+          <div className="admin-admins-message admin-admins-error">{error}</div>
+        )}
 
         {/* =================================
             SUMMARY
@@ -663,19 +469,13 @@ function AdminAdmins() {
 
         <section className="admin-admins-summary">
           <span>
-            <ShieldCheck
-              size={17}
-            />
+            <ShieldCheck size={17} />
           </span>
 
           <div>
-            <small>
-              Administrator Accounts
-            </small>
+            <small>Administrator Accounts</small>
 
-            <strong>
-              {admins.length}
-            </strong>
+            <strong>{admins.length}</strong>
           </div>
         </section>
 
@@ -691,14 +491,7 @@ function AdminAdmins() {
               type="search"
               value={search}
               placeholder="Search administrators..."
-              onChange={(
-                event
-              ) =>
-                setSearch(
-                  event.target
-                    .value
-                )
-              }
+              onChange={(event) => setSearch(event.target.value)}
             />
           </div>
         </section>
@@ -707,151 +500,85 @@ function AdminAdmins() {
             ADMIN GRID
         ================================= */}
 
-        {filteredAdmins.length >
-        0 ? (
+        {filteredAdmins.length > 0 ? (
           <section className="admin-admins-grid">
-            {filteredAdmins.map(
-              (admin) => {
-                const isCurrentAdmin =
-                  Number(
-                    user?.id
-                  ) ===
-                  Number(
-                    admin.id
-                  );
+            {filteredAdmins.map((admin) => {
+              const isCurrentAdmin = Number(user?.id) === Number(admin.id);
 
-                return (
-                  <article
-                    className="admin-admin-card"
-                    key={admin.id}
-                  >
-                    <div className="admin-admin-card-top">
-                      <div className="admin-admin-avatar">
-                        <UserCog
-                          size={19}
-                        />
-                      </div>
-
-                      <div className="admin-admin-identity">
-                        <div className="admin-admin-name-row">
-                          <h2>
-                            {
-                              admin.name
-                            }
-                          </h2>
-
-                          {isCurrentAdmin && (
-                            <span>
-                              You
-                            </span>
-                          )}
-                        </div>
-
-                        <small>
-                          Administrator
-                        </small>
-                      </div>
+              return (
+                <article className="admin-admin-card" key={admin.id}>
+                  <div className="admin-admin-card-top">
+                    <div className="admin-admin-avatar">
+                      <UserCog size={19} />
                     </div>
 
-                    <div className="admin-admin-details">
-                      <div>
-                        <Mail
-                          size={12}
-                        />
+                    <div className="admin-admin-identity">
+                      <div className="admin-admin-name-row">
+                        <h2>{admin.name}</h2>
 
-                        <span>
-                          {
-                            admin.email
-                          }
-                        </span>
+                        {isCurrentAdmin && <span>You</span>}
                       </div>
 
-                      <div>
-                        <Phone
-                          size={12}
-                        />
+                      <small>Administrator</small>
+                    </div>
+                  </div>
 
-                        <span>
-                          {admin.phone ||
-                            "No phone"}
-                        </span>
-                      </div>
+                  <div className="admin-admin-details">
+                    <div>
+                      <Mail size={12} />
+
+                      <span>{admin.email}</span>
                     </div>
 
-                    <div className="admin-admin-meta">
-                      <span>
-                        Added
-                      </span>
+                    <div>
+                      <Phone size={12} />
 
-                      <strong>
-                        {formatDate(
-                          admin.created_at
-                        )}
-                      </strong>
+                      <span>{admin.phone || "No phone"}</span>
                     </div>
+                  </div>
 
-                    <div className="admin-admin-actions">
-                      <button
-                        type="button"
-                        className="edit"
-                        onClick={() =>
-                          handleEdit(
-                            admin
-                          )
-                        }
-                      >
-                        <Edit3
-                          size={12}
-                        />
+                  <div className="admin-admin-meta">
+                    <span>Added</span>
 
-                        Edit
-                      </button>
+                    <strong>{formatDate(admin.created_at)}</strong>
+                  </div>
 
-                      <button
-                        type="button"
-                        className="delete"
-                        disabled={
-                          isCurrentAdmin ||
-                          deletingId ===
-                            admin.id
-                        }
-                        onClick={() =>
-                          handleDelete(
-                            admin
-                          )
-                        }
-                      >
-                        <Trash2
-                          size={12}
-                        />
+                  <div className="admin-admin-actions">
+                    <button
+                      type="button"
+                      className="edit"
+                      onClick={() => handleEdit(admin)}
+                    >
+                      <Edit3 size={12} />
+                      Edit
+                    </button>
 
-                        {deletingId ===
-                        admin.id
-                          ? "Deleting..."
-                          : isCurrentAdmin
-                            ? "Your Account"
-                            : "Delete"}
-                      </button>
-                    </div>
-                  </article>
-                );
-              }
-            )}
+                    <button
+                      type="button"
+                      className="delete"
+                      disabled={isCurrentAdmin || deletingId === admin.id}
+                      onClick={() => handleDelete(admin)}
+                    >
+                      <Trash2 size={12} />
+
+                      {deletingId === admin.id
+                        ? "Deleting..."
+                        : isCurrentAdmin
+                          ? "Your Account"
+                          : "Delete"}
+                    </button>
+                  </div>
+                </article>
+              );
+            })}
           </section>
         ) : (
           <div className="admin-admins-state">
-            <UserCog
-              size={24}
-            />
+            <UserCog size={24} />
 
-            <strong>
-              No administrators found
-            </strong>
+            <strong>No administrators found</strong>
 
-            <p>
-              Try another search or
-              create a new administrator.
-            </p>
+            <p>Try another search or create a new administrator.</p>
           </div>
         )}
       </div>
@@ -863,28 +590,18 @@ function AdminAdmins() {
       {formOpen && (
         <div
           className="admin-admin-modal-backdrop"
-          onMouseDown={
-            handleCloseForm
-          }
+          onMouseDown={handleCloseForm}
         >
           <div
             className="admin-admin-modal"
-            onMouseDown={(
-              event
-            ) =>
-              event.stopPropagation()
-            }
+            onMouseDown={(event) => event.stopPropagation()}
           >
             <header>
               <div>
-                <span>
-                  ACCESS MANAGEMENT
-                </span>
+                <span>ACCESS MANAGEMENT</span>
 
                 <h2>
-                  {editingAdmin
-                    ? "Edit Administrator"
-                    : "Add Administrator"}
+                  {editingAdmin ? "Edit Administrator" : "Add Administrator"}
                 </h2>
 
                 <p>
@@ -897,121 +614,83 @@ function AdminAdmins() {
               <button
                 type="button"
                 className="admin-admin-modal-close"
-                onClick={
-                  handleCloseForm
-                }
+                onClick={handleCloseForm}
                 aria-label="Close"
               >
                 <X size={16} />
               </button>
             </header>
 
-            {error && (
-              <div className="admin-admin-form-error">
-                {error}
-              </div>
-            )}
+            {error && <div className="admin-admin-form-error">{error}</div>}
 
-            <form
-              onSubmit={
-                handleSubmit
-              }
-            >
+            <form onSubmit={handleSubmit}>
               <label className="admin-admin-field">
-                <span>
-                  Name *
-                </span>
+                <span>Name *</span>
 
                 <input
                   type="text"
                   name="name"
                   value={form.name}
                   placeholder="Administrator name"
-                  onChange={
-                    handleChange
-                  }
+                  onChange={handleChange}
                 />
               </label>
 
               <label className="admin-admin-field">
-                <span>
-                  Email *
-                </span>
+                <span>Email *</span>
 
                 <input
                   type="email"
                   name="email"
-                  value={
-                    form.email
-                  }
+                  value={form.email}
                   placeholder="admin@example.com"
-                  onChange={
-                    handleChange
-                  }
+                  onChange={handleChange}
                 />
               </label>
 
               <label className="admin-admin-field">
-                <span>
-                  Phone
-                </span>
+                <span>Phone</span>
 
                 <input
                   type="text"
                   name="phone"
-                  value={
-                    form.phone
-                  }
+                  value={form.phone}
                   placeholder="+961 ..."
-                  onChange={
-                    handleChange
-                  }
+                  onChange={handleChange}
                 />
               </label>
 
               <label className="admin-admin-field">
                 <span>
                   Password
-                  {editingAdmin
-                    ? " (optional)"
-                    : " *"}
+                  {editingAdmin ? " (optional)" : " *"}
                 </span>
 
                 <input
                   type="password"
                   name="password"
-                  value={
-                    form.password
-                  }
+                  value={form.password}
                   placeholder={
                     editingAdmin
                       ? "Leave blank to keep current password"
                       : "Minimum 8 characters"
                   }
-                  onChange={
-                    handleChange
-                  }
+                  onChange={handleChange}
                 />
               </label>
 
               <label className="admin-admin-field">
                 <span>
                   Confirm Password
-                  {editingAdmin
-                    ? ""
-                    : " *"}
+                  {editingAdmin ? "" : " *"}
                 </span>
 
                 <input
                   type="password"
                   name="password_confirmation"
-                  value={
-                    form.password_confirmation
-                  }
+                  value={form.password_confirmation}
                   placeholder="Repeat password"
-                  onChange={
-                    handleChange
-                  }
+                  onChange={handleChange}
                 />
               </label>
 
@@ -1019,18 +698,12 @@ function AdminAdmins() {
                 <button
                   type="button"
                   className="cancel"
-                  onClick={
-                    handleCloseForm
-                  }
+                  onClick={handleCloseForm}
                 >
                   Cancel
                 </button>
 
-                <button
-                  type="submit"
-                  className="save"
-                  disabled={saving}
-                >
+                <button type="submit" className="save" disabled={saving}>
                   {saving
                     ? "Saving..."
                     : editingAdmin

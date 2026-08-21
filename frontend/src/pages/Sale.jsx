@@ -13,7 +13,7 @@ function Sale() {
     const fetchSaleProducts = async () => {
       try {
         const response = await axios.get(
-          "http://127.0.0.1:8000/api/products?on_sale=1&per_page=48"
+          "https://ecommerce-platform-4vwn.onrender.com/api/products?on_sale=1&per_page=48",
         );
 
         setProducts(response.data.data?.data || []);
@@ -34,10 +34,7 @@ function Sale() {
         <div className="sale-container">
           <span>LIMITED TIME</span>
           <h1>Hot Deals & Special Offers</h1>
-          <p>
-            Discover selected products at special prices while
-            stock lasts.
-          </p>
+          <p>Discover selected products at special prices while stock lasts.</p>
         </div>
       </section>
 
@@ -60,10 +57,7 @@ function Sale() {
           {!loading && !error && (
             <div className="sale-grid">
               {products.map((product) => (
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                />
+                <ProductCard key={product.id} product={product} />
               ))}
             </div>
           )}

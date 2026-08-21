@@ -18,8 +18,8 @@ import { Link, useParams } from "react-router-dom";
 import { useAuth } from "../context/auth-context";
 import "./Invoice.css";
 
-const API_URL = "http://127.0.0.1:8000/api";
-const STORAGE_URL = "http://127.0.0.1:8000/storage";
+const API_URL = "https://ecommerce-platform-4vwn.onrender.com/api";
+const STORAGE_URL = "https://ecommerce-platform-4vwn.onrender.com/storage";
 
 function Invoice() {
   const { orderId } = useParams();
@@ -29,62 +29,55 @@ function Invoice() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-useEffect(() => {
-  window.scrollTo({
-    top: 0,
-    left: 0,
-    behavior: "instant",
-  });
-
-  if (!token) {
-    return undefined;
-  }
-
-  let cancelled = false;
-
-  axios
-    .get(`${API_URL}/orders/${orderId}/invoice`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: "application/json",
-      },
-    })
-    .then((response) => {
-      if (cancelled) {
-        return;
-      }
-
-      setInvoiceData(response.data.data);
-    })
-    .catch((err) => {
-      if (cancelled) {
-        return;
-      }
-
-      console.error(
-        "Failed to load invoice:",
-        err
-      );
-
-      setError(
-        err.response?.data?.message ||
-          "Unable to load this invoice."
-      );
-    })
-    .finally(() => {
-      if (!cancelled) {
-        setLoading(false);
-      }
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "instant",
     });
 
-  return () => {
-    cancelled = true;
-  };
-}, [orderId, token]);
+    if (!token) {
+      return undefined;
+    }
+
+    let cancelled = false;
+
+    axios
+      .get(`${API_URL}/orders/${orderId}/invoice`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+        },
+      })
+      .then((response) => {
+        if (cancelled) {
+          return;
+        }
+
+        setInvoiceData(response.data.data);
+      })
+      .catch((err) => {
+        if (cancelled) {
+          return;
+        }
+
+        console.error("Failed to load invoice:", err);
+
+        setError(err.response?.data?.message || "Unable to load this invoice.");
+      })
+      .finally(() => {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [orderId, token]);
 
   const formatMoney = (value) => {
-    const symbol =
-      invoiceData?.store?.currency_symbol || "$";
+    const symbol = invoiceData?.store?.currency_symbol || "$";
 
     return `${symbol}${Number(value || 0).toFixed(2)}`;
   };
@@ -94,14 +87,11 @@ useEffect(() => {
       return "—";
     }
 
-    return new Date(value).toLocaleDateString(
-      undefined,
-      {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-      }
-    );
+    return new Date(value).toLocaleDateString(undefined, {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
   };
 
   const formatPaymentMethod = (method) => {
@@ -111,11 +101,7 @@ useEffect(() => {
 
     return method
       .split("_")
-      .map(
-        (word) =>
-          word.charAt(0).toUpperCase() +
-          word.slice(1)
-      )
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
       .join(" ");
   };
 
@@ -139,25 +125,15 @@ useEffect(() => {
 
           <h2>Invoice unavailable</h2>
 
-          <p>
-            {error || "Invoice could not be found."}
-          </p>
+          <p>{error || "Invoice could not be found."}</p>
 
-          <Link to="/my-orders">
-            Back to My Orders
-          </Link>
+          <Link to="/my-orders">Back to My Orders</Link>
         </div>
       </main>
     );
   }
 
-  const {
-    invoice,
-    store,
-    customer,
-    items,
-    totals,
-  } = invoiceData;
+  const { invoice, store, customer, items, totals } = invoiceData;
 
   return (
     <main className="invoice-page">
@@ -165,18 +141,12 @@ useEffect(() => {
         {/* ACTIONS */}
 
         <div className="invoice-actions no-print">
-          <Link
-            to={`/orders/${orderId}`}
-            className="invoice-back"
-          >
+          <Link to={`/orders/${orderId}`} className="invoice-back">
             <ArrowLeft size={16} />
             Order Details
           </Link>
 
-          <button
-            type="button"
-            onClick={() => window.print()}
-          >
+          <button type="button" onClick={() => window.print()}>
             <Printer size={16} />
             Print / Save PDF
           </button>
@@ -194,10 +164,7 @@ useEffect(() => {
           <header className="invoice-header">
             <div className="invoice-brand">
               {store.logo ? (
-                <img
-                  src={`${STORAGE_URL}/${store.logo}`}
-                  alt={store.name}
-                />
+                <img src={`${STORAGE_URL}/${store.logo}`} alt={store.name} />
               ) : (
                 <div className="invoice-logo-placeholder">
                   {store.name?.charAt(0) || "N"}
@@ -207,18 +174,14 @@ useEffect(() => {
               <div>
                 <h1>{store.name}</h1>
 
-                <p>
-                  {store.description}
-                </p>
+                <p>{store.description}</p>
               </div>
             </div>
 
             <div className="invoice-title">
               <span>INVOICE</span>
 
-              <strong>
-                {invoice.number}
-              </strong>
+              <strong>{invoice.number}</strong>
 
               <div className="invoice-date">
                 <CalendarDays size={12} />
@@ -242,9 +205,7 @@ useEffect(() => {
                 </div>
               </div>
 
-              <strong className="invoice-customer-name">
-                {customer.name}
-              </strong>
+              <strong className="invoice-customer-name">{customer.name}</strong>
 
               <div className="invoice-contact-line">
                 <Mail size={12} />
@@ -259,11 +220,7 @@ useEffect(() => {
               <div className="invoice-contact-line">
                 <MapPin size={12} />
                 <span>
-                  {[
-                    customer.address,
-                    customer.city,
-                    customer.country,
-                  ]
+                  {[customer.address, customer.city, customer.country]
                     .filter(Boolean)
                     .join(", ")}
                 </span>
@@ -305,11 +262,7 @@ useEffect(() => {
               <div className="invoice-meta-row">
                 <span>Payment Method</span>
 
-                <strong>
-                  {formatPaymentMethod(
-                    invoice.payment_method
-                  )}
-                </strong>
+                <strong>{formatPaymentMethod(invoice.payment_method)}</strong>
               </div>
             </div>
           </section>
@@ -326,9 +279,7 @@ useEffect(() => {
               <div className="invoice-item-count">
                 <Package size={14} />
                 {items?.length || 0}{" "}
-                {(items?.length || 0) === 1
-                  ? "Item"
-                  : "Items"}
+                {(items?.length || 0) === 1 ? "Item" : "Items"}
               </div>
             </div>
 
@@ -360,35 +311,19 @@ useEffect(() => {
                           )}
 
                           <div>
-                            <strong>
-                              {item.name}
-                            </strong>
+                            <strong>{item.name}</strong>
 
-                            {item.sku && (
-                              <span>
-                                SKU: {item.sku}
-                              </span>
-                            )}
+                            {item.sku && <span>SKU: {item.sku}</span>}
                           </div>
                         </div>
                       </td>
 
-                      <td>
-                        {formatMoney(
-                          item.unit_price
-                        )}
-                      </td>
+                      <td>{formatMoney(item.unit_price)}</td>
+
+                      <td>× {item.quantity}</td>
 
                       <td>
-                        × {item.quantity}
-                      </td>
-
-                      <td>
-                        <strong>
-                          {formatMoney(
-                            item.line_total
-                          )}
-                        </strong>
+                        <strong>{formatMoney(item.line_total)}</strong>
                       </td>
                     </tr>
                   ))}
@@ -399,173 +334,158 @@ useEffect(() => {
 
           {/* BOTTOM */}
 
-        {/* =========================================
+          {/* =========================================
     FULL WIDTH PRICE SUMMARY
 ========================================= */}
 
-<section className="invoice-full-summary">
-  <div className="invoice-full-summary-header">
-    <div className="invoice-full-summary-title">
-      <ReceiptText size={17} />
+          <section className="invoice-full-summary">
+            <div className="invoice-full-summary-header">
+              <div className="invoice-full-summary-title">
+                <ReceiptText size={17} />
 
-      <span>PRICE SUMMARY</span>
-    </div>
+                <span>PRICE SUMMARY</span>
+              </div>
 
-    <span>AMOUNT</span>
-  </div>
+              <span>AMOUNT</span>
+            </div>
 
-  <div className="invoice-full-summary-body">
-    <div className="invoice-summary-row">
-      <div className="invoice-summary-row-label">
-        <span>Subtotal</span>
-      </div>
+            <div className="invoice-full-summary-body">
+              <div className="invoice-summary-row">
+                <div className="invoice-summary-row-label">
+                  <span>Subtotal</span>
+                </div>
 
-      <strong>
-        {formatMoney(totals.subtotal)}
-      </strong>
-    </div>
+                <strong>{formatMoney(totals.subtotal)}</strong>
+              </div>
 
-    <div className="invoice-summary-row">
-      <div className="invoice-summary-row-label">
-        <span>Discount</span>
-      </div>
+              <div className="invoice-summary-row">
+                <div className="invoice-summary-row-label">
+                  <span>Discount</span>
+                </div>
 
-      <strong
-        className={
-          Number(totals.discount || 0) > 0
-            ? "invoice-summary-discount"
-            : ""
-        }
-      >
-        -
-        {formatMoney(totals.discount)}
-      </strong>
-    </div>
+                <strong
+                  className={
+                    Number(totals.discount || 0) > 0
+                      ? "invoice-summary-discount"
+                      : ""
+                  }
+                >
+                  -{formatMoney(totals.discount)}
+                </strong>
+              </div>
 
-    <div className="invoice-summary-row">
-      <div className="invoice-summary-row-label">
-        <span>Delivery</span>
-      </div>
+              <div className="invoice-summary-row">
+                <div className="invoice-summary-row-label">
+                  <span>Delivery</span>
+                </div>
 
-      <strong>
-        {Number(totals.shipping || 0) === 0
-          ? "FREE"
-          : formatMoney(totals.shipping)}
-      </strong>
-    </div>
+                <strong>
+                  {Number(totals.shipping || 0) === 0
+                    ? "FREE"
+                    : formatMoney(totals.shipping)}
+                </strong>
+              </div>
 
-    <div className="invoice-summary-row">
-      <div className="invoice-summary-row-label">
-        <span>Tax</span>
-      </div>
+              <div className="invoice-summary-row">
+                <div className="invoice-summary-row-label">
+                  <span>Tax</span>
+                </div>
 
-      <strong>
-        {formatMoney(totals.tax)}
-      </strong>
-    </div>
-  </div>
+                <strong>{formatMoney(totals.tax)}</strong>
+              </div>
+            </div>
 
-  <div className="invoice-summary-total">
-    <div>
-      <strong>TOTAL</strong>
-      <span>Final amount to be paid</span>
-    </div>
+            <div className="invoice-summary-total">
+              <div>
+                <strong>TOTAL</strong>
+                <span>Final amount to be paid</span>
+              </div>
 
-    <strong>
-      {formatMoney(totals.total)}
-    </strong>
-  </div>
-</section>
+              <strong>{formatMoney(totals.total)}</strong>
+            </div>
+          </section>
 
-{/* =========================================
+          {/* =========================================
     PAYMENT INFORMATION
 ========================================= */}
 
-<section className="invoice-payment-bar">
-  <div className="invoice-payment-box">
-    <div className="invoice-payment-icon">
-      <CreditCard size={18} />
-    </div>
+          <section className="invoice-payment-bar">
+            <div className="invoice-payment-box">
+              <div className="invoice-payment-icon">
+                <CreditCard size={18} />
+              </div>
 
-    <div>
-      <span>Payment Method</span>
+              <div>
+                <span>Payment Method</span>
 
-      <strong>
-        {formatPaymentMethod(
-          invoice.payment_method
-        )}
-      </strong>
-    </div>
-  </div>
+                <strong>{formatPaymentMethod(invoice.payment_method)}</strong>
+              </div>
+            </div>
 
-  <div className="invoice-payment-divider" />
+            <div className="invoice-payment-divider" />
 
-  <div className="invoice-payment-box">
-    <div className="invoice-payment-icon">
-      <ReceiptText size={18} />
-    </div>
+            <div className="invoice-payment-box">
+              <div className="invoice-payment-icon">
+                <ReceiptText size={18} />
+              </div>
 
-    <div>
-      <span>Payment Status</span>
+              <div>
+                <span>Payment Status</span>
 
-      <strong
-        className={`invoice-payment-${invoice.payment_status}`}
-      >
-        {invoice.payment_status}
-      </strong>
-    </div>
-  </div>
-</section>
+                <strong className={`invoice-payment-${invoice.payment_status}`}>
+                  {invoice.payment_status}
+                </strong>
+              </div>
+            </div>
+          </section>
 
-{/* =========================================
+          {/* =========================================
     SELLER
 ========================================= */}
 
-<section className="invoice-seller-footer">
-  <div>
-    <span>SOLD BY</span>
+          <section className="invoice-seller-footer">
+            <div>
+              <span>SOLD BY</span>
 
-    <strong>{store.name}</strong>
-  </div>
+              <strong>{store.name}</strong>
+            </div>
 
-  <div className="invoice-seller-footer-details">
-    {store.address && (
-      <span>
-        <MapPin size={11} />
-        {store.address}
-      </span>
-    )}
+            <div className="invoice-seller-footer-details">
+              {store.address && (
+                <span>
+                  <MapPin size={11} />
+                  {store.address}
+                </span>
+              )}
 
-    {store.email && (
-      <span>
-        <Mail size={11} />
-        {store.email}
-      </span>
-    )}
+              {store.email && (
+                <span>
+                  <Mail size={11} />
+                  {store.email}
+                </span>
+              )}
 
-    {store.phone && (
-      <span>
-        <Phone size={11} />
-        {store.phone}
-      </span>
-    )}
-  </div>
-</section>
+              {store.phone && (
+                <span>
+                  <Phone size={11} />
+                  {store.phone}
+                </span>
+              )}
+            </div>
+          </section>
 
-{customer.notes && (
-  <section className="invoice-notes">
-    <strong>ORDER NOTES</strong>
-    <p>{customer.notes}</p>
-  </section>
-)}
+          {customer.notes && (
+            <section className="invoice-notes">
+              <strong>ORDER NOTES</strong>
+              <p>{customer.notes}</p>
+            </section>
+          )}
 
           {/* FOOTER */}
 
           <footer className="invoice-footer">
             <div>
-              <strong>
-                Thank you for your order!
-              </strong>
+              <strong>Thank you for your order!</strong>
 
               <p>
                 {store.invoice_footer ||

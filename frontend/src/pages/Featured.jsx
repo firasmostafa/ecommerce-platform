@@ -16,7 +16,7 @@ function Featured() {
         setError("");
 
         const response = await axios.get(
-          "http://127.0.0.1:8000/api/products?featured=1&per_page=48"
+          "https://ecommerce-platform-4vwn.onrender.com/api/products?featured=1&per_page=48",
         );
 
         setProducts(response.data.data?.data || []);
@@ -37,9 +37,7 @@ function Featured() {
         <div className="featured-page-container">
           <span>CURATED COLLECTION</span>
           <h1>Featured Products</h1>
-          <p>
-            Handpicked products selected from across the store.
-          </p>
+          <p>Handpicked products selected from across the store.</p>
         </div>
       </section>
 
@@ -62,10 +60,7 @@ function Featured() {
           {!loading && !error && products.length > 0 && (
             <div className="featured-page-grid">
               {products.map((product) => (
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                />
+                <ProductCard key={product.id} product={product} />
               ))}
             </div>
           )}

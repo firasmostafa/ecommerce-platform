@@ -1,15 +1,8 @@
-import {
-  useEffect,
-  useState,
-} from "react";
+import { useEffect, useState } from "react";
 
-import {
-  ArrowRight,
-} from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
-import {
-  Link,
-} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import axios from "axios";
 
@@ -17,34 +10,21 @@ import CategoryCard from "../../components/CategoryCard";
 
 import "./CategoriesPreview.css";
 
-const API_URL =
-  "http://127.0.0.1:8000/api";
+const API_URL = "https://ecommerce-platform-4vwn.onrender.com/api";
 
 function CategoriesPreview() {
-  const [
-    categories,
-    setCategories,
-  ] = useState([]);
+  const [categories, setCategories] = useState([]);
 
-  const [
-    sectionSettings,
-    setSectionSettings,
-  ] = useState({
+  const [sectionSettings, setSectionSettings] = useState({
     title: "Explore Categories",
 
     subtitle:
       "Find products by category and discover collections made for your lifestyle.",
   });
 
-  const [
-    loading,
-    setLoading,
-  ] = useState(true);
+  const [loading, setLoading] = useState(true);
 
-  const [
-    error,
-    setError,
-  ] = useState("");
+  const [error, setError] = useState("");
 
   /* ========================================
      LOAD CATEGORIES + HOMEPAGE SETTINGS
@@ -58,17 +38,10 @@ function CategoriesPreview() {
         setLoading(true);
         setError("");
 
-        const [
-          categoriesResponse,
-          settingsResponse,
-        ] = await Promise.all([
-          axios.get(
-            `${API_URL}/categories`
-          ),
+        const [categoriesResponse, settingsResponse] = await Promise.all([
+          axios.get(`${API_URL}/categories`),
 
-          axios.get(
-            `${API_URL}/home-settings`
-          ),
+          axios.get(`${API_URL}/home-settings`),
         ]);
 
         if (cancelled) {
@@ -79,35 +52,23 @@ function CategoriesPreview() {
            CATEGORIES
         ================================= */
 
-        const categoriesData =
-          categoriesResponse.data?.data ||
-          [];
+        const categoriesData = categoriesResponse.data?.data || [];
 
-        const allCategories =
-          Array.isArray(
-            categoriesData
-          )
-            ? categoriesData
-            : categoriesData.data ||
-              [];
+        const allCategories = Array.isArray(categoriesData)
+          ? categoriesData
+          : categoriesData.data || [];
 
-        setCategories(
-          allCategories.slice(0, 4)
-        );
+        setCategories(allCategories.slice(0, 4));
 
         /* ================================
            HOMEPAGE SETTINGS
         ================================= */
 
         const settings =
-          settingsResponse.data?.data ||
-          settingsResponse.data ||
-          {};
+          settingsResponse.data?.data || settingsResponse.data || {};
 
         setSectionSettings({
-          title:
-            settings.categories_title ||
-            "Explore Categories",
+          title: settings.categories_title || "Explore Categories",
 
           subtitle:
             settings.categories_subtitle ||
@@ -118,14 +79,9 @@ function CategoriesPreview() {
           return;
         }
 
-        console.error(
-          "Failed to load categories preview:",
-          err
-        );
+        console.error("Failed to load categories preview:", err);
 
-        setError(
-          "We could not load the categories right now."
-        );
+        setError("We could not load the categories right now.");
       } finally {
         if (!cancelled) {
           setLoading(false);
@@ -143,32 +99,21 @@ function CategoriesPreview() {
   return (
     <section className="categories-preview">
       <div className="categories-preview-container">
-
         {/* =================================
             HEADING
         ================================= */}
 
         <div className="preview-heading">
           <div>
-            <span className="preview-eyebrow">
-              DISCOVER YOUR STYLE
-            </span>
+            <span className="preview-eyebrow">DISCOVER YOUR STYLE</span>
 
-            <h2>
-              {sectionSettings.title}
-            </h2>
+            <h2>{sectionSettings.title}</h2>
 
-            <p>
-              {sectionSettings.subtitle}
-            </p>
+            <p>{sectionSettings.subtitle}</p>
           </div>
 
-          <Link
-            to="/categories"
-            className="preview-view-all"
-          >
+          <Link to="/categories" className="preview-view-all">
             View All Categories
-
             <ArrowRight size={17} />
           </Link>
         </div>
@@ -181,9 +126,7 @@ function CategoriesPreview() {
           <div className="preview-state">
             <span className="preview-spinner" />
 
-            <p>
-              Loading categories...
-            </p>
+            <p>Loading categories...</p>
           </div>
         )}
 
@@ -193,13 +136,9 @@ function CategoriesPreview() {
 
         {!loading && error && (
           <div className="preview-state preview-error">
-            <strong>
-              Something went wrong
-            </strong>
+            <strong>Something went wrong</strong>
 
-            <p>
-              {error}
-            </p>
+            <p>{error}</p>
           </div>
         )}
 
@@ -207,39 +146,23 @@ function CategoriesPreview() {
             CATEGORIES
         ================================= */}
 
-        {!loading &&
-          !error &&
-          categories.length > 0 && (
-            <div className="categories-preview-grid">
-              {categories.map(
-                (category) => (
-                  <CategoryCard
-                    key={
-                      category.id
-                    }
-                    category={
-                      category
-                    }
-                  />
-                )
-              )}
-            </div>
-          )}
+        {!loading && !error && categories.length > 0 && (
+          <div className="categories-preview-grid">
+            {categories.map((category) => (
+              <CategoryCard key={category.id} category={category} />
+            ))}
+          </div>
+        )}
 
         {/* =================================
             EMPTY
         ================================= */}
 
-        {!loading &&
-          !error &&
-          categories.length === 0 && (
-            <div className="preview-state">
-              <p>
-                No categories are
-                available yet.
-              </p>
-            </div>
-          )}
+        {!loading && !error && categories.length === 0 && (
+          <div className="preview-state">
+            <p>No categories are available yet.</p>
+          </div>
+        )}
       </div>
     </section>
   );

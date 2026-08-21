@@ -11,10 +11,7 @@ import {
   Truck,
 } from "lucide-react";
 
-import {
-  Link,
-  useParams,
-} from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 import axios from "axios";
 
@@ -26,63 +23,32 @@ import { useCurrency } from "../context/useCurrency";
 import "./ProductDetails.css";
 import "./ProductDetailsFeedback.css";
 
-const API_URL =
-  "http://127.0.0.1:8000/api";
+const API_URL = "https://ecommerce-platform-4vwn.onrender.com/api";
 
-const STORAGE_URL =
-  "http://127.0.0.1:8000/storage";
+const STORAGE_URL = "https://ecommerce-platform-4vwn.onrender.com/storage";
 
 function ProductDetails() {
   const { slug } = useParams();
 
-  const {
-    cartItems,
-    addToCart,
-  } = useCart();
+  const { cartItems, addToCart } = useCart();
 
-  const {
-    formatPrice,
-  } = useCurrency();
+  const { formatPrice } = useCurrency();
 
-  const [
-    product,
-    setProduct,
-  ] = useState(null);
+  const [product, setProduct] = useState(null);
 
-  const [
-    relatedProducts,
-    setRelatedProducts,
-  ] = useState([]);
+  const [relatedProducts, setRelatedProducts] = useState([]);
 
-  const [
-    selectedImageIndex,
-    setSelectedImageIndex,
-  ] = useState(0);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
-  const [
-    quantity,
-    setQuantity,
-  ] = useState(1);
+  const [quantity, setQuantity] = useState(1);
 
-  const [
-    loading,
-    setLoading,
-  ] = useState(true);
+  const [loading, setLoading] = useState(true);
 
-  const [
-    error,
-    setError,
-  ] = useState("");
+  const [error, setError] = useState("");
 
-  const [
-    justAdded,
-    setJustAdded,
-  ] = useState(false);
+  const [justAdded, setJustAdded] = useState(false);
 
-  const [
-    lastAddedQuantity,
-    setLastAddedQuantity,
-  ] = useState(0);
+  const [lastAddedQuantity, setLastAddedQuantity] = useState(0);
 
   /* ========================================
      LOAD PRODUCT
@@ -100,65 +66,42 @@ function ProductDetails() {
         setLoading(true);
         setError("");
 
-        const productsResponse =
-          await axios.get(
-            `${API_URL}/products?per_page=100`
-          );
+        const productsResponse = await axios.get(
+          `${API_URL}/products?per_page=100`,
+        );
 
         const products =
-          productsResponse.data.data?.data ||
-          productsResponse.data.data ||
-          [];
+          productsResponse.data.data?.data || productsResponse.data.data || [];
 
-        const matchedProduct =
-          products.find(
-            (item) =>
-              item.slug === slug
-          );
+        const matchedProduct = products.find((item) => item.slug === slug);
 
         if (!matchedProduct) {
-          setError(
-            "Product not found."
-          );
+          setError("Product not found.");
 
           return;
         }
 
-        setProduct(
-          matchedProduct
-        );
+        setProduct(matchedProduct);
 
-        setSelectedImageIndex(
-          0
-        );
+        setSelectedImageIndex(0);
 
         setQuantity(1);
 
         setJustAdded(false);
 
-        const related =
-          products
-            .filter(
-              (item) =>
-                item.id !==
-                  matchedProduct.id &&
-                item.category_id ===
-                  matchedProduct.category_id
-            )
-            .slice(0, 4);
+        const related = products
+          .filter(
+            (item) =>
+              item.id !== matchedProduct.id &&
+              item.category_id === matchedProduct.category_id,
+          )
+          .slice(0, 4);
 
-        setRelatedProducts(
-          related
-        );
+        setRelatedProducts(related);
       } catch (err) {
-        console.error(
-          "Failed to load product details:",
-          err
-        );
+        console.error("Failed to load product details:", err);
 
-        setError(
-          "We could not load this product right now."
-        );
+        setError("We could not load this product right now.");
       } finally {
         setLoading(false);
       }
@@ -172,28 +115,14 @@ function ProductDetails() {
   ======================================== */
 
   const images = useMemo(() => {
-    if (
-      !product?.images?.length
-    ) {
+    if (!product?.images?.length) {
       return [];
     }
 
-    return [
-      ...product.images,
-    ].sort(
+    return [...product.images].sort(
       (a, b) =>
-        Number(
-          b.is_primary || 0
-        ) -
-          Number(
-            a.is_primary || 0
-          ) ||
-        Number(
-          a.sort_order || 0
-        ) -
-          Number(
-            b.sort_order || 0
-          )
+        Number(b.is_primary || 0) - Number(a.is_primary || 0) ||
+        Number(a.sort_order || 0) - Number(b.sort_order || 0),
     );
   }, [product]);
 
@@ -201,78 +130,42 @@ function ProductDetails() {
      CART QUANTITY
   ======================================== */
 
-  const quantityInCart =
-    useMemo(() => {
-      if (!product) {
-        return 0;
-      }
+  const quantityInCart = useMemo(() => {
+    if (!product) {
+      return 0;
+    }
 
-      const cartItem =
-        cartItems.find(
-          (item) =>
-            item.id ===
-            product.id
-        );
+    const cartItem = cartItems.find((item) => item.id === product.id);
 
-      return Number(
-        cartItem?.quantity ||
-          0
-      );
-    }, [
-      cartItems,
-      product,
-    ]);
+    return Number(cartItem?.quantity || 0);
+  }, [cartItems, product]);
 
   /* ========================================
      IMAGE
   ======================================== */
 
-  const selectedImage =
-    images[
-      selectedImageIndex
-    ];
+  const selectedImage = images[selectedImageIndex];
 
-  const selectedImageUrl =
-    selectedImage?.image
-      ? `${STORAGE_URL}/${selectedImage.image}`
-      : null;
+  const selectedImageUrl = selectedImage?.image
+    ? `${STORAGE_URL}/${selectedImage.image}`
+    : null;
 
   /* ========================================
      PRICE
   ======================================== */
 
-  const regularPrice =
-    Number(
-      product?.price || 0
-    );
+  const regularPrice = Number(product?.price || 0);
 
-  const salePrice =
-    product?.sale_price
-      ? Number(
-          product.sale_price
-        )
-      : null;
+  const salePrice = product?.sale_price ? Number(product.sale_price) : null;
 
   const hasSale =
-    salePrice !== null &&
-    salePrice > 0 &&
-    salePrice <
-      regularPrice;
+    salePrice !== null && salePrice > 0 && salePrice < regularPrice;
 
-  const finalPrice =
-    hasSale
-      ? salePrice
-      : regularPrice;
+  const finalPrice = hasSale ? salePrice : regularPrice;
 
   const discountPercentage =
-    hasSale &&
-    regularPrice > 0
-      ? Math.round(
-          ((regularPrice -
-            salePrice) /
-            regularPrice) *
-            100
-        )
+    hasSale && regularPrice > 0
+      ? Math.round(((regularPrice - salePrice) / regularPrice) * 100)
       : 0;
 
   /* ========================================
@@ -284,60 +177,32 @@ function ProductDetails() {
       return;
     }
 
-    setQuantity(
-      (current) =>
-        Math.min(
-          current + 1,
-          Number(
-            product.stock
-          )
-        )
-    );
+    setQuantity((current) => Math.min(current + 1, Number(product.stock)));
   };
 
   const decreaseQuantity = () => {
-    setQuantity(
-      (current) =>
-        Math.max(
-          1,
-          current - 1
-        )
-    );
+    setQuantity((current) => Math.max(1, current - 1));
   };
 
   /* ========================================
      ADD TO CART
   ======================================== */
 
-  const handleAddToCart =
-    () => {
-      if (
-        !product ||
-        product.stock <= 0
-      ) {
-        return;
-      }
+  const handleAddToCart = () => {
+    if (!product || product.stock <= 0) {
+      return;
+    }
 
-      addToCart(
-        product,
-        quantity
-      );
+    addToCart(product, quantity);
 
-      setLastAddedQuantity(
-        quantity
-      );
+    setLastAddedQuantity(quantity);
 
-      setJustAdded(true);
+    setJustAdded(true);
 
-      window.setTimeout(
-        () => {
-          setJustAdded(
-            false
-          );
-        },
-        2200
-      );
-    };
+    window.setTimeout(() => {
+      setJustAdded(false);
+    }, 2200);
+  };
 
   /* ========================================
      LOADING
@@ -349,9 +214,7 @@ function ProductDetails() {
         <div className="product-details-state">
           <span className="product-details-spinner" />
 
-          <p>
-            Loading product...
-          </p>
+          <p>Loading product...</p>
         </div>
       </main>
     );
@@ -361,27 +224,15 @@ function ProductDetails() {
      ERROR
   ======================================== */
 
-  if (
-    error ||
-    !product
-  ) {
+  if (error || !product) {
     return (
       <main className="product-details-page">
         <div className="product-details-state">
+          <strong>Product unavailable</strong>
 
-          <strong>
-            Product unavailable
-          </strong>
+          <p>{error || "This product could not be found."}</p>
 
-          <p>
-            {error ||
-              "This product could not be found."}
-          </p>
-
-          <Link to="/products">
-            Back to Shop
-          </Link>
-
+          <Link to="/products">Back to Shop</Link>
         </div>
       </main>
     );
@@ -389,121 +240,65 @@ function ProductDetails() {
 
   return (
     <main className="product-details-page">
-
       <section className="product-details-main">
         <div className="product-details-container">
-
-          <Link
-            to="/products"
-            className="product-details-back"
-          >
-            <ArrowLeft
-              size={17}
-            />
-
+          <Link to="/products" className="product-details-back">
+            <ArrowLeft size={17} />
             Back to Shop
           </Link>
 
           <div className="product-details-grid">
-
             {/* ===============================
                 GALLERY
             =============================== */}
 
             <div className="product-gallery">
-
               <div className="product-main-image">
-
                 {selectedImageUrl ? (
                   <img
-                    src={
-                      selectedImageUrl
-                    }
-                    alt={
-                      selectedImage?.alt_text ||
-                      product.name
-                    }
+                    src={selectedImageUrl}
+                    alt={selectedImage?.alt_text || product.name}
                   />
                 ) : (
                   <div className="product-main-placeholder">
-                    {product.name.charAt(
-                      0
-                    )}
+                    {product.name.charAt(0)}
                   </div>
                 )}
 
                 {hasSale && (
                   <span className="product-details-sale">
-                    -
-                    {
-                      discountPercentage
-                    }
-                    %
+                    -{discountPercentage}%
                   </span>
                 )}
 
                 {product.is_featured && (
-                  <span className="product-details-featured">
-                    Featured
-                  </span>
+                  <span className="product-details-featured">Featured</span>
                 )}
-
               </div>
 
               {images.length > 1 && (
                 <div className="product-thumbnails">
+                  {images.map((image, index) => {
+                    const url = image.image
+                      ? `${STORAGE_URL}/${image.image}`
+                      : null;
 
-                  {images.map(
-                    (
-                      image,
-                      index
-                    ) => {
-                      const url =
-                        image.image
-                          ? `${STORAGE_URL}/${image.image}`
-                          : null;
-
-                      return (
-                        <button
-                          key={
-                            image.id
-                          }
-                          type="button"
-                          className={
-                            index ===
-                            selectedImageIndex
-                              ? "active"
-                              : ""
-                          }
-                          onClick={() =>
-                            setSelectedImageIndex(
-                              index
-                            )
-                          }
-                          aria-label={`View product image ${
-                            index +
-                            1
-                          }`}
-                        >
-                          {url && (
-                            <img
-                              src={
-                                url
-                              }
-                              alt={
-                                image.alt_text ||
-                                product.name
-                              }
-                            />
-                          )}
-                        </button>
-                      );
-                    }
-                  )}
-
+                    return (
+                      <button
+                        key={image.id}
+                        type="button"
+                        className={index === selectedImageIndex ? "active" : ""}
+                        onClick={() => setSelectedImageIndex(index)}
+                        aria-label={`View product image ${index + 1}`}
+                      >
+                        {url && (
+                          <img src={url} alt={image.alt_text || product.name} />
+                        )}
+                      </button>
+                    );
+                  })}
                 </div>
               )}
-
             </div>
 
             {/* ===============================
@@ -511,80 +306,48 @@ function ProductDetails() {
             =============================== */}
 
             <div className="product-information">
-
               <span className="product-details-category">
-                {product.category
-                  ?.name ||
-                  "Nova Collection"}
+                {product.category?.name || "Nova Collection"}
               </span>
 
-              <h1>
-                {product.name}
-              </h1>
+              <h1>{product.name}</h1>
 
               {/* PRICE */}
 
               <div className="product-details-price">
-
-                <strong>
-                  {formatPrice(
-                    finalPrice
-                  )}
-                </strong>
+                <strong>{formatPrice(finalPrice)}</strong>
 
                 {hasSale && (
                   <>
-                    <span>
-                      {formatPrice(
-                        regularPrice
-                      )}
-                    </span>
+                    <span>{formatPrice(regularPrice)}</span>
 
-                    <small>
-                      Save{" "}
-                      {
-                        discountPercentage
-                      }
-                      %
-                    </small>
+                    <small>Save {discountPercentage}%</small>
                   </>
                 )}
-
               </div>
 
               <p className="product-details-short">
-                {product.short_description ||
-                  product.description}
+                {product.short_description || product.description}
               </p>
 
               {/* META */}
 
               <div className="product-details-meta">
-
                 <div>
-                  <span>
-                    SKU
-                  </span>
+                  <span>SKU</span>
 
-                  <strong>
-                    {product.sku ||
-                      "N/A"}
-                  </strong>
+                  <strong>{product.sku || "N/A"}</strong>
                 </div>
 
                 <div>
-                  <span>
-                    Availability
-                  </span>
+                  <span>Availability</span>
 
                   <strong
                     className={
                       Number(product.stock) <= 0
                         ? "unavailable"
                         : Number(product.stock) <=
-                            Number(
-                              product.low_stock_threshold ?? 5
-                            )
+                            Number(product.low_stock_threshold ?? 5)
                           ? "low-stock"
                           : "available"
                     }
@@ -592,165 +355,95 @@ function ProductDetails() {
                     {Number(product.stock) <= 0
                       ? "Sold Out"
                       : Number(product.stock) <=
-                          Number(
-                            product.low_stock_threshold ?? 5
-                          )
+                          Number(product.low_stock_threshold ?? 5)
                         ? "Low Stock"
                         : "In Stock"}
                   </strong>
                 </div>
-
               </div>
 
               {/* DESCRIPTION */}
 
               {product.description && (
                 <div className="product-details-description">
+                  <h3>About this product</h3>
 
-                  <h3>
-                    About this product
-                  </h3>
-
-                  <p>
-                    {
-                      product.description
-                    }
-                  </p>
-
+                  <p>{product.description}</p>
                 </div>
               )}
 
               {/* PURCHASE */}
 
               <div className="product-purchase-panel">
-
                 <div className="quantity-control">
-
-                  <span>
-                    Quantity
-                  </span>
+                  <span>Quantity</span>
 
                   <div>
                     <button
                       type="button"
-                      onClick={
-                        decreaseQuantity
-                      }
-                      disabled={
-                        quantity <= 1
-                      }
+                      onClick={decreaseQuantity}
+                      disabled={quantity <= 1}
                       aria-label="Decrease quantity"
                     >
-                      <Minus
-                        size={17}
-                      />
+                      <Minus size={17} />
                     </button>
 
-                    <strong>
-                      {quantity}
-                    </strong>
+                    <strong>{quantity}</strong>
 
                     <button
                       type="button"
-                      onClick={
-                        increaseQuantity
-                      }
+                      onClick={increaseQuantity}
                       disabled={
-                        product.stock ===
-                          0 ||
-                        quantity >=
-                          Number(
-                            product.stock
-                          )
+                        product.stock === 0 || quantity >= Number(product.stock)
                       }
                       aria-label="Increase quantity"
                     >
-                      <Plus
-                        size={17}
-                      />
+                      <Plus size={17} />
                     </button>
                   </div>
-
                 </div>
 
                 <button
                   type="button"
                   className={`product-details-cart ${
-                    justAdded
-                      ? "product-details-cart-added"
-                      : ""
+                    justAdded ? "product-details-cart-added" : ""
                   }`}
-                  disabled={
-                    product.stock ===
-                    0
-                  }
-                  onClick={
-                    handleAddToCart
-                  }
+                  disabled={product.stock === 0}
+                  onClick={handleAddToCart}
                 >
                   {justAdded ? (
                     <>
-                      <Check
-                        size={19}
-                      />
-
+                      <Check size={19} />
                       Added Successfully
                     </>
                   ) : (
                     <>
-                      <ShoppingBag
-                        size={19}
-                      />
+                      <ShoppingBag size={19} />
 
-                      {product.stock >
-                      0
-                        ? "Add to Cart"
-                        : "Sold Out"}
+                      {product.stock > 0 ? "Add to Cart" : "Sold Out"}
                     </>
                   )}
                 </button>
-
               </div>
 
               {/* CART STATUS */}
 
-              {quantityInCart >
-                0 && (
+              {quantityInCart > 0 && (
                 <div className="product-details-cart-status">
-
                   <div className="product-details-cart-status-icon">
-                    <Check
-                      size={16}
-                    />
+                    <Check size={16} />
                   </div>
 
                   <div>
-                    <strong>
-                      Product is in
-                      your cart
-                    </strong>
+                    <strong>Product is in your cart</strong>
 
                     <span>
-                      You currently
-                      have{" "}
-                      <b>
-                        {
-                          quantityInCart
-                        }
-                      </b>{" "}
-                      {quantityInCart ===
-                      1
-                        ? "item"
-                        : "items"}{" "}
-                      of this
-                      product.
+                      You currently have <b>{quantityInCart}</b>{" "}
+                      {quantityInCart === 1 ? "item" : "items"} of this product.
                     </span>
                   </div>
 
-                  <Link to="/cart">
-                    View Cart
-                  </Link>
-
+                  <Link to="/cart">View Cart</Link>
                 </div>
               )}
 
@@ -758,70 +451,43 @@ function ProductDetails() {
 
               {justAdded && (
                 <div className="product-added-message">
-
-                  <Check
-                    size={17}
-                  />
+                  <Check size={17} />
 
                   <span>
-                    {
-                      lastAddedQuantity
-                    }{" "}
-                    {lastAddedQuantity ===
-                    1
-                      ? "item was"
-                      : "items were"}{" "}
-                    added
+                    {lastAddedQuantity}{" "}
+                    {lastAddedQuantity === 1 ? "item was" : "items were"} added
                     successfully.
                   </span>
-
                 </div>
               )}
 
               {/* BENEFITS */}
 
               <div className="product-details-benefits">
-
                 <div>
                   <span>
-                    <Truck
-                      size={19}
-                    />
+                    <Truck size={19} />
                   </span>
 
                   <div>
-                    <strong>
-                      Fast Delivery
-                    </strong>
+                    <strong>Fast Delivery</strong>
 
-                    <small>
-                      Reliable shipping
-                      service
-                    </small>
+                    <small>Reliable shipping service</small>
                   </div>
                 </div>
 
                 <div>
                   <span>
-                    <ShieldCheck
-                      size={19}
-                    />
+                    <ShieldCheck size={19} />
                   </span>
 
                   <div>
-                    <strong>
-                      Secure Checkout
-                    </strong>
+                    <strong>Secure Checkout</strong>
 
-                    <small>
-                      Protected order
-                      process
-                    </small>
+                    <small>Protected order process</small>
                   </div>
                 </div>
-
               </div>
-
             </div>
           </div>
         </div>
@@ -831,42 +497,23 @@ function ProductDetails() {
           RELATED PRODUCTS
       ================================= */}
 
-      {relatedProducts.length >
-        0 && (
+      {relatedProducts.length > 0 && (
         <section className="related-products">
           <div className="product-details-container">
-
             <div className="related-products-heading">
-              <span>
-                YOU MAY ALSO LIKE
-              </span>
+              <span>YOU MAY ALSO LIKE</span>
 
-              <h2>
-                Related Products
-              </h2>
+              <h2>Related Products</h2>
             </div>
 
             <div className="related-products-grid">
-
-              {relatedProducts.map(
-                (item) => (
-                  <ProductCard
-                    key={
-                      item.id
-                    }
-                    product={
-                      item
-                    }
-                  />
-                )
-              )}
-
+              {relatedProducts.map((item) => (
+                <ProductCard key={item.id} product={item} />
+              ))}
             </div>
-
           </div>
         </section>
       )}
-
     </main>
   );
 }
