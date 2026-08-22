@@ -817,3 +817,194 @@
     font-size: 6px;
   }
 }
+
+/* ========================================
+   FINAL MOBILE PRODUCT CARD READABILITY
+   Larger text and controls for one-card-per-row layouts
+======================================== */
+
+@media (max-width: 650px) {
+  .product-card {
+    width: 100%;
+    min-width: 0;
+
+    border-radius: 14px;
+  }
+
+  .product-card-image-wrapper {
+    aspect-ratio: 1 / 0.82;
+  }
+
+  .product-card-body {
+    padding: 12px 12px 13px;
+  }
+
+  /* Badges on image */
+  .product-sale-badge,
+  .product-featured-badge {
+    padding: 4px 7px;
+
+    font-size: 8px;
+  }
+
+  .product-card-badges {
+    top: 9px;
+    left: 9px;
+
+    gap: 5px;
+  }
+
+  /* Wishlist */
+  .product-wishlist-button {
+    top: 9px;
+    right: 9px;
+
+    width: 34px;
+    height: 34px;
+  }
+
+  .product-wishlist-button svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  /* Add to cart button */
+  .product-quick-cart {
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+
+    min-height: 40px;
+
+    padding: 0 12px;
+
+    gap: 6px;
+
+    border-radius: 10px;
+
+    font-size: 10.5px;
+  }
+
+  .product-quick-cart svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* Category + rating */
+  .product-card-category {
+    max-width: 72%;
+
+    font-size: 8px;
+  }
+
+  .product-card-rating {
+    gap: 3px;
+
+    font-size: 8px;
+  }
+
+  .product-card-rating svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  /* Product title */
+  .product-card-title {
+    font-size: 14px;
+
+    line-height: 1.35;
+  }
+
+  /* Description becomes visible on one-card mobile layout */
+  .product-card-description {
+    margin-top: 6px;
+
+    display: -webkit-box;
+
+    font-size: 10px;
+    line-height: 1.55;
+
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  /* Cart status */
+  .product-cart-status {
+    margin-top: 8px;
+
+    padding: 6px 8px;
+
+    gap: 5px;
+
+    border-radius: 8px;
+
+    font-size: 8.5px;
+  }
+
+  .product-cart-status-icon {
+    width: 19px;
+    height: 19px;
+  }
+
+  .product-cart-status-icon svg {
+    width: 11px;
+    height: 11px;
+  }
+
+  /* Price and stock */
+  .product-card-footer {
+    padding-top: 10px;
+
+    gap: 8px;
+  }
+
+  .product-card-price strong {
+    font-size: 17px;
+  }
+
+  .product-card-price span {
+    font-size: 9px;
+  }
+
+  .product-stock {
+    display: inline-flex;
+
+    padding: 4px 7px;
+
+    font-size: 8px;
+  }
+}
+
+/* ========================================
+   VERY SMALL MOBILE
+======================================== */
+
+@media (max-width: 370px) {
+  .product-card-body {
+    padding: 10px;
+  }
+
+  .product-card-title {
+    font-size: 13px;
+  }
+
+  .product-card-description {
+    font-size: 9.5px;
+  }
+
+  .product-quick-cart {
+    min-height: 38px;
+
+    font-size: 10px;
+  }
+
+  .product-card-price strong {
+    font-size: 16px;
+  }
+
+  .product-stock {
+    display: inline-flex;
+
+    font-size: 7.5px;
+  }
+}

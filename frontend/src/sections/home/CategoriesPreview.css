@@ -186,7 +186,7 @@
     grid-template-columns:
       repeat(2, minmax(0, 1fr));
 
-    gap: 9px;
+    gap: 10px;
   }
 }
 
@@ -196,62 +196,65 @@
 
 @media (max-width: 650px) {
   .categories-preview {
-    padding: 24px 0 32px;
+    padding: 30px 0 38px;
   }
 
   .categories-preview-container {
-    width: calc(100% - 18px);
+    width: calc(100% - 24px);
   }
 
   .preview-heading {
-    margin-bottom: 13px;
+    margin-bottom: 18px;
 
     flex-direction: column;
     align-items: flex-start;
 
-    gap: 7px;
+    gap: 10px;
   }
 
   .preview-eyebrow {
-    margin-bottom: 4px;
+    margin-bottom: 5px;
 
-    font-size: 6px;
+    font-size: 7px;
+    font-weight: 900;
   }
 
   .preview-heading h2 {
-    font-size: 21px;
+    font-size: 24px;
+
+    line-height: 1.1;
   }
 
   .preview-heading p {
     max-width: 100%;
 
-    margin-top: 5px;
+    margin-top: 7px;
 
-    font-size: 9px;
+    font-size: 10.5px;
 
-    line-height: 1.5;
+    line-height: 1.6;
   }
 
   .preview-view-all {
     width: auto;
 
-    padding: 6px 9px;
+    padding: 8px 11px;
 
-    border-radius: 8px;
+    border-radius: 9px;
 
-    font-size: 7px;
+    font-size: 9px;
   }
 
   .preview-view-all svg {
-    width: 11px;
-    height: 11px;
+    width: 13px;
+    height: 13px;
   }
 
+  /* ONE CATEGORY PER ROW */
   .categories-preview-grid {
-    grid-template-columns:
-      repeat(2, minmax(0, 1fr));
+    grid-template-columns: 1fr;
 
-    gap: 6px;
+    gap: 14px;
   }
 
   .categories-preview-grid > * {
@@ -260,13 +263,17 @@
   }
 
   .preview-state {
-    min-height: 120px;
+    min-height: 130px;
 
-    border-radius: 10px;
+    border-radius: 11px;
   }
 
   .preview-state p {
-    font-size: 8px;
+    font-size: 9px;
+  }
+
+  .preview-state strong {
+    font-size: 11px;
   }
 }
 
@@ -276,15 +283,23 @@
 
 @media (max-width: 370px) {
   .categories-preview-container {
-    width: calc(100% - 14px);
+    width: calc(100% - 18px);
   }
 
   .categories-preview-grid {
-    gap: 5px;
+    gap: 12px;
   }
 
   .preview-heading h2 {
-    font-size: 19px;
+    font-size: 22px;
+  }
+
+  .preview-heading p {
+    font-size: 10px;
+  }
+
+  .preview-view-all {
+    font-size: 8.5px;
   }
 }
 

@@ -178,20 +178,19 @@
     font-size: 18px;
   }
 }
-
-/* MOBILE — TWO CARDS SIDE BY SIDE */
+/* MOBILE — ONE CARD PER ROW */
 
 @media (max-width: 650px) {
   .category-card {
     width: 100%;
     min-width: 0;
 
-    min-height: 165px;
+    min-height: 240px;
 
-    border-radius: 13px;
+    border-radius: 18px;
 
     box-shadow:
-      0 8px 22px rgba(49, 35, 83, 0.1);
+      0 12px 30px rgba(49, 35, 83, 0.12);
   }
 
   .category-card:hover {
@@ -199,7 +198,7 @@
   }
 
   .category-card:active {
-    transform: scale(0.985);
+    transform: scale(0.99);
   }
 
   .category-card-image img {
@@ -207,11 +206,11 @@
   }
 
   .category-card-content {
-    right: 9px;
-    bottom: 9px;
-    left: 9px;
+    right: 16px;
+    bottom: 16px;
+    left: 16px;
 
-    gap: 6px;
+    gap: 12px;
   }
 
   .category-card-content > div {
@@ -219,53 +218,56 @@
   }
 
   .category-card-label {
-    font-size: 5.5px;
+    font-size: 8px;
 
-    letter-spacing: 0.1em;
+    letter-spacing: 0.11em;
   }
 
   .category-card-content h3 {
     max-width: 100%;
 
-    margin: 3px 0;
+    margin: 5px 0;
 
-    overflow: hidden;
+    overflow: visible;
 
     color: #ffffff;
 
-    font-size: 12px;
-    line-height: 1.1;
+    font-size: 20px;
 
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    line-height: 1.15;
+
+    text-overflow: initial;
+    white-space: normal;
   }
 
   .category-card-content p {
-    font-size: 7px;
+    font-size: 10px;
+
+    line-height: 1.5;
   }
 
   .category-card-arrow {
-    width: 28px;
-    height: 28px;
+    width: 38px;
+    height: 38px;
 
-    border-radius: 8px;
+    border-radius: 11px;
   }
 
   .category-card-arrow svg {
-    width: 13px;
-    height: 13px;
+    width: 17px;
+    height: 17px;
   }
 
   .category-card-placeholder {
-    font-size: 38px;
+    font-size: 52px;
   }
 
   .category-card-overlay {
     background:
       linear-gradient(
         180deg,
-        rgba(17, 12, 28, 0.02) 20%,
-        rgba(17, 12, 28, 0.86) 100%
+        rgba(17, 12, 28, 0.03) 15%,
+        rgba(17, 12, 28, 0.88) 100%
       );
   }
 }
@@ -274,21 +276,29 @@
 
 @media (max-width: 370px) {
   .category-card {
-    min-height: 150px;
+    min-height: 220px;
   }
 
   .category-card-content {
-    right: 7px;
-    bottom: 7px;
-    left: 7px;
+    right: 13px;
+    bottom: 13px;
+    left: 13px;
+  }
+
+  .category-card-label {
+    font-size: 7.5px;
   }
 
   .category-card-content h3 {
-    font-size: 10px;
+    font-size: 18px;
+  }
+
+  .category-card-content p {
+    font-size: 9.5px;
   }
 
   .category-card-arrow {
-    width: 25px;
-    height: 25px;
+    width: 35px;
+    height: 35px;
   }
 }

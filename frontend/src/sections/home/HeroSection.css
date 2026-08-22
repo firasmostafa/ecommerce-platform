@@ -551,83 +551,72 @@
 }
 
 /* Mobile */
-
 @media (max-width: 650px) {
   .nova-hero-container {
     width: calc(100% - 28px);
-    padding: 18px 0 24px;
+    padding: 20px 0 26px;
   }
 
-  .nova-hero-content h1 {
-    font-size: clamp(26px, 8vw, 36px);
-  }
-
-  .nova-hero-description {
+  .nova-hero-badge {
     font-size: 9px;
   }
 
-  .nova-hero-actions {
-    display: grid;
-    grid-template-columns: 1fr;
+  .nova-hero-content h1 {
+    font-size: clamp(29px, 8.5vw, 39px);
+  }
+
+  .nova-hero-description {
+    font-size: 10.5px;
+    line-height: 1.65;
   }
 
   .nova-hero-primary,
   .nova-hero-secondary {
     width: 100%;
+
+    min-height: 44px;
+
+    font-size: 10px;
   }
 
-  .nova-hero-benefits {
-    gap: 10px;
+  .nova-hero-benefit strong {
+    font-size: 9.5px;
   }
 
-  .nova-hero-benefit {
-    flex: 1 1 110px;
-    justify-content: center;
+  .nova-hero-benefit small {
+    font-size: 9px;
   }
 
-  .nova-hero-slider {
-    min-height: 245px;
+  .nova-slider-meta > span:first-child {
+    font-size: 9px;
   }
 
-  .nova-slider-card {
-    width: min(240px, calc(100% - 18px));
-    padding: 8px;
-    border-radius: 15px;
+  .nova-slider-stock {
+    font-size: 9px !important;
   }
 
-  .nova-slider-image {
-    height: 150px;
-    border-radius: 12px;
+  .nova-slider-title {
+    font-size: 11px;
   }
 
-  .nova-slider-arrow {
-    width: 30px;
-    height: 30px;
+  .nova-slider-price strong {
+    font-size: 17px;
   }
 
-  .nova-slider-arrow-left {
-    left: 0;
+  .nova-slider-price span {
+    font-size: 9px;
   }
 
-  .nova-slider-arrow-right {
-    right: 0;
+  .nova-slider-discount small,
+  .nova-slider-discount strong {
+    font-size: 9px;
   }
 
-  .nova-slider-orbit-one {
-    width: 260px;
-    height: 260px;
+  .nova-hero-loading p {
+    font-size: 9px;
   }
 
-  .nova-slider-orbit-two {
-    width: 290px;
-    height: 290px;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .nova-slider-card,
-  .nova-slider-orbit,
-  .nova-hero-loading > span {
-    animation: none;
+  .nova-hero-empty a {
+    font-size: 9px;
   }
 }

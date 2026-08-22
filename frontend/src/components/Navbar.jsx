@@ -221,6 +221,16 @@ function Navbar() {
             </span>
           </Link>
 
+          {/* MOBILE HOME - VISIBLE IN HEADER */}
+
+          <NavLink
+            to="/"
+            className="mobile-home-link"
+            onClick={closeMobileMenu}
+          >
+            Home
+          </NavLink>
+
           {/* DESKTOP CART BESIDE LOGO */}
 
           <Link
@@ -586,7 +596,15 @@ function Navbar() {
         {/* NAVIGATION */}
 
         <nav className="mobile-navigation-links">
-          <span className="mobile-menu-section-title">SHOP</span>
+          <NavLink to="/" onClick={closeMobileMenu}>
+            <span>Home</span>
+
+            <ChevronRight size={15} />
+          </NavLink>
+
+          <span className="mobile-menu-section-title mobile-menu-section-space">
+            SHOP
+          </span>
 
           <NavLink to="/products" onClick={closeMobileMenu}>
             <span>Shop</span>

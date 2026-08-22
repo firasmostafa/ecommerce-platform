@@ -216,106 +216,83 @@
     grid-template-columns:
       repeat(2, minmax(0, 1fr));
 
-    gap: 9px;
+    gap: 10px;
   }
 }
 
 /* ========================================
    MOBILE
 ======================================== */
-
 @media (max-width: 650px) {
   .featured-preview {
-    padding: 24px 0 32px;
+    padding: 30px 0 38px;
   }
 
   .featured-preview-container {
-    width: calc(100% - 18px);
+    width: calc(100% - 24px);
   }
 
   .featured-preview-heading {
-    margin-bottom: 13px;
+    margin-bottom: 18px;
 
     flex-direction: column;
     align-items: flex-start;
 
-    gap: 7px;
+    gap: 10px;
   }
 
   .featured-preview-eyebrow {
-    margin-bottom: 4px;
+    margin-bottom: 5px;
 
-    font-size: 6px;
+    font-size: 8px;
+    font-weight: 900;
   }
 
   .featured-preview-heading h2 {
-    font-size: 21px;
+    font-size: 25px;
+
+    line-height: 1.1;
   }
 
   .featured-preview-heading p {
     max-width: 100%;
 
-    margin-top: 5px;
+    margin-top: 7px;
 
-    font-size: 9px;
-    line-height: 1.5;
+    font-size: 11.5px;
+    line-height: 1.65;
   }
 
   .featured-preview-link {
-    padding: 6px 9px;
+    padding: 9px 12px;
 
-    border-radius: 8px;
+    border-radius: 9px;
 
-    font-size: 7px;
+    font-size: 10px;
   }
 
   .featured-preview-link svg {
-    width: 11px;
-    height: 11px;
+    width: 14px;
+    height: 14px;
   }
 
   .featured-preview-grid {
-    grid-template-columns:
-      repeat(2, minmax(0, 1fr));
+    grid-template-columns: 1fr;
 
-    gap: 6px;
+    gap: 14px;
   }
 
   .featured-preview-state {
-    min-height: 120px;
+    min-height: 130px;
 
-    border-radius: 10px;
+    border-radius: 11px;
   }
 
   .featured-preview-state p {
-    font-size: 8px;
-  }
-}
-
-/* ========================================
-   VERY SMALL MOBILE
-======================================== */
-
-@media (max-width: 370px) {
-  .featured-preview-container {
-    width: calc(100% - 14px);
+    font-size: 10px;
   }
 
-  .featured-preview-grid {
-    gap: 5px;
-  }
-
-  .featured-preview-heading h2 {
-    font-size: 19px;
-  }
-}
-
-/* ========================================
-   REDUCED MOTION
-======================================== */
-
-@media (prefers-reduced-motion: reduce) {
-  .featured-preview-spinner {
-    animation: none;
+  .featured-preview-state strong {
+    font-size: 12px;
   }
 }
